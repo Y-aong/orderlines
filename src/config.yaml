@@ -1,0 +1,31 @@
+# order_lines 配置文件
+
+# 标准库文件位置
+order_lines:
+  standard_library_location:
+    - "order_lines.libraries"
+  callback_func: "send_msg"
+  callback_module: Email
+  retry_time: 3
+  sleep_time: 1
+  # 默认每个任务的运行超时时间为120秒
+  task_timeout: 120
+  process_timeout: 120
+
+
+
+falsk:
+  SQLALCHEMY_TRACK_MODIFICATIONS: True
+  SQLALCHEMY_COMMIT_TEARDOWN: True
+  SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:123456@localhost:3306/order_lines"
+  SECRET_KEY: "051900abcsdafgdargdsf"
+
+email:
+  mail_host: 'smtp.163.com'
+  mail_user: '15334927340'
+  mail_pwd: 'TXFOQMKWMUAEQZLR'
+  sender: '15334927340@163.com'
+  receivers:
+    - '1627469727@qq.com'
+
+

@@ -1,0 +1,89 @@
+[
+    {
+        "task_id": 1,
+        "task_name": "start",
+        "method_name": "start",
+        "task_type": "start",
+        "method_kwargs": null,
+        "prev_id": null,
+        "next_id": 2,
+        "task_config": null,
+        "task_module": "Start",
+        "desc": null
+    },
+    {
+        "task_id": 2,
+        "task_name": "add",
+        "method_name": "test_add",
+        "task_type": "common",
+        "method_kwargs": {
+            "a": 2,
+            "b": 786
+        },
+        "prev_id": 1,
+        "next_id": 3,
+        "task_config": null,
+        "task_module": "AddTest",
+        "desc": null
+    },
+    {
+        "task_id": 4,
+        "task_name": "add",
+        "method_name": "test_add",
+        "task_type": "common",
+        "method_kwargs": {
+            "a": 2,
+            "b": 78
+        },
+        "prev_id": 3,
+        "next_id": 6,
+        "task_config": null,
+        "task_module": "AddTest",
+        "desc": null
+    },
+    {
+        "task_id": 5,
+        "task_name": "add",
+        "method_name": "test_subtraction",
+        "task_type": "common",
+        "method_kwargs": {
+            "a": 2,
+            "b": 712
+        },
+        "prev_id": 3,
+        "next_id": 6,
+        "task_config": null,
+        "task_module": "AddTest",
+        "desc": null
+    },
+    {
+        "task_id": 3,
+        "task_name": "process_control",
+        "method_name": "process_control",
+        "task_type": "process_control",
+        "method_kwargs": {
+            "conditions": "success",
+            "expression": {
+                "success": {"task_id": 4},
+                "failure": {"task_id": 5}
+            }
+        },
+        "prev_id": 2,
+        "next_id": null,
+        "task_config": null,
+        "task_module": "ProcessControl",
+        "desc": null
+    },
+    {
+        "task_id": 6,
+        "task_name": "end",
+        "method_name": "end",
+        "task_type": "end",
+        "method_kwargs": null,
+        "prev_id": 3,
+        "next_id": null,
+        "task_config": null,
+        "task_module": "End",
+        "desc": null
+    }
+]

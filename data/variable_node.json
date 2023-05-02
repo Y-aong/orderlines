@@ -1,0 +1,72 @@
+{
+  "process_id": "1001",
+  "process_name": "test_variable",
+  "process_desc": "测试变量解析",
+  "process_params": null,
+  "process_config": null,
+  "creator": "blue",
+  "updater": null,
+  "node_list": [
+    {
+      "task_id": 1001,
+      "task_name": "start",
+      "method_name": "start",
+      "task_type": "start",
+      "method_kwargs": null,
+      "prev_id": null,
+      "next_id": 1002,
+      "task_config": null,
+      "task_module": "Start",
+      "desc": null
+    },
+    {
+      "task_id": 1002,
+      "task_name": "add",
+      "method_name": "test_add",
+      "task_type": "common",
+      "method_kwargs": {
+        "a": 1,
+        "b": 2
+      },
+      "prev_id": 1001,
+      "next_id": 1003,
+      "task_config": null,
+      "task_module": "AddTest",
+      "result": [
+        {
+          "add_value": "${add_value}",
+          "variable_type": "int",
+          "variable_desc": "add函数的返回值"
+        }
+      ],
+      "desc": null
+    },
+    {
+      "task_id": 1003,
+      "task_name": "subtraction",
+      "method_name": "test_subtraction",
+      "task_type": "common",
+      "method_kwargs": {
+        "a": "${add_value}",
+        "b": 2
+      },
+      "prev_id": 1002,
+      "next_id": 1004,
+      "task_config": null,
+      "task_module": "SubtractionTest",
+      "desc": null
+    },
+    {
+      "task_id": 1004,
+      "task_name": "end",
+      "method_name": "end",
+      "task_type": "end",
+      "method_kwargs": null,
+      "prev_id": 1003,
+      "next_id": null,
+      "task_config": null,
+      "task_module": "End",
+      "desc": null
+    }
+  ]
+}
