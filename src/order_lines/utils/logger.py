@@ -13,17 +13,19 @@ import logging
 import platform
 from time import strftime
 
+from conf.config import LoggerConfig
+
 # 输出日志路径
 if platform.system().lower() == 'windows':
     appdata_path = os.getenv('APPDATA')
     PATH = os.path.join(appdata_path, 'order_lines')
 
 elif platform.system().lower() == 'linux':
-    PATH = os.path.join('/etc', 'order_lines')
+    PATH = os.path.join(LoggerConfig.linux_logger_path, 'order_lines')
 
 # 设置日志格式#和时间格式
-FMT = '%(asctime)s %(levelname)s %(message)s'
-DATE_FMT = '%Y-%m-%d %H:%M:%S'
+FMT = LoggerConfig.FMT
+DATE_FMT = LoggerConfig.DATE_FMT
 
 
 class Logger(object):

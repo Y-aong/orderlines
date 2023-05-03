@@ -14,14 +14,23 @@
 - 任务回调，任务运行失败可以指定回调函数
 - 停止任务，这里有问题就是不能停止正在运行的任务，因为python协程的问题
 
-未实现功能
+优化点
 
-- api接口不太完善（时间不够）
+- api接口不完善，后续使用django进行整合
+- 将order_lines和web api 拆分为两个项目。order_lines作为单独的工作流模块，并添加命令行模式。
 - 支持大返回值使用mongodb或者redis进行存储
 - 运行时增加变量，变量可以在流程中使用
-- rbac权限
-- 使用k8s进行运行定时任务和异步任务
-- docker 部署
+- rbac权限，django中rbac已经实现了。[django_celery_demo](https://github.com/PoeticChihiro/django_celery_demo)
+- 使用k8s进行运行定时任务和异步任务，这里是为了处理停止流程的问题
+- docker 文件编写
+
+### 设计思路
+流程的使用链表进行串联
+
+组件库就是我们具体要运行的任务，组件库中有基本的标准库，如start, end, process_control, parallel, group,common, 启动start, end作为内置built_in模块
+common是支持我们自主进行编写的任务组件库，process_control, parallel作为网关控制我们任务的运行顺序，group作为抽象任务其中可以包含多个任务
+
+celery在这里不是必须的，可以替换为k8s，celery只是作为流程运行的载体
 
 ### 目录结构介绍
 
@@ -51,6 +60,7 @@
 ### 流程文件配置介绍
 
 ```python
+# 整个流程的配置是使用双向链表的形式
 nodes = [
     # 每个流程必有的start和end节点
     {
@@ -182,15 +192,41 @@ process_info = {
 }
 ```
 
+### 流程状态介绍
+
+```python
+import enum
+
+
+class ProcessStatus(enum.Enum):
+    green = 'SUCCESS'  # 流程成功
+    red = 'FAILURE'  # 流程失败
+    yellow = 'STOP'  # 流程停止
+    grey = 'PENDING'  # 流程排队中
+    blue = "RUNNING"  # 流程运行中
+
+
+class StatusEnum(enum.Enum):
+    grey = 'PENDING'  # 任务排队中
+    blue = 'RUNNING'  # 任务运行中
+    red = 'FAILURE'  # 任务失败
+    green = 'SUCCESS'  # 任务成功
+    pink = 'SKIP'  # 跳过任务
+    yellow = 'STOP'  # 任务停止
+    orange = 'RETRY'  # 任务重试中
+```
+
 ### 启动celery worker
 
 ```shell
+cd src
 celery -A celery_worker.celery worker --loglevel=info --pool=solo
 ```
 
 ### 启动celery beat
 
 ```shell
+cd src
 celery -A celery_worker.celery beat -l info --scheduler celery_sqlalchemy_scheduler.schedulers:DatabaseScheduler
 ```
 
