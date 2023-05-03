@@ -9,7 +9,7 @@
 """
 from typing import Any
 
-from flask_app.order_lines_app.models.variable_model import VariableModel
+from flask_app.order_lines_app.models import VariableModel
 
 
 class Variable:

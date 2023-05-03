@@ -11,7 +11,7 @@ import datetime
 import smtplib
 
 from email.mime.text import MIMEText
-from order_lines.conf.config import EmailConfig
+from conf.config import EmailConfig
 from order_lines.libraries.BaseTask import BaseTask
 from order_lines.utils.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
@@ -57,24 +57,26 @@ class Email(BaseTask):
         :param status: 任务状态
         :return:
         """
+        if not EmailConfig.is_send:
+            logger.info('回调函数调用成功，不发送邮件')
+            return {'status': StatusEnum.green.value}
         title, msg = self.build_msg(process_name, node_info, error_info, status)
-        # message = MIMEText(msg, 'plain', 'utf-8')
-        # # 邮件主题
-        # message['Subject'] = title
-        # # 发送方信息
-        # message['From'] = self.sender
-        # # 接受方信息
-        # message['To'] = ','.join(self.receivers)
-        # # 登录并发送邮件
-        # try:
-        #     smtp_obj = smtplib.SMTP()
-        #     smtp_obj.connect(self.mail_host, 25)
-        #     smtp_obj.login(self.mail_user, self.mail_pwd)
-        #     smtp_obj.sendmail(self.sender, self.receivers, message.as_string())
-        #     smtp_obj.quit()
-        #     logger.info('邮件发送成功')
-        #     return {'status': StatusEnum.green.value}
-        # except smtplib.SMTPException as e:
-        #     logger.error(f'邮件发送失败, 异常信息:{e}')
-        #     return {'status': StatusEnum.red.value}
-        logger.info(f'发送邮件成功：标题：{title},\n 内容：{msg}')
+        message = MIMEText(msg, 'plain', 'utf-8')
+        # 邮件主题
+        message['Subject'] = title
+        # 发送方信息
+        message['From'] = self.sender
+        # 接受方信息
+        message['To'] = ','.join(self.receivers)
+        # 登录并发送邮件
+        try:
+            smtp_obj = smtplib.SMTP()
+            smtp_obj.connect(self.mail_host, 25)
+            smtp_obj.login(self.mail_user, self.mail_pwd)
+            smtp_obj.sendmail(self.sender, self.receivers, message.as_string())
+            smtp_obj.quit()
+            logger.info('邮件发送成功')
+            return {'status': StatusEnum.green.value}
+        except smtplib.SMTPException as e:
+            logger.error(f'邮件发送失败, 异常信息:{e}')
+            return {'status': StatusEnum.red.value}

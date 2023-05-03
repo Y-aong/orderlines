@@ -13,9 +13,9 @@ import threading
 import uuid
 from typing import List
 
+from conf.config import OrderLinesConfig
 from flask_app.order_lines_app.models.base_model import get_session
 from order_lines.api.process import Process
-from order_lines.conf.config import OrderLinesConfig
 from order_lines.running.listen_running import ListenRunning
 from order_lines.running.runner import TaskRunner
 from order_lines.utils.exceptions import TimeOutException
@@ -100,11 +100,11 @@ class OrderLines:
         t.daemon = True
         t.start()
         main_loop = asyncio.get_event_loop()
-        logger.info(f"task_loop is_run::{task_loop.is_running()}, is_close::{task_loop.is_closed()}, {id(task_loop)}")
-        logger.info(f"main_loop is_run::{main_loop.is_running()}, is_close::{main_loop.is_closed()}, {id(main_loop)}")
+        # logger.info(f"task_loop is_run::{task_loop.is_running()}, is_close::{task_loop.is_closed()}, {id(task_loop)}")
+        # logger.info(f"main_loop is_run::{main_loop.is_running()}, is_close::{main_loop.is_closed()}, {id(main_loop)}")
         main_loop.run_until_complete(self.watch_dog(task_loop))
 
-        # threading.Thread(target=self.watch_dog, args=(task_loop,))
+        threading.Thread(target=self.watch_dog, args=(task_loop,))
         if task_loop.is_running() and not task_loop.is_closed():
             logger.info(f'停止循环，task_loop关闭')
             task_loop.stop()

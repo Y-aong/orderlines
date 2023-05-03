@@ -17,14 +17,17 @@ celery.config_from_object('tasks.celery_config')
 
 def _register_plugin(app: Flask):
     from flask_app.order_lines_app.models.base_model import db
+    from .order_lines_app.models import (
+        ProcessModel, ProcessInstanceModel, TaskModel, TaskInstanceModel, VariableModel, Test)
     db.init_app(app)
     with app.app_context():
         db.create_all()
 
 
 def _register_resource(app):
-    from flask_app.order_lines_app.views import TaskView, TaskInstanceView, ProcessView, ProcessInstanceView, \
-        OrderLinesBuildView, OrderLinesStart, TestView
+    from flask_app.order_lines_app.views import (
+        TaskView, TaskInstanceView, ProcessView, ProcessInstanceView, OrderLinesBuildView, OrderLinesStart, TestView
+    )
 
     api = Api(app)
     api.add_resource(TaskView, TaskView.url, endpoint='task')

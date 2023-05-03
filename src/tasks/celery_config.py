@@ -9,18 +9,20 @@
 """
 from datetime import timedelta
 
+from conf.config import CeleryConfig
+
 imports = (
     'tasks.add',
     'tasks.order_lines_run',
 )
 
 # #Timezone
-enable_utc = False
-timezone = 'Asia/Shanghai'
-beat_db_uri = 'mysql+pymysql://root:123456@localhost:3306/order_lines'
+enable_utc = CeleryConfig.enable_utc
+timezone = CeleryConfig.timezone
+beat_db_uri = CeleryConfig.beat_db_uri
 # Broker and Backend
-broker_url = 'redis://127.0.0.1:6379/0'
-result_backend = 'redis://127.0.0.1:6379/1'
+broker_url = CeleryConfig.broker_url
+result_backend = CeleryConfig.broker_url
 celery_config = {'beat_dburi': beat_db_uri}
 
 beat_schedule = {

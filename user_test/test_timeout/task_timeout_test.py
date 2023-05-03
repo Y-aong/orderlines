@@ -1,12 +1,13 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_skip.py
-# Time       ：2023/3/11 16:51
+# File       : task_timeout_test.py
+# Time       ：2023/3/11 17:17
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：任务失败直接跳过
+# Description：测试任务运行超时
 """
+
 from order_lines.OrderLines import OrderLines
 
 data = [
@@ -28,13 +29,13 @@ data = [
         "method_name": "test_add",
         "task_type": "common",
         "method_kwargs": {
-            "a": '1',
+            "a": 1,
             "b": 2
         },
         "prev_id": 1001,
         "next_id": 1003,
         "task_config": {
-            "task_strategy": 'skip'
+            'timeout': 1
         },
         "task_module": "Test",
         "desc": None
@@ -68,8 +69,8 @@ data = [
     }
 ]
 process_info = {
-    'process_id': '1003',
-    'process_name': 'test_skip_error',
+    'process_id': '1010',
+    'process_name': 'test_task_timeout',
     "creator": "blue",
     "updater": None,
 }

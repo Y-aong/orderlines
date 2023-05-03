@@ -10,8 +10,8 @@
 from flask import request
 from flask_restful import Resource
 
-from flask_app.order_lines_app.models.base_model import db
-from flask_app.public.response import generate_response
+from ..order_lines_app.models.base_model import db
+from ..public.response import generate_response
 
 
 class BaseView(Resource):

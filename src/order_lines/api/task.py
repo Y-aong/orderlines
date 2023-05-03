@@ -16,7 +16,7 @@ from sqlalchemy import or_
 
 from flask_app.order_lines_app.models.base_model import get_session
 from order_lines.utils.process_action_enum import StatusEnum
-from flask_app.order_lines_app.models.order_line_models import TaskInstanceModel
+from flask_app.order_lines_app.models import TaskInstanceModel
 
 
 class TaskInstance:

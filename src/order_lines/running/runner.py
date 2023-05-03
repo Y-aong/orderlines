@@ -18,7 +18,7 @@ import traceback
 from typing import List
 import async_timeout
 
-from order_lines.conf.config import OrderLinesConfig
+from conf.config import OrderLinesConfig
 from order_lines.running.running_strategy import RunningStrategy
 from order_lines.running.task_build import build_task
 from order_lines.utils.exceptions import OrderLineStopException
@@ -52,7 +52,12 @@ class TaskRunner(threading.Thread):
     def get_task_timeout(self):
         """获取任务超时时间"""
         task_config = get_current_node(self.current_task_id, self.process_node).get('task_config')
-        task_config = json.loads(task_config) if task_config else {}
+        if task_config and isinstance(task_config, str):
+            task_config = json.loads(task_config)
+        elif task_config and isinstance(task_config, dict):
+            task_config = task_config
+        else:
+            task_config = dict()
         return task_config.get('timeout') if task_config.get('timeout') else OrderLinesConfig.task_timeout
 
     async def process_is_stop(self):
@@ -125,4 +130,3 @@ class TaskRunner(threading.Thread):
         self.listen_running.update(current_node, task_instance, task_table_id, error_info, task_status)
         if task_status == Status.red.value:
             await self.trigger.update_process_info(task_status, traceback.format_exc())
-

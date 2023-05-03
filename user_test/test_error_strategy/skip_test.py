@@ -1,11 +1,11 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_retry.py
-# Time       ：2023/3/11 16:53
+# File       : skip_test.py
+# Time       ：2023/3/11 16:51
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：任务失败重试
+# Description：任务失败直接跳过
 """
 from order_lines.OrderLines import OrderLines
 
@@ -34,7 +34,7 @@ data = [
         "prev_id": 1001,
         "next_id": 1003,
         "task_config": {
-            "task_strategy": 'retry'
+            "task_strategy": 'skip'
         },
         "task_module": "Test",
         "desc": None
@@ -68,8 +68,8 @@ data = [
     }
 ]
 process_info = {
-    'process_id': '1002',
-    'process_name': 'test_retry',
+    'process_id': '1003',
+    'process_name': 'test_skip_error',
     "creator": "blue",
     "updater": None,
 }

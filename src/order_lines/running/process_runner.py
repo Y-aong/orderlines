@@ -8,8 +8,7 @@
 # Description：使用进程方式运行任务
 """
 from multiprocessing import Pool, context
-
-from order_lines.conf.config import OrderLinesConfig
+from conf.config import OrderLinesConfig
 from order_lines.utils.const import CPU_COUNT
 from order_lines.utils.exceptions import TimeOutException
 

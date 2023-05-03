@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_get_group_ids.py
+# File       : get_group_ids_test.py
 # Time       ：2023/3/5 14:34
 # Author     ：blue_moon
 # version    ：python 3.7
@@ -10,7 +10,7 @@
 from order_lines.utils.parallel_util import ParallelUtils
 
 
-def test_group_ids():
+def get_group_ids():
     data = [
         {
             'task_id': 1001,
@@ -58,4 +58,5 @@ def test_group_ids():
     print(ret)
 
 
-test_group_ids()
+if __name__ == '__main__':
+    get_group_ids()

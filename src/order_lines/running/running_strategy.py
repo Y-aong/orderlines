@@ -12,8 +12,8 @@ import asyncio
 
 import async_timeout
 
+from conf.config import OrderLinesConfig
 from order_lines.running.module_check import CheckModule
-from order_lines.conf.config import OrderLinesConfig
 from order_lines.running.task_build import build_task
 from order_lines.utils.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum as Status

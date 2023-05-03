@@ -1,11 +1,11 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_parallel_with_group.py
-# Time       ：2023/3/1 23:29
+# File       : parallel_with_process_test.py
+# Time       ：2023/3/11 16:59
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：声明使用任务组运行并行任务
+# Description：使用进程方式运行任务组,任务组中运行的是计算密集型数据
 """
 from order_lines.OrderLines import OrderLines
 
@@ -32,7 +32,9 @@ nodes = [
         },
         "prev_id": 1001,
         "next_id": 1006,
-        "task_config": None,
+        "task_config": {
+            'runner': 'process'
+        },
         "task_module": "Parallel",
         "desc": None
     },
@@ -104,8 +106,8 @@ nodes = [
     }
 ]
 process_info = {
-    'process_id': '1005',
-    'process_name': 'test_parallel_with_group',
+    'process_id': '1006',
+    'process_name': 'test_parallel_with_process',
     "creator": "blue",
     "updater": None,
 }

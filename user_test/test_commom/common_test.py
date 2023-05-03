@@ -1,13 +1,12 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_call_back.py
-# Time       ：2023/3/11 17:19
+# File       : common_test.py
+# Time       ：2023/1/27 17:28
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：任务运行失败后的消息通知
+# Description：测试简单流程
 """
-
 from order_lines.OrderLines import OrderLines
 
 data = [
@@ -29,14 +28,12 @@ data = [
         "method_name": "test_add",
         "task_type": "common",
         "method_kwargs": {
-            "a": "1",
+            "a": 1,
             "b": 2
         },
         "prev_id": 1001,
         "next_id": 1003,
-        "task_config": {
-            "task_strategy": "raise"
-        },
+        "task_config": None,
         "task_module": "Test",
         "desc": None
     },
@@ -69,8 +66,8 @@ data = [
     }
 ]
 process_info = {
-    "process_id": "1011",
-    "process_name": "test_call_back",
+    "process_id": "1001",
+    "process_name": "test_common",
     "creator": "blue",
     "updater": None,
 }

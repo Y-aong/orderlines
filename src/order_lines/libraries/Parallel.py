@@ -19,7 +19,7 @@
 from typing import List
 import gevent
 
-from order_lines.conf.config import OrderLinesConfig
+from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
 from order_lines.running.process_runner import ProcessRunner
 from order_lines.utils.parallel_util import ParallelUtils

@@ -9,7 +9,7 @@
 """
 import importlib
 import inspect
-from order_lines.conf.config import OrderLinesConfig as Config
+from conf.config import OrderLinesConfig as Config
 from order_lines.libraries import STANDARD_LIBS
 
 

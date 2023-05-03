@@ -1,13 +1,13 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : api_execptions.py
+# File       : api_exceptions.py
 # Time       ：2023/1/11 20:54
 # Author     ：blue_moon
 # version    ：python 3.7
 # Description：api 异常类
 """
-from flask_app.public.api_exceptions.api_base_exception import APIException
+from .api_base_exception import APIException
 
 
 class ClientException(APIException):

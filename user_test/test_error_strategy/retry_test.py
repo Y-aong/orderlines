@@ -1,11 +1,11 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_group.py
-# Time       ：2023/2/26 22:53
+# File       : retry_test.py
+# Time       ：2023/3/11 16:53
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：测试任务组
+# Description：任务失败重试
 """
 from order_lines.OrderLines import OrderLines
 
@@ -24,16 +24,19 @@ data = [
     },
     {
         "task_id": 1002,
-        "task_name": "任务组",
-        "method_name": "task_group",
-        "task_type": "group",
+        "task_name": "加法",
+        "method_name": "test_add",
+        "task_type": "common",
         "method_kwargs": {
-            "group_ids": [1003, 1004]
+            "a": '1',
+            "b": 2
         },
         "prev_id": 1001,
-        "next_id": 1005,
-        "task_config": None,
-        "task_module": "Group",
+        "next_id": 1003,
+        "task_config": {
+            "task_strategy": 'retry'
+        },
+        "task_module": "Test",
         "desc": None
     },
     {
@@ -45,46 +48,19 @@ data = [
             "a": 10,
             "b": 12
         },
-        "result": [
-            {
-                "subtraction_value": "${subtraction_value}+1",
-                "variable_type": "int",
-                "variable_desc": "subtraction函数的返回值"
-            }
-        ],
+        "prev_id": 1002,
+        "next_id": 1004,
         "task_config": None,
         "task_module": "Test",
         "desc": None
     },
     {
         "task_id": 1004,
-        "task_name": "减法1",
-        "method_name": "test_subtraction",
-        "task_type": "common",
-        "method_kwargs": {
-            "a": "${subtraction_value}",
-            "b": 12
-        },
-        "prev_id": 1002,
-        "next_id": 1005,
-        "result": [
-            {
-                "subtraction_value": "${return_value}",
-                "variable_type": "int",
-                "variable_desc": "subtraction函数的返回值"
-            }
-        ],
-        "task_config": None,
-        "task_module": "Test",
-        "desc": None
-    },
-    {
-        "task_id": 1005,
         "task_name": "结束节点",
         "method_name": 'end',
         "task_type": "end",
         "method_kwargs": None,
-        "prev_id": 1002,
+        "prev_id": 1003,
         "next_id": None,
         "task_config": None,
         "task_module": "BuiltIn",
@@ -92,8 +68,8 @@ data = [
     }
 ]
 process_info = {
-    'process_id': '1004',
-    'process_name': 'test_group',
+    'process_id': '1002',
+    'process_name': 'test_retry',
     "creator": "blue",
     "updater": None,
 }

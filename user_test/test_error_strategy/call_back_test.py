@@ -1,19 +1,20 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_process_timeout.py
-# Time       ：2023/3/11 17:05
+# File       : call_back_test.py
+# Time       ：2023/3/11 17:19
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：测试流程超时
+# Description：任务运行失败后的消息通知
 """
+
 from order_lines.OrderLines import OrderLines
 
 data = [
     {
         "task_id": 1001,
         "task_name": "开始节点",
-        "method_name": 'start',
+        "method_name": "start",
         "task_type": "start",
         "method_kwargs": None,
         "prev_id": None,
@@ -28,13 +29,13 @@ data = [
         "method_name": "test_add",
         "task_type": "common",
         "method_kwargs": {
-            "a": 1,
+            "a": "1",
             "b": 2
         },
         "prev_id": 1001,
         "next_id": 1003,
         "task_config": {
-            'timeout': 3
+            "task_strategy": "raise"
         },
         "task_module": "Test",
         "desc": None
@@ -57,7 +58,7 @@ data = [
     {
         "task_id": 1004,
         "task_name": "结束节点",
-        "method_name": 'end',
+        "method_name": "end",
         "task_type": "end",
         "method_kwargs": None,
         "prev_id": 1003,
@@ -68,11 +69,11 @@ data = [
     }
 ]
 process_info = {
-    'process_id': '1009',
-    'process_name': 'test_process_timeout',
+    "process_id": "1011",
+    "process_name": "test_call_back",
     "creator": "blue",
     "updater": None,
 }
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     OrderLines(process_info, data).run()

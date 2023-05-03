@@ -1,21 +1,21 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_variable_process.py
-# Time       ：2023/2/6 21:29
+# File       : process_timeout_test.py
+# Time       ：2023/3/11 17:05
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：
+# Description：测试流程超时
 """
 from order_lines.OrderLines import OrderLines
 
-node_data = [
+data = [
     {
         "task_id": 1001,
-        "task_name": "start",
-        "method_name": "start",
+        "task_name": "开始节点",
+        "method_name": 'start',
         "task_type": "start",
-        "method_kwargs": {},
+        "method_kwargs": None,
         "prev_id": None,
         "next_id": 1002,
         "task_config": None,
@@ -24,54 +24,42 @@ node_data = [
     },
     {
         "task_id": 1002,
-        "task_name": "add",
+        "task_name": "加法",
         "method_name": "test_add",
         "task_type": "common",
         "method_kwargs": {
             "a": 1,
-            "b": 123143
+            "b": 2
         },
         "prev_id": 1001,
         "next_id": 1003,
-        "task_config": None,
+        "task_config": {
+            'timeout': 3
+        },
         "task_module": "Test",
-        "result": [
-            {
-                "add_value": "${add_value}+1",
-                "variable_type": "int",
-                "variable_desc": "add函数的返回值"
-            }
-        ],
         "desc": None
     },
     {
         "task_id": 1003,
-        "task_name": "subtraction",
+        "task_name": "减法",
         "method_name": "test_subtraction",
         "task_type": "common",
         "method_kwargs": {
-            "a": "${add_value}",
-            "b": 123123
+            "a": 10,
+            "b": 12
         },
         "prev_id": 1002,
         "next_id": 1004,
         "task_config": None,
         "task_module": "Test",
-        "result": [
-            {
-                "subtraction_value": "${return_value}",
-                "variable_type": "int",
-                "variable_desc": "subtraction函数的返回值"
-            }
-        ],
         "desc": None
     },
     {
         "task_id": 1004,
-        "task_name": "end",
-        "method_name": "end",
+        "task_name": "结束节点",
+        "method_name": 'end',
         "task_type": "end",
-        "method_kwargs": {},
+        "method_kwargs": None,
         "prev_id": 1003,
         "next_id": None,
         "task_config": None,
@@ -79,12 +67,15 @@ node_data = [
         "desc": None
     }
 ]
-
 process_info = {
-    "process_id": "1003",
-    "process_name": "test_variable1",
+    'process_id': '1009',
+    'process_name': 'test_process_timeout',
     "creator": "blue",
+    "updater": None,
+    "process_config": {
+        "timeout": 1
+    }
 }
 
 if __name__ == '__main__':
-    OrderLines(process_info, node_data).run()
+    OrderLines(process_info, data).run()
