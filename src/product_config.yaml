@@ -28,18 +28,18 @@ email:
   is_send: False
   # 邮件配置
   mail_host: "smtp.163.com"
-  mail_user: "15334927340"
-  mail_pwd: "TXFOQMKWMUAEQZLR"
+  mail_user: "***"
+  mail_pwd: "***"
   # 邮件发送方
-  sender: "15334927340@163.com"
+  sender: "***@163.com"
   # 邮件接受方
   receivers:
-    - "1627469727@qq.com"
+    - "**@qq.com"
 
 celery:
   enable_utc: False
   timezone: "Asia/Shanghai"
-  beat_db_uri: "mysql+pymysql://root:123456@localhost:3306/order_lines"
+  beat_db_uri: "mysql+pymysql://root:123456@127.0.0.1:3306/order_lines"
   broker_url: "redis://127.0.0.1:6379/0"
   result_backend: "redis://127.0.0.1:6379/1"
 
