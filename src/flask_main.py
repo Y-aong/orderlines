@@ -11,7 +11,7 @@
 from flask_app import create_app
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from flask_app.order_lines_app.models.order_line_models import db
+from flask_app.celery_order_lines.models.order_line_models import db
 
 app = create_app()
 migrate = Migrate(app=app, db=db)

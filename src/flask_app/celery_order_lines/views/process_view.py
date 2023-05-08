@@ -7,8 +7,8 @@
 # version    ：python 3.7
 # Description：
 """
-from flask_app.order_lines_app.models.order_line_models import ProcessModel
-from flask_app.order_lines_app.schema.order_lines_schema import ProcessSchema
+from flask_app.celery_order_lines.models.order_line_models import ProcessModel
+from flask_app.celery_order_lines.schema.order_lines_schema import ProcessSchema
 from flask_app.public.base_view import BaseView
 
 

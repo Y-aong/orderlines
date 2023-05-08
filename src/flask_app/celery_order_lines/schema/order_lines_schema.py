@@ -12,7 +12,7 @@ import json
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
-from flask_app.order_lines_app.models.order_line_models import *
+from flask_app.celery_order_lines.models.order_line_models import *
 
 
 class ProcessSchema(SQLAlchemyAutoSchema):

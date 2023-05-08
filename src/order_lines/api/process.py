@@ -11,7 +11,7 @@ import datetime
 import json
 
 from order_lines.utils.process_action_enum import ProcessStatus
-from flask_app.order_lines_app.models import ProcessInstanceModel
+from flask_app.celery_order_lines.models import ProcessInstanceModel
 
 
 class Process:

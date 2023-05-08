@@ -8,9 +8,9 @@
 # Description：order lines 帮助类
 """
 
-from ..order_lines_app.models.base_model import get_session
-from ..order_lines_app.models.order_line_models import ProcessModel, TaskModel
-from ..order_lines_app.schema.order_lines_schema import ProcessSchema, TaskSchema
+from ..celery_order_lines.models.base_model import get_session
+from ..celery_order_lines.models.order_line_models import ProcessModel, TaskModel
+from ..celery_order_lines.schema.order_lines_schema import ProcessSchema, TaskSchema
 
 
 class OrderLinesHelper:
