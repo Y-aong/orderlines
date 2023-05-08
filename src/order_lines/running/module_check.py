@@ -5,7 +5,7 @@
 # Time       ：2023/1/16 20:27
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：check module is exist
+# Description：运行时检查模块是否存在
 """
 import importlib
 import inspect
@@ -15,8 +15,8 @@ from order_lines.libraries import STANDARD_LIBS
 
 def dynamic_import(module_name: str, class_name):
     """
-    这里类名必须要和模块名一致
-    :param module_name: 模块名
+    动态导入组件库，这里类名必须要和模块名一致
+    :param module_name: 模块名，参考配置文件中的标准库
     :param class_name: 类名元组
     :return:
     """

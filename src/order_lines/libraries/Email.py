@@ -45,7 +45,7 @@ class Email(BaseTask):
               f'任务名称:{node_info.get("task_name")} \n' \
               f'任务参数:{node_info.get("method_kwargs")} \n' \
               f'运行时间:{datetime.datetime.now()} \n' \
-              f'{content},'
+              f'{content}'
         return title, msg
 
     def send_msg(self, process_name: str, node_info: dict, error_info=None, status=None):

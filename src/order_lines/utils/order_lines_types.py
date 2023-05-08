@@ -5,7 +5,7 @@
 # Time       ：2023/2/19 20:02
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：
+# Description：工作流中返回值的类型，这里有待改进，这里是参考robot-framework
 """
 from collections.abc import Iterable, Mapping
 from collections import UserString

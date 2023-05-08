@@ -5,7 +5,9 @@
 # Time       ：2023/2/19 19:36
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：
+# Description：解析流程的方式
+1、使用flask线程隔离的方式进行隔离线程
+2、使用队列的方式运行任务的取出和放入，这里主要考虑到多线程下的数据安全
 """
 import asyncio
 import datetime

@@ -5,11 +5,9 @@
 # Time       ：2023/2/19 19:59
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：
+# Description：关键字注册，未真正使用上
 """
-import warnings
-
-from order_lines.utils.utils import NormalizedDict
+from order_lines.utils.normalizing import NormalizedDict
 
 
 class _RunKeywordRegister:

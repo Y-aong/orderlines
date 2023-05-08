@@ -5,7 +5,7 @@
 # Time       ：2023/2/22 22:46
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：变量运算
+# Description：变量运算, 目前支持int四则运算，和str拼接
 """
 from typing import List
 from copy import deepcopy
@@ -76,7 +76,6 @@ class VariableHandler:
             ],
             "expression": {
                 'A': {'task_id': 1014},
-
                 'B': {'task_id': 1015}
             },
         :return:

@@ -42,24 +42,24 @@ class VariableOperator:
 
     def _variable_handler(self, match):
         """变量处理方法"""
-        if self.variable_type== 'str' and '+' in self.variable_key:
+        if self.variable_type == 'str' and '+' in self.variable_key:
             self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
             v1, v2 = self.variable_key.split('+')
-            return f"{v1,v2}"
-        elif self.variable_type== 'int' and '+' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match,  str(self.real_variable_value))
+            return f"{v1, v2}"
+        elif self.variable_type == 'int' and '+' in self.variable_key:
+            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
             v1, v2 = self.variable_key.split('+')
             return int(v1) + int(v2)
-        elif self.variable_type== 'float' and '-' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match,  str(self.real_variable_value))
+        elif self.variable_type == 'float' and '-' in self.variable_key:
+            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
             v1, v2 = self.variable_key.split('-')
             return float(v1) - float(v2)
-        elif self.variable_type== 'int' and '*' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match,  str(self.real_variable_value))
+        elif self.variable_type == 'int' and '*' in self.variable_key:
+            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
             v1, v2 = self.variable_key.split('*')
             return float(v1) * float(v2)
-        elif self.variable_type== 'int' and '/' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match,  str(self.real_variable_value))
+        elif self.variable_type == 'int' and '/' in self.variable_key:
+            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
             v1, v2 = self.variable_key.split('/')
             return float(v1) / float(v2)
         else:

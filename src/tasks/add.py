@@ -5,7 +5,7 @@
 # Time       ：2023/1/14 23:10
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：user_test
+# Description：user_test, celery任务
 """
 from flask_app import celery
 

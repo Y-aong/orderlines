@@ -100,10 +100,9 @@ class OrderLines:
         t.daemon = True
         t.start()
         main_loop = asyncio.get_event_loop()
-        # logger.info(f"task_loop is_run::{task_loop.is_running()}, is_close::{task_loop.is_closed()}, {id(task_loop)}")
-        # logger.info(f"main_loop is_run::{main_loop.is_running()}, is_close::{main_loop.is_closed()}, {id(main_loop)}")
+        # 这里主线程运行流程
         main_loop.run_until_complete(self.watch_dog(task_loop))
-
+        # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
         threading.Thread(target=self.watch_dog, args=(task_loop,))
         if task_loop.is_running() and not task_loop.is_closed():
             logger.info(f'停止循环，task_loop关闭')

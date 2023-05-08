@@ -11,14 +11,14 @@ from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from sqlalchemy import Column, SmallInteger
 from contextlib import contextmanager
 
+from conf.config import FlaskConfig
 from flask_app.order_lines_app.models.db_utils import get_filter
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from flask_app.public.config import SQLALCHEMY_DATABASE_URI
 
 
 def get_session():
-    db_uri = SQLALCHEMY_DATABASE_URI
+    db_uri = FlaskConfig.SQLALCHEMY_DATABASE_URI
     engine = create_engine(db_uri)
     return sessionmaker(engine)()
 

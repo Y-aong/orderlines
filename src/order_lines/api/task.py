@@ -5,7 +5,7 @@
 # Time       ：2023/1/10 22:35
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：任务节点
+# Description：任务节点操作api
 """
 import copy
 import datetime
@@ -72,7 +72,6 @@ class TaskInstance:
             session.query(TaskInstanceModel).filter(
                 TaskInstanceModel.id == task_id
             ).update({'task_status': StatusEnum.yellow.value})
-            session.commit()
         return list(task_names)
 
     @staticmethod

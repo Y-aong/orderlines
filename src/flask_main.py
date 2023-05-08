@@ -5,7 +5,7 @@
 # Time       ：2023/1/14 22:34
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：flask api main
+# Description：flask方法入口
 """
 
 from flask_app import create_app
@@ -18,7 +18,6 @@ migrate = Migrate(app=app, db=db)
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
-
 
 if __name__ == '__main__':
     # manager.run()

@@ -5,7 +5,7 @@
 # Time       ：2023/3/12 14:20
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：
+# Description：order lines 帮助类
 """
 
 from ..order_lines_app.models.base_model import get_session

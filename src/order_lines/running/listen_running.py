@@ -5,7 +5,7 @@
 # Time       ：2023/2/25 15:08
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：
+# Description：任务运行时的处理，主要是对于返回值的处理和参数的解析
 """
 from order_lines.api.task import TaskInstance
 from order_lines.utils.process_action_enum import StatusEnum
@@ -29,7 +29,7 @@ class ListenRunning:
         """
         运行时将任务插入数据库
         :param current_node: 当前正在运行node节点信息
-        :return:
+        :return:任务实例和任务运行id
         """
         current_task_id = current_node.get('task_id')
         task_name = current_node.get('task_name')
@@ -56,8 +56,7 @@ class ListenRunning:
         :param task_instance_id: 任务实例id
         :param result_or_error: 任务运行结果或者任务错误信息
         :param task_status: 任务运行结果或者任务状态
-
-        :return:
+        :return:任务id
         """
         assert self.variable_handler, "variable_handler must is not None"
         if task_status == StatusEnum.green.value:
@@ -77,6 +76,7 @@ class ListenRunning:
 
     @staticmethod
     def stop_helper(process_instance_id):
+        """停止流程"""
         return TaskInstance.stop_helper(process_instance_id)
 
     @staticmethod

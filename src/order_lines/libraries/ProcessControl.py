@@ -6,6 +6,9 @@
 # Author     ：blue_moon
 # version    ：python 3.7
 # Description：流程控制
+流程控制也是网关的一种，包括两种模式
+模式1:对于流程返回值的判断走任务A还是任务B
+模式2:对于流程的运行状态进行判断，成功——任务A，失败——任务B
 """
 from typing import Any
 

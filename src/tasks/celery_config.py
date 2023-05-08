@@ -19,11 +19,12 @@ imports = (
 # #Timezone
 enable_utc = CeleryConfig.enable_utc
 timezone = CeleryConfig.timezone
-beat_db_uri = CeleryConfig.beat_db_uri
+
 # Broker and Backend
 broker_url = CeleryConfig.broker_url
 result_backend = CeleryConfig.broker_url
-celery_config = {'beat_dburi': beat_db_uri}
+
+celery_config = {'beat_dburi': CeleryConfig.beat_db_uri}
 
 beat_schedule = {
     'user_test run every 10 seconds': {

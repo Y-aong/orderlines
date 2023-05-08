@@ -14,17 +14,9 @@ from src.order_lines.utils.utils import normalize
 
 
 class NormalizedDict(MutableMapping):
-    """Custom dictionary implementation automatically normalizing keys."""
+    """自定义字典实现自动规范化组件库"""
 
     def __init__(self, initial=None, ignore=(), caseless=True, spaceless=True):
-        """Initialized with possible initial value and normalizing spec.
-
-        Initial values can be either a dictionary or an iterable of name/value
-        pairs. In the latter case items are added in the given order.
-
-        Normalizing spec has exact same semantics as with the :func:`normalize`
-        function.
-        """
         self._data = {}
         self._keys = {}
         self._normalize = lambda s: normalize(s, ignore, caseless, spaceless)
@@ -71,8 +63,6 @@ class NormalizedDict(MutableMapping):
         copy._keys = self._keys.copy()
         copy._normalize = self._normalize
         return copy
-
-    # Speed-ups. Following methods are faster than default implementations.
 
     def __contains__(self, key):
         return self._normalize(key) in self._data

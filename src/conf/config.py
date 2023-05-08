@@ -59,6 +59,8 @@ class FlaskConfig:
     SQLALCHEMY_COMMIT_TEARDOWN = _ctx.get('SQLALCHEMY_COMMIT_TEARDOWN')
     SQLALCHEMY_DATABASE_URI = _ctx.get('SQLALCHEMY_DATABASE_URI')
     SECRET_KEY = _ctx.get('SECRET_KEY')
+    PRE_PAGE = _ctx.get('PRE_PAGE')
+    PAGE = _ctx.get('PAGE')
 
 
 class LoggerConfig:

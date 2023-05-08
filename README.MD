@@ -25,12 +25,87 @@
 - docker 文件编写
 
 ### 设计思路
+
 流程的使用链表进行串联
 
 组件库就是我们具体要运行的任务，组件库中有基本的标准库，如start, end, process_control, parallel, group,common, 启动start, end作为内置built_in模块
 common是支持我们自主进行编写的任务组件库，process_control, parallel作为网关控制我们任务的运行顺序，group作为抽象任务其中可以包含多个任务
 
 celery在这里不是必须的，可以替换为k8s，celery只是作为流程运行的载体
+
+### 组件库的设计思路
+
+- 组件库实际上就是真正运行的任务
+- 任务函数的参数必须增加**kw,因为流程运行中可能会有其他的参数
+- 任务函数的返回值包含两个部分第一为运行状态，这里框架会自己处理，第二为自己的返回值，可以自定义
+- 有返回值必须为dict字段方便扩展
+- 组件库的初心是为了方便业务任务和流程框架的解耦，方便业务的扩展
+
+**简单示例**
+
+```python
+import time
+
+from order_lines.libraries.BaseTask import BaseTask, run_keyword_variant
+
+
+class Test(BaseTask):
+
+    @run_keyword_variant('Test')
+    def test_add(self, a: int, b: int, **kwargs) -> dict:
+        time.sleep(10)
+        return {'add_value': a + b}
+
+    @run_keyword_variant('Test')
+    def test_subtraction(self, a: int, b: int, **kwargs) -> dict:
+        return {'subtraction_value': a - b}
+
+    @run_keyword_variant('Test')
+    def test_multi(self, a: int, b: int, **kwargs) -> dict:
+        return {'subtraction_value': a * b}
+```
+
+### 网关设计
+
+目前已经实现的网关有三种。流程控制网关，并行网关，任务组。
+
+- 流程控制网关。对于流程返回值的判断走任务A还是任务B 对于流程的运行状态进行判断，成功——任务A，失败——任务B
+
+```text
+模式1:对于流程返回值的判断走任务A还是任务B
+模式2:对于流程的运行状态进行判断，成功——任务A，失败——任务B
+```
+
+- 并行网关。有两种模式`gevent`默认方式，使用协程的方式进行，适合网络io密集型，`process`使用进程方式运行适合计算密集型如pandas处理
+
+```text
+1、并行网关中运行的是任务组，就算只是运行一个任务也是一个任务组
+2、并行网关可以使用两种方式来运行
+    2.1 协程方式这种主要的运行方式就是使用协程的方式来运行，主要针对于io密集行数据
+    2.2 进程方式这种是真正的并行，主要针对的是计算密集型
+3、并行网关实际上也是一个任务集合的封装，其中只可以运行普通任务
+4、并行任务有两种组合方式
+    第一：声明式：并行任务中声明为任务组id，即parallel_task_ids中声明为任务组的id，这是在创建时就将任务组声明了
+    第二：寻找式：并行任务中为所有的任务id,让框架自己寻找任务组，但是任务中必须要有pre_id和next_id
+```
+
+- 任务组。多个任务抽象为一个任务
+
+```text
+1、任务组中只可以运行普通任务，不可以运行流程控制，并发任务等任务
+2、任务组是一个多个任务的集合，在主流程中只相当于一个普通节点
+3、任务组是一个责任链模式，必须是确定的任务，任务组的中的子任务和其他方式的运行方式不一样
+4、并发节点中只可以运行任务组就算是一个节点也要是一个任务组
+5、任务组的group_ids是一个列表，包含着当前任务中的所有子任务
+```
+
+### 数据安全介绍
+
+方式一、使用flask中`werkzeug.local.Local`进行线程隔离
+
+方式二、使用队列进行流程运行时的取任务和放任务
+
+方式三、数据表中的设计，使用uuid生成instance_id（运行时id）
 
 ### 目录结构介绍
 
@@ -48,13 +123,15 @@ celery在这里不是必须的，可以替换为k8s，celery只是作为流程�
 ### 基础配置
 
 - src 目录设置为source root
+
   ![img.png](docu/images/img1.png)
 
 - 修改配置文件
     - 本地测试。复制配置文件product_config.yaml为develop_config.yaml，修改.env
     - 正式环境需要修改环境变量
 
-- 运行测试文件，出现以下输出，最好把所有的测试用例运行一遍
+- 运行测试文件，出现以下输出，最好把所有的测试用例运行一遍，结果如下
+
   ![img.png](docu/images/img2.png)
 
 ### 流程文件配置介绍

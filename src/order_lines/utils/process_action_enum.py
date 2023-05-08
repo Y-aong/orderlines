@@ -5,7 +5,7 @@
 # Time       ：2023/1/11 21:20
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：流程操作
+# Description：流程和任务状态
 """
 import enum
 
