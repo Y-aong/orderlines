@@ -10,6 +10,7 @@
 import asyncio
 import datetime
 import threading
+import time
 import uuid
 from typing import List
 
@@ -57,7 +58,7 @@ class OrderLines:
             process.update_db(self.process_instance_id, **update_data)
         return flag
 
-    async def watch_dog(self):
+    def watch_dog(self):
         """
         任务运行看门狗，
         每隔0.1秒检查一下数据库，查看流程运行实例的task_status,如果是停止的就抛出OrderLineStopException停止流程
@@ -86,13 +87,13 @@ class OrderLines:
             # 检查是否超时
             if self.process_is_timeout():
                 logger.info(f'流程{self.process_name}运行超时')
-                raise TimeOutException(f'流程{self.process_name}运行超时')
 
-            await asyncio.sleep(0.5)
+            time.sleep(0.5)
 
     def run(self):
         t = TaskRunner(self.process_info, self.process_node, self.listen_running)
-        # t.daemon = True
+        t.daemon = True
         t.start()
         # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
-        threading.Thread(target=self.watch_dog, args=())
+        watch_dog = threading.Thread(target=self.watch_dog, args=())
+        watch_dog.start()
