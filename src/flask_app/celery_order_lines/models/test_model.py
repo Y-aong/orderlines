@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：
 """
-from flask_app.celery_order_lines.models.base_model import Base, db
+from flask_app.public.base_model import Base, db
 
 
 class Test(Base):

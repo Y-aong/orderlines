@@ -16,7 +16,7 @@ celery.config_from_object('tasks.celery_config')
 
 
 def _register_plugin(app: Flask):
-    from flask_app.celery_order_lines.models.base_model import db
+    from flask_app.public.base_model import db
     from .celery_order_lines.models import (
         ProcessModel, ProcessInstanceModel, TaskModel, TaskInstanceModel, VariableModel, Test)
     db.init_app(app)
@@ -41,7 +41,7 @@ def _register_resource(app):
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('flask_app.public.config')
+    app.config.from_object('conf.config.FlaskConfig')
     _register_plugin(app)
     _register_resource(app)
     return app

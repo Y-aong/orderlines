@@ -13,7 +13,7 @@ from flask import request
 
 from flask_restful import Resource
 
-from flask_app.celery_order_lines.models.base_model import db
+from flask_app.public.base_model import db
 from flask_app.celery_order_lines.models.order_line_models import ProcessModel, TaskModel
 from flask_app.celery_order_lines.schema.order_lines_schema import ProcessSchema, TaskSchema
 from flask_app.public.response import generate_response

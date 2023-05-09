@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：变量模型类
 """
-from flask_app.celery_order_lines.models.base_model import Base, db
+from flask_app.public.base_model import Base, db
 
 
 class VariableModel(Base):

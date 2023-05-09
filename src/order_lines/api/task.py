@@ -14,7 +14,7 @@ import uuid
 
 from sqlalchemy import or_
 
-from flask_app.celery_order_lines.models.base_model import get_session
+from flask_app.public.base_model import get_session
 from order_lines.utils.process_action_enum import StatusEnum
 from flask_app.celery_order_lines.models import TaskInstanceModel
 

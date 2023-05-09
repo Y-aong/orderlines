@@ -3,6 +3,7 @@ amqp==5.1.1
 aniso8601==9.0.1
 async-timeout==4.0.2
 attrs==22.2.0
+beautifulsoup4==4.12.2
 billiard==3.6.4.0
 celery==5.0.5
 celery-sqlalchemy-scheduler==0.3.0
@@ -47,12 +48,14 @@ pycparser==2.21
 PyJWT==2.3.0
 PyMySQL==1.0.2
 pytest==7.2.1
+python-dotenv==1.0.0
 pytz==2022.7.1
 PyYAML==6.0
 redis==4.4.2
 requests==2.28.2
 six==1.16.0
-SQLAlchemy==1.4.40
+soupsieve==2.4
+SQLAlchemy==1.4.36
 tomli==2.0.1
 typing_extensions==4.2.0
 urllib3==1.26.14

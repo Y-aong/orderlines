@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : orderline_models.py
+# File       : order_line_models.py
 # Time       ：2023/1/11 21:03
 # Author     ：blue_moon
 # version    ：python 3.7
@@ -9,7 +9,7 @@
 """
 import datetime
 
-from flask_app.celery_order_lines.models.base_model import Base, db
+from flask_app.public.base_model import Base, db
 
 
 class ProcessModel(Base):

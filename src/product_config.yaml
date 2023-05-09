@@ -48,6 +48,6 @@ celery:
 logger:
   linux_logger_path: "/etc"
   FMT: "%(asctime)s %(levelname)s %(message)s"
-  DATE_FMT: "DATE_FMT"
+  DATE_FMT: "%Y-%m-%d %H:%M:%S"
   
 

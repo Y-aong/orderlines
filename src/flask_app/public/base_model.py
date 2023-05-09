@@ -12,7 +12,7 @@ from sqlalchemy import Column, SmallInteger
 from contextlib import contextmanager
 
 from conf.config import FlaskConfig
-from flask_app.celery_order_lines.models.db_utils import get_filter
+from flask_app.public.db_utils import get_filter
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

@@ -8,7 +8,7 @@
 # Description：order lines 帮助类
 """
 
-from ..celery_order_lines.models.base_model import get_session
+from flask_app.public.base_model import get_session
 from ..celery_order_lines.models.order_line_models import ProcessModel, TaskModel
 from ..celery_order_lines.schema.order_lines_schema import ProcessSchema, TaskSchema
 

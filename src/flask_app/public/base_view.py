@@ -11,7 +11,7 @@ from flask import request
 from flask_restful import Resource
 
 from conf.config import FlaskConfig
-from ..celery_order_lines.models.base_model import db
+from flask_app.public.base_model import db
 from ..public.response import generate_response
 
 

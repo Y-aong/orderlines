@@ -14,7 +14,7 @@ import uuid
 from typing import List
 
 from conf.config import OrderLinesConfig
-from flask_app.celery_order_lines.models.base_model import get_session
+from flask_app.public.base_model import get_session
 from order_lines.api.process import Process
 from order_lines.running.listen_running import ListenRunning
 from order_lines.running.runner import TaskRunner
