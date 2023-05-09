@@ -92,7 +92,7 @@ class OrderLines:
 
     def run(self):
         t = TaskRunner(self.process_info, self.process_node, self.listen_running)
-        t.daemon = True
+        # t.daemon = True
         t.start()
-        # # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
+        # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
         threading.Thread(target=self.watch_dog, args=())
