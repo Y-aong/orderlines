@@ -7,8 +7,7 @@
 # version    ：python 3.7
 # Description：order_lines入口
 """
-import asyncio
-import datetime
+
 import threading
 import time
 import uuid
@@ -19,7 +18,6 @@ from flask_app.public.base_model import get_session
 from order_lines.api.process import Process
 from order_lines.running.listen_running import ListenRunning
 from order_lines.running.runner import TaskRunner
-from order_lines.utils.exceptions import TimeOutException
 
 from order_lines.utils.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
@@ -34,29 +32,6 @@ class OrderLines:
         self.process_info['process_instance_id'] = self.process_instance_id
         self.session = get_session()
         self.listen_running = ListenRunning(self.process_info)
-
-    def process_is_timeout(self) -> bool:
-        """
-        获取流程的运行时长
-        :return:
-        """
-        current_time = datetime.datetime.now()
-        process = Process(self.process_info)
-        process_instance = process.select_data(self.process_instance_id)
-        start_time = process_instance.start_time
-        process_config = self.process_info.get('process_config')
-        timeout = process_config.get('timeout') if process_config else OrderLinesConfig.process_timeout
-        time_interval = (current_time - start_time).seconds
-        flag = time_interval > timeout and current_time > start_time
-
-        if flag:
-            update_data = {
-                'process_error_info': f'流程{self.process_name}运行超时',
-                'process_status': StatusEnum.red.value
-            }
-            logger.info(f'流程超时运行时间:{time_interval},{flag}, {start_time}, {current_time}')
-            process.update_db(self.process_instance_id, **update_data)
-        return flag
 
     def watch_dog(self):
         """
@@ -84,16 +59,15 @@ class OrderLines:
                 task_names = self.listen_running.stop_helper(self.process_instance_id)
                 logger.info(f'任务{",".join(task_names)}停止, {self.process_instance_id}')
 
-            # 检查是否超时
-            if self.process_is_timeout():
-                logger.info(f'流程{self.process_name}运行超时')
-
             time.sleep(0.5)
 
     def run(self):
         t = TaskRunner(self.process_info, self.process_node, self.listen_running)
         t.daemon = True
         t.start()
+        process_timeout = self.process_info.get('process_config').get('timeout')
+        process_timeout = process_timeout if process_timeout else OrderLinesConfig.process_timeout
+        t.join(timeout=process_timeout)
         # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
         watch_dog = threading.Thread(target=self.watch_dog, args=())
         watch_dog.start()
