@@ -31,12 +31,11 @@ from order_lines.utils.utils import get_current_node
 class TaskRunner(threading.Thread):
     stop = False
 
-    def __init__(self, process_info: dict, process_node: List[dict], task_loop, listen_running):
+    def __init__(self, process_info: dict, process_node: List[dict], listen_running):
         super(TaskRunner, self).__init__()
         self.process_info = process_info
         self.process_instance_id = process_info.get('process_instance_id')
         self.process_node = process_node
-        self.task_loop = task_loop
         self.trigger = Trigger(process_info, process_node)
         self.task_deque = self.trigger.task_deque
         self.listen_running = listen_running
@@ -45,9 +44,7 @@ class TaskRunner(threading.Thread):
         self.variable_handler = None
 
     def run(self) -> None:
-        asyncio.set_event_loop(self.task_loop)
-        future = asyncio.gather(self.task_run())
-        self.task_loop.run_until_complete(future)
+        asyncio.run(self.task_run())
 
     def get_task_timeout(self):
         """获取任务超时时间"""

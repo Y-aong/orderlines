@@ -46,7 +46,8 @@ celery:
   result_backend: "redis://127.0.0.1:6379/1"
 
 logger:
-  linux_logger_path: "/etc"
+  # 当没有权限会在当前文件中创建order_lines_logs日志文件夹
+  linux_logger_path: "/order_lines_logs"
   FMT: "%(asctime)s %(levelname)s %(message)s"
   DATE_FMT: "%Y-%m-%d %H:%M:%S"
   

@@ -9,8 +9,8 @@
 """
 from typing import MutableMapping
 
-from src.order_lines.utils.order_lines_types import is_dict_like
-from src.order_lines.utils.utils import normalize
+from order_lines.utils.order_lines_types import is_dict_like
+from order_lines.utils.utils import normalize
 
 
 class NormalizedDict(MutableMapping):

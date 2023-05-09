@@ -41,22 +41,19 @@ class OrderLinesBuildView(Resource):
         # 生成task
         for node in node_info:
             node['process_id'] = process_id
-            method_kwargs = json.dumps(node.get('method_kwargs')) if node.get('method_kwargs') else '{}'
-            task_config = json.dumps(node.get('task_config')) if node.get('task_config') else '{}'
-            node['task_config'] = task_config
             task_obj = db.session.query(TaskModel).filter(
                 TaskModel.process_id == process_id,
-                TaskModel.task_name == node.get('task_name'),
-                TaskModel.method_kwargs == method_kwargs
+                TaskModel.task_id == node.get('task_id'),
             ).first()
             if not node.get('method_kwargs'):
                 node['method_kwargs'] = {}
+            if not node.get('task_config'):
+                node['task_config'] = {}
             task = TaskSchema().load(node)
             if task_obj:
                 db.session.query(TaskModel).filter(
                     TaskModel.process_id == process_id,
-                    TaskModel.task_name == node.get('task_name'),
-                    TaskModel.task_module == node.get('task_module')
+                    TaskModel.task_id == node.get('task_id'),
                 ).update(task)
             else:
                 task_obj = TaskModel(**task)

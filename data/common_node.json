@@ -1,7 +1,7 @@
 {
     "process_info": {
-        "process_id": "1011",
-        "process_name": "test_call_back",
+        "process_id": "1001",
+        "process_name": "test_common",
         "creator": "blue",
         "updater": null
     },
@@ -24,7 +24,7 @@
             "method_name": "test_add",
             "task_type": "common",
             "method_kwargs": {
-                "a": "1",
+                "a": 1,
                 "b": 2
             },
             "prev_id": "1001",

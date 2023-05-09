@@ -56,13 +56,16 @@ class BaseView(Resource):
 
     def _get_multi(self):
         """多条查询"""
-        multi_data = db.session.query(self.table_orm).filter(*self._filter).order_by(self.table_orm.id).all()
-        return self.table_schema().dump(multi_data, many=True)
+        multi_data = db.session.query(self.table_orm).filter(*self._filter).order_by(
+            self.table_orm.id).paginate(page=self.page, per_page=self.pre_page)
+        items = self.table_schema().dump(multi_data.items, many=True)
+        total = multi_data.total
+        return {'items': items, 'total': total}
 
     def get(self):
         # 获取全部
         self.handle_filter()
-        if self.form_data.get('pre_page'):
+        if not self.form_data or self.form_data.get('pre_page'):
             data = self._get_multi()
         else:
             data = self._get_single()

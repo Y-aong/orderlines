@@ -5,7 +5,7 @@
 # Time       ：2023/3/11 17:05
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：测试流程超时
+# Description：测试流程超时,但是不建议配置流程操作，一般配置任务超时就可以了
 """
 from order_lines.OrderLines import OrderLines
 

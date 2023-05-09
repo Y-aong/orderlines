@@ -57,7 +57,7 @@ class OrderLines:
             process.update_db(self.process_instance_id, **update_data)
         return flag
 
-    async def watch_dog(self, task_loop):
+    async def watch_dog(self):
         """
         任务运行看门狗，
         每隔0.1秒检查一下数据库，查看流程运行实例的task_status,如果是停止的就抛出OrderLineStopException停止流程
@@ -68,7 +68,6 @@ class OrderLines:
         if process_status == StatusEnum.yellow.value:
             task_names = self.listen_running.stop_helper(self.process_instance_id)
             logger.info(f'任务{",".join(task_names)}停止')
-            task_loop.stop()
 
         while process_status in [StatusEnum.grey.value, StatusEnum.blue.value]:
             process_instance = Process.select_data(self.process_instance_id)
@@ -83,31 +82,17 @@ class OrderLines:
             elif process_status == StatusEnum.yellow.value:
                 task_names = self.listen_running.stop_helper(self.process_instance_id)
                 logger.info(f'任务{",".join(task_names)}停止, {self.process_instance_id}')
-                task_loop.stop()
 
             # 检查是否超时
             if self.process_is_timeout():
                 logger.info(f'流程{self.process_name}运行超时')
-                task_loop.stop()
                 raise TimeOutException(f'流程{self.process_name}运行超时')
 
             await asyncio.sleep(0.5)
 
     def run(self):
-
-        task_loop = asyncio.new_event_loop()
-        t = TaskRunner(self.process_info, self.process_node, task_loop, self.listen_running)
+        t = TaskRunner(self.process_info, self.process_node, self.listen_running)
         t.daemon = True
         t.start()
-        main_loop = asyncio.get_event_loop()
-        # 这里主线程运行流程
-        main_loop.run_until_complete(self.watch_dog(task_loop))
-        # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
-        threading.Thread(target=self.watch_dog, args=(task_loop,))
-        if task_loop.is_running() and not task_loop.is_closed():
-            logger.info(f'停止循环，task_loop关闭')
-            task_loop.stop()
-            task_loop.close()
-        else:
-            logger.info(f'task_loop关闭')
-            task_loop.close()
+        # # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
+        threading.Thread(target=self.watch_dog, args=())

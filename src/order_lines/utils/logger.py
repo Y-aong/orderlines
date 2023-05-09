@@ -5,7 +5,7 @@
 # Time       ：2023/1/27 20:19
 # Author     ：blue_moon
 # version    ：python 3.7
-# Description：
+# Description：日志
 """
 import os
 import sys
