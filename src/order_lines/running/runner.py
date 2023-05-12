@@ -6,9 +6,6 @@
 # Author     ：blue_moon
 # version    ：python 3.7
 # Description：流程运行
-停止任务：
-    任务和看门狗一起运行，任务运行完成之后会修改任务的运行状态
-    看门狗的任务时监控任务的状态，如果任务的运行状态为成功，失败，跳过，重试时就看门狗结束，如果看门狗发现任务的状态为stop，看门狗触发停止任务
 """
 import asyncio
 import json

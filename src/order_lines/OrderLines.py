@@ -7,7 +7,6 @@
 # version    ：python 3.7
 # Description：order_lines入口
 """
-import hashlib
 import threading
 import time
 import uuid
