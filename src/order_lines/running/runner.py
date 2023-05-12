@@ -94,7 +94,6 @@ class TaskRunner(threading.Thread):
             task = asyncio.create_task(build_task(self.process_node, self.current_task_id, self.process_info))
             await task
             task_result: dict = task.result()
-            logger.info(f'current_task_id::{self.current_task_id}, 运行结果{task_result}')
             strategy = RunningStrategy(
                 self.process_info, self.process_node, self.current_task_id, self.trigger, timeout)
             self.is_run, task_or_error, task_status = await strategy.running_strategy(task_result, current_node)

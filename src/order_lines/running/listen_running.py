@@ -8,6 +8,7 @@
 # Description：任务运行时的处理，主要是对于返回值的处理和参数的解析
 """
 from order_lines.api.task import TaskInstance
+from order_lines.utils.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
 from order_lines.variable.variable_handler import VariableHandler
 
@@ -62,6 +63,7 @@ class ListenRunning:
         if task_status == StatusEnum.green.value:
             # 解析返回值
             result = self.variable_handler.handle_node_return(current_node.get('result'), result_or_error)
+            logger.info(f'current_task_id::{task_instance.task_id}, 运行结果{result}')
             table_id = task_instance.update(task_instance_id, StatusEnum.green.value, result=result)
             return table_id
         elif task_status in [StatusEnum.red.value, StatusEnum.pink.value, StatusEnum.orange.value]:
