@@ -19,7 +19,7 @@ class Test(BaseTask):
 
     @run_keyword_variant('Test')
     def test_add(self, a: int, b: int, **kwargs) -> dict:
-        time.sleep(10)
+        time.sleep(3)
         return {'add_value': a + b}
 
     @run_keyword_variant('Test')

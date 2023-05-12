@@ -40,7 +40,7 @@ async def build_task(process_node: List[dict], task_id: str, process_info):
             task_kwargs: dict = node.get('method_kwargs')
             task_kwargs = task_kwargs if task_kwargs else {}
             task_kwargs.setdefault('__task_config__', task_config)
-            if task_type in ['group', 'parallel']:
+            if task_type in ['group', 'parallel', 'process_control']:
                 task_kwargs['process_node'] = process_node
                 task_kwargs['process_info'] = process_info
 

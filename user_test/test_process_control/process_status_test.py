@@ -29,11 +29,13 @@ nodes = [
         "task_type": "common",
         "method_kwargs": {
             "a": 2,
-            "b": 786
+            "b": 334
         },
         "prev_id": 1011,
         "next_id": 1013,
-        "task_config": None,
+        "task_config": {
+            "task_strategy": "skip"  # 需要根据运行状态进行判断的task_strategy必须为skip，不跳过直接抛错了后面怎么根据状态判断
+        },
         "task_module": "Test",
         "desc": None
     },
@@ -44,7 +46,7 @@ nodes = [
         "method_name": "process_control",
         "task_type": "process_control",
         "method_kwargs": {
-            "conditions": "success",
+            "conditions": "1012",  # 这里传递task_id
             "expression": {
                 "success": {"task_id": 1014},
                 "failure": {"task_id": 1015}

@@ -23,7 +23,7 @@ class TaskInstance:
     def __init__(self, node_info: dict, process_info: dict):
         self.node_info = copy.deepcopy(node_info)
         self.task_id = node_info.get('task_id')
-        self.task_params = node_info.get('task_params')
+        self.task_params = node_info.get('method_kwargs')
         self.method_name = node_info.get('method_name')
         self.task_name = node_info.get('task_name')
         self.process_id = process_info.get('process_id')
@@ -38,6 +38,7 @@ class TaskInstance:
         task_data['task_kwargs'] = json.dumps(self.task_params)
         task_data['method_name'] = self.method_name
         task_data['task_name'] = self.task_name
+        task_data['task_id'] = self.task_id
         task_data['task_instance_id'] = self.task_instance_id
         task_data['process_id'] = self.process_id
         task_data['process_instance_id'] = self.process_instance_id
@@ -52,6 +53,7 @@ class TaskInstance:
         if task_status == StatusEnum.green.value:
             update_data['task_result'] = json.dumps(kwargs.get('result'))
         else:
+            update_data['task_result'] = json.dumps({'status': task_status})
             update_data['task_error_info'] = json.dumps(kwargs.get('error_info'))
         update_data['task_status'] = task_status
         return TaskInstanceModel.update_db(TaskInstanceModel, {'id': table_id}, update_data)

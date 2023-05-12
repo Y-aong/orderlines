@@ -7,13 +7,12 @@
 # version    ：python 3.7
 # Description：order_lines入口
 """
-
+import hashlib
 import threading
 import time
 import uuid
 from typing import List
 
-from conf.config import OrderLinesConfig
 from flask_app.public.base_model import get_session
 from order_lines.api.process import Process
 from order_lines.running.listen_running import ListenRunning
@@ -36,7 +35,7 @@ class OrderLines:
     def watch_dog(self):
         """
         任务运行看门狗，
-        每隔0.1秒检查一下数据库，查看流程运行实例的task_status,如果是停止的就抛出OrderLineStopException停止流程
+        每隔0.5秒检查一下数据库，查看流程运行实例的process_status
         :return:
         """
         process_instance = Process.select_data(self.process_instance_id)
@@ -58,6 +57,7 @@ class OrderLines:
             elif process_status == StatusEnum.yellow.value:
                 task_names = self.listen_running.stop_helper(self.process_instance_id)
                 logger.info(f'任务{",".join(task_names)}停止, {self.process_instance_id}')
+                break
 
             time.sleep(0.5)
 
@@ -65,9 +65,5 @@ class OrderLines:
         t = TaskRunner(self.process_info, self.process_node, self.listen_running)
         t.daemon = True
         t.start()
-        process_timeout = self.process_info.get('process_config').get('timeout')
-        process_timeout = process_timeout if process_timeout else OrderLinesConfig.process_timeout
-        t.join(timeout=process_timeout)
-        # 单独启动一个线程来运行看门狗，看门狗主要是根据数据库任务状态来监控流程的运行状态
         watch_dog = threading.Thread(target=self.watch_dog, args=())
         watch_dog.start()

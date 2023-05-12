@@ -33,7 +33,7 @@ class ProcessControl(BaseTask):
         """
         task_status = expression.get('success')
         if task_status:
-            task_id = self.control_by_status(conditions, expression)
+            task_id = self.control_by_status(conditions, expression, **kwargs)
         else:
             task_id = self.control_by_condition(conditions, expression)
         return task_id
@@ -41,10 +41,23 @@ class ProcessControl(BaseTask):
     def get_module(self, node: dict):
         return self.modules.get(node.get('module_name'))
 
-    def control_by_status(self, conditions, expression) -> int:
+    @staticmethod
+    def get_task_status(task_id, process_instance_id):
+        # 通过task_id和process_instance_id找到task_status
+        from flask_app.public.base_model import get_session
+        from flask_app.celery_order_lines.models import TaskInstanceModel
+        session = get_session()
+        task_status = session.query(TaskInstanceModel).filter(
+            TaskInstanceModel.process_instance_id == process_instance_id,
+            TaskInstanceModel.task_id == task_id
+        ).first().task_status.lower()
+        # 这里因为运行到这里，不可能出现pending和running
+        return task_status if task_status in ['success', 'failure'] else 'failure'
+
+    def control_by_status(self, condition, expression, **kwargs) -> int:
         """
         根据任务状态进行判断
-        :param conditions:str success/failure
+        :param condition:task_id如1001
         :param expression:{
                             'success': {
                                 'task_id':'2',
@@ -59,10 +72,12 @@ class ProcessControl(BaseTask):
                             }
         :return: task_id
         """
-
-        assert expression.get(conditions), 'please check conditions'
-        self.get_module(expression.get(conditions))
-        return expression.get(conditions).get('task_id')
+        process_instance_id = kwargs.get('process_info').get('process_instance_id')
+        # 根据上一个节点的task_id获取到task_status
+        task_status = self.get_task_status(condition, process_instance_id)
+        assert expression.get(task_status), f'根据此任务id::{condition}找不到任务状态::{task_status}'
+        self.get_module(expression.get(task_status))
+        return expression.get(task_status).get('task_id')
 
     def control_by_condition(self, conditions: list, expression: dict) -> int:
         """

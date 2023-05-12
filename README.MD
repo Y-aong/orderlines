@@ -293,6 +293,8 @@ class StatusEnum(enum.Enum):
     orange = 'RETRY'  # 任务重试中
 ```
 
+其中task_status简单可以分为两种，PENDING，RUNNING，SUCCESS为成功，其他都为失败
+
 ### 启动celery worker
 
 ```shell
@@ -304,7 +306,7 @@ celery -A celery_worker.celery worker --loglevel=info --pool=solo
 
 ```shell
 cd src
-celery -A celery_worker.celery beat -l info --scheduler celery_sqlalchemy_scheduler.schedulers:DatabaseScheduler
+celery -A celery_worker.celery beat -l info 
 ```
 
 ### 启动flask

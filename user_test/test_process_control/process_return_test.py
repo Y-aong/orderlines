@@ -55,7 +55,7 @@ nodes = [
         "method_kwargs": {
             "conditions": [
                 {
-                    'A': [{'condition': 1, 'target': 1, 'sign': '='},
+                    'A': [{'condition': 1, 'target': "${add_value}", 'sign': '='},
                           {'condition': 1, 'target': 3, 'sign': '>'}]
                 },
                 {
@@ -65,7 +65,6 @@ nodes = [
             ],
             "expression": {
                 'A': {'task_id': 1014},
-
                 'B': {'task_id': 1015}
             },
             "prev_id": 1012,

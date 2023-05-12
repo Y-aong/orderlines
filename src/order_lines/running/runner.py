@@ -85,7 +85,8 @@ class TaskRunner(threading.Thread):
             # 任务之间休眠0.1
             self.stop = await self.process_is_stop()
             if not self.is_run and not self.stop:
-                logger.info(f'流程名称:{self.process_info.get("process_name")},流程id:{self.process_info.get("process_id")}结束')
+                logger.info(
+                    f'流程名称:{self.process_info.get("process_name")},流程id:{self.process_info.get("process_id")}结束')
                 break
             await asyncio.sleep(0.01)
 
