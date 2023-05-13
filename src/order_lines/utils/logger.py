@@ -18,10 +18,10 @@ from conf.config import LoggerConfig
 # 输出日志路径
 if platform.system().lower() == 'windows':
     appdata_path = os.getenv('APPDATA')
-    PATH = os.path.join(appdata_path, 'order_lines')
+    PATH = os.path.join(appdata_path, 'order_lines_logs')
 
 elif platform.system().lower() == 'linux':
-    PATH = os.path.join(LoggerConfig.linux_logger_path, 'order_lines')
+    PATH = os.path.join(LoggerConfig.linux_logger_path, 'order_lines_logs')
 
 # 设置日志格式#和时间格式
 FMT = LoggerConfig.FMT
@@ -32,7 +32,7 @@ class Logger(object):
     def __init__(self):
         self.logger = logging.getLogger()
         self.formatter = logging.Formatter(fmt=FMT, datefmt=DATE_FMT)
-        self.log_filename = f'{PATH}\\{strftime("%Y-%m-%d")}.log'
+        self.log_filename = os.path.join(PATH, f'{strftime("%Y-%m-%d")}.log')
         if not os.path.exists(os.path.abspath(PATH)):
             os.makedirs(PATH)
         self.logger.addHandler(self.get_file_handler(self.log_filename))
