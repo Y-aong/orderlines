@@ -3,7 +3,7 @@
 """
 # File       : module_check.py
 # Time       ：2023/1/16 20:27
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：运行时检查模块是否存在
 """

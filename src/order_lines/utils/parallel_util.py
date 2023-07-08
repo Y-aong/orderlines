@@ -3,7 +3,7 @@
 """
 # File       : parallel_util.py
 # Time       ：2023/3/5 14:13
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：并行任务组中寻找任务组，这是并行任务组中的第二种方式，
 就是并行任务组中给定的是所有的task下，需要框架自己需要找到任务组

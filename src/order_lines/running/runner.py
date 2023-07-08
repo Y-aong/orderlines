@@ -3,7 +3,7 @@
 """
 # File       : runner_handler.py
 # Time       ：2023/2/16 21:13
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：流程运行
 """
@@ -19,7 +19,7 @@ from conf.config import OrderLinesConfig
 from order_lines.running.running_strategy import RunningStrategy
 from order_lines.running.task_build import build_task
 from order_lines.utils.exceptions import OrderLineStopException
-from order_lines.utils.logger import logger
+from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum as Status
 from order_lines.running.trigger import Trigger
 from order_lines.utils.utils import get_current_node

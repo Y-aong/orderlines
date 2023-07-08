@@ -3,11 +3,11 @@
 """
 # File       : parallel_with_process_test.py
 # Time       ：2023/3/11 16:59
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：使用进程方式运行任务组,任务组中运行的是计算密集型数据
 """
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 nodes = [
     {

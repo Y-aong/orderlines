@@ -3,7 +3,7 @@
 """
 # File       : Group.py
 # Time       ：2023/2/26 21:33
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：任务组
 任务组
@@ -38,7 +38,7 @@ from order_lines.running.listen_running import ListenRunning
 
 from order_lines.utils.exceptions import OrderLineStopException
 from order_lines.utils.process_action_enum import StatusEnum as Status
-from order_lines.utils.logger import logger
+from public.logger import logger
 from order_lines.utils.utils import get_current_node
 
 

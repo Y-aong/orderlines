@@ -3,14 +3,14 @@
 """
 # File       : variable_handler.py
 # Time       ：2023/2/22 22:46
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：变量运算, 目前支持int四则运算，和str拼接
 """
 from typing import List
 from copy import deepcopy
-from order_lines.api.variable import Variable
-from order_lines.utils.logger import logger
+from order_lines.operators.variable import VariableOperator
+from public.logger import logger
 from order_lines.utils.utils import get_variable_value
 from order_lines.variable.match import Match
 from order_lines.variable.variable_operator import VariableOperator
@@ -38,7 +38,7 @@ class VariableHandler:
         :return:
         """
         variable_name = Match(params_value).get_variable_name()
-        variable = Variable(self.task_id, variable_name)
+        variable = VariableOperator(self.task_id, variable_name)
         variable_instance = variable.select_data(self.process_instance_id, variable_name)
         real_variable_value = variable_instance.variable_value if variable_instance else None
         variable_type = variable_instance.variable_type
@@ -140,7 +140,7 @@ class VariableHandler:
         """
         if task_variable_value:
             variable_name = Match(node_variable_value).get_variable_name()
-            variable = Variable(self.task_id, variable_name)
+            variable = VariableOperator(self.task_id, variable_name)
             variable_instance = variable.select_data(self.process_instance_id, variable_name)
             variable_type = node_result.get('variable_type')
             variable_operator = VariableOperator(node_variable_value, task_variable_value, variable_type)

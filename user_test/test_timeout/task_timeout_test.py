@@ -3,12 +3,12 @@
 """
 # File       : task_timeout_test.py
 # Time       ：2023/3/11 17:17
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：测试任务运行超时
 """
 
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 data = [
     {

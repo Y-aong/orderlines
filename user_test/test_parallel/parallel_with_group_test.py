@@ -3,11 +3,11 @@
 """
 # File       : parallel_with_group_test.py
 # Time       ：2023/3/1 23:29
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：声明使用任务组运行并行任务
 """
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 nodes = [
     {

@@ -3,7 +3,7 @@
 """
 # File       : __init.py
 # Time       ：2023/1/15 12:31
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：base check
 """

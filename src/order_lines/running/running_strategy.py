@@ -3,7 +3,7 @@
 """
 # File       : running_strategy.py
 # Time       ：2023/2/26 10:23
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：任务运行过程中的异常处理策略
             重试，抛出，忽略
@@ -15,7 +15,7 @@ import async_timeout
 from conf.config import OrderLinesConfig
 from order_lines.running.module_check import CheckModule
 from order_lines.running.task_build import build_task
-from order_lines.utils.logger import logger
+from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum as Status
 
 

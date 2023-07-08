@@ -3,11 +3,11 @@
 """
 # File       : skip_test.py
 # Time       ：2023/3/11 16:51
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：任务失败直接跳过
 """
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 data = [
     {

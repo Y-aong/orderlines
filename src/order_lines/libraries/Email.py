@@ -3,7 +3,7 @@
 """
 # File       : Email.py
 # Time       ：2023/2/26 10:34
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：发送邮件
 """
@@ -13,7 +13,7 @@ import smtplib
 from email.mime.text import MIMEText
 from conf.config import EmailConfig
 from order_lines.libraries.BaseTask import BaseTask
-from order_lines.utils.logger import logger
+from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
 
 

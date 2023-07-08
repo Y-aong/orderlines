@@ -3,7 +3,7 @@
 """
 # File       : process_runner.py
 # Time       ：2023/2/19 22:30
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：使用进程方式运行任务
 """

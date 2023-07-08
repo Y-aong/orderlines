@@ -3,11 +3,11 @@
 """
 # File       : retry_test.py
 # Time       ：2023/3/11 16:53
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：任务失败重试
 """
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 data = [
     {

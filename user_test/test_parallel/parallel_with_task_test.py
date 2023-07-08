@@ -3,11 +3,11 @@
 """
 # File       : parallel_with_task_test.py
 # Time       ：2023/3/3 22:14
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：测试并行任务，不声明任务组，让框架自己寻找
 """
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 nodes = [
     {

@@ -3,7 +3,7 @@
 """
 # File       : variable_operator.py
 # Time       ：2023/2/22 22:28
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：变量处理
 """

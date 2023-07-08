@@ -3,12 +3,12 @@
 """
 # File       : listen_running.py
 # Time       ：2023/2/25 15:08
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：任务运行时的处理，主要是对于返回值的处理和参数的解析
 """
-from order_lines.api.task import TaskInstance
-from order_lines.utils.logger import logger
+from order_lines.operators.task import TaskInstanceOperator
+from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
 from order_lines.variable.variable_handler import VariableHandler
 

@@ -3,12 +3,12 @@
 """
 # File       : BaseTask.py
 # Time       ：2023/1/15 16:49
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：base task 这里想做任务的动态注册
 """
 
-from order_lines.utils.logger import logger
+from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
 from order_lines.running.context import EXECUTION_CONTEXTS
 from order_lines.running.run_keyword_register import RUN_KW_REGISTER
@@ -57,6 +57,7 @@ class BaseTask:
 
 def run_keyword_variant(class_name, resolve=1, dry_run=True):
     """运行组件库的变体实现,待实现"""
+
     def decorator(method):
         RUN_KW_REGISTER.register_run_keyword(class_name, method.__name__, resolve,
                                              deprecation_warning=False,

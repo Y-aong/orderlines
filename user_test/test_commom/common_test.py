@@ -3,11 +3,11 @@
 """
 # File       : common_test.py
 # Time       ：2023/1/27 17:28
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：测试简单流程
 """
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 data = [
     {

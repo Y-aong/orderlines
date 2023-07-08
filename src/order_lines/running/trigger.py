@@ -3,7 +3,7 @@
 """
 # File       : trigger.py
 # Time       ：2023/2/19 19:36
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：解析流程的方式
 1、使用flask线程隔离的方式进行隔离线程
@@ -16,7 +16,7 @@ from typing import List
 
 from werkzeug.local import Local
 
-from order_lines.api.process import Process
+from order_lines.operators.process import ProcessInstanceOperator
 from order_lines.libraries.ProcessControl import ProcessControl
 
 from order_lines.utils.process_action_enum import StatusEnum, ProcessStatus
@@ -35,7 +35,7 @@ class Trigger:
         self.task_deque = Queue()
         self.start_node_id = self.get_start_node_id()
         self.current_task_id = self.start_node_id
-        self.process_instance = Process(process_info)
+        self.process_instance = ProcessInstanceOperator(process_info)
         if not hasattr(self.local_process, self.process_instance_id):
             # 将流程运行信息插入数据
             process_instance = self.process_instance.select_data(self.process_instance_id)

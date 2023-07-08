@@ -3,11 +3,11 @@
 """
 # File       : process_timeout_test.py
 # Time       ：2023/3/11 17:05
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：测试流程超时,但是不建议配置流程操作，一般配置任务超时就可以了
 """
-from order_lines.OrderLines import OrderLines
+from order_lines.enter_point import OrderLines
 
 data = [
     {

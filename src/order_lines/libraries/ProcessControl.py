@@ -3,7 +3,7 @@
 """
 # File       : ProcessControl.py
 # Time       ：2023/1/16 21:56
-# Author     ：blue_moon
+# Author     ：Y-aong
 # version    ：python 3.7
 # Description：流程控制
 流程控制也是网关的一种，包括两种模式
@@ -44,8 +44,8 @@ class ProcessControl(BaseTask):
     @staticmethod
     def get_task_status(task_id, process_instance_id):
         # 通过task_id和process_instance_id找到task_status
-        from flask_app.public.base_model import get_session
-        from flask_app.celery_order_lines.models import TaskInstanceModel
+        from public import get_session
+        from apis.order_lines.models import TaskInstanceModel
         session = get_session()
         task_status = session.query(TaskInstanceModel).filter(
             TaskInstanceModel.process_instance_id == process_instance_id,
