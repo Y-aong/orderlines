@@ -16,7 +16,7 @@ class VariableModel(Base):
     # 存入变量是在任务运行时进行进行存入
     # 解析变量是在任务运行时进行解析
     """
-    __tablename__ = 'variable'
+    __tablename__ = 'base_variable'
 
     process_id = db.Column(db.String(255), comment='流程id')
     process_instance_id = db.Column(db.String(255), comment='流程实例id')

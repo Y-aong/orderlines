@@ -8,7 +8,7 @@
 # Description：response基类
 """
 
-from flask import jsonify
+from flask import jsonify, abort
 
 
 def generate_response(data=None, code=200, message='success'):
@@ -23,3 +23,9 @@ def generate_response(data=None, code=200, message='success'):
     res = jsonify(dict(code=code, success=success, data=data, message=message))
     res.status_code = 200
     return res
+
+
+def generate_abort(code=401, success='failure', **kwargs, ):
+    kwargs.setdefault('success', success)
+    kwargs.setdefault('status_code', code)
+    return abort(code, kwargs)

@@ -13,7 +13,7 @@ from public.base_model import Base, db
 
 
 class ProcessModel(Base):
-    __tablename__ = 'process'
+    __tablename__ = 'base_process'
 
     process_id = db.Column(db.String(255), unique=True, comment='流程id')
     process_name = db.Column(db.String(30), unique=True, comment='流程名称')
@@ -27,7 +27,7 @@ class ProcessModel(Base):
 
 
 class ProcessInstanceModel(Base):
-    __tablename__ = 'process_instance'
+    __tablename__ = 'base_process_instance'
     process_id = db.Column(db.String(255), comment='流程id')
     process_instance_id = db.Column(db.String(255), unique=True, comment='流程运行id')
     process_name = db.Column(db.String(30), comment='流程实例名称')

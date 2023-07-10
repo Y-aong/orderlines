@@ -15,13 +15,13 @@ from public.logger import logger
 from flask import request
 
 
-def handle_error(func):
+def handle_api_error(func):
     def wrapper(*args, **kwargs):
         try:
             res = func(*args, **kwargs)
         except ValueError as e:
             logger.info(f"接口名称::{request.url},\n异常堆栈::{traceback.format_exc()}, {e}")
-            return generate_response(message='客户端参数异常', code=400, data=None)
+            return generate_response(message=f'客户端参数异常::{e}', code=400, data=None)
         except Exception as e:
             logger.info(f"接口名称::{request.url},\n异常堆栈::{traceback.format_exc()}, {e}")
             return generate_response(message='服务器异常', code=500, data=None)

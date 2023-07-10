@@ -14,7 +14,7 @@ from public.base_model import Base, db
 
 
 class TaskModel(Base):
-    __tablename__ = 'tasks'
+    __tablename__ = 'base_task'
 
     task_id = db.Column(db.String(255), comment='任务id')
     prev_id = db.Column(db.String(255), comment='任务上一个task_id')
@@ -34,7 +34,7 @@ class TaskModel(Base):
 
 
 class TaskInstanceModel(Base):
-    __tablename__ = 'task_instance'
+    __tablename__ = 'base_task_instance'
     task_id = db.Column(db.String(255), comment='任务id')
     task_instance_id = db.Column(db.String(255), comment='任务运行id')
     task_name = db.Column(db.String(50), comment='任务名称')

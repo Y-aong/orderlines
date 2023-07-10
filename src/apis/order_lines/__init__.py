@@ -14,11 +14,11 @@ from apis.order_lines.views import (
     TaskView, TaskInstanceView, ProcessView, ProcessInstanceView, OrderLinesBuildView, OrderLinesStart)
 
 order_line_blue = Blueprint("order_line", __name__, url_prefix="")
-schedule_task_api = Api(order_line_blue)
+order_line_api = Api(order_line_blue)
 
-schedule_task_api.add_resource(TaskView, TaskView.url)
-schedule_task_api.add_resource(TaskInstanceView, TaskInstanceView.url)
-schedule_task_api.add_resource(ProcessView, ProcessView.url)
-schedule_task_api.add_resource(ProcessInstanceView, ProcessInstanceView.url)
-schedule_task_api.add_resource(OrderLinesBuildView, OrderLinesBuildView.url)
-schedule_task_api.add_resource(OrderLinesStart, OrderLinesStart.url)
+order_line_api.add_resource(TaskView, TaskView.url)
+order_line_api.add_resource(TaskInstanceView, TaskInstanceView.url)
+order_line_api.add_resource(ProcessView, ProcessView.url)
+order_line_api.add_resource(ProcessInstanceView, ProcessInstanceView.url)
+order_line_api.add_resource(OrderLinesBuildView, OrderLinesBuildView.url)
+order_line_api.add_resource(OrderLinesStart, OrderLinesStart.url)

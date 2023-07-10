@@ -11,6 +11,7 @@ from flask import request
 from flask_restful import Resource
 
 from conf.config import FlaskConfig
+from .api_handle_exception import handle_api_error
 from .base_model import db
 from .base_response import generate_response
 
@@ -52,7 +53,9 @@ class BaseView(Resource):
     def _get_single(self):
         """单条查询"""
         single_data = db.session.query(self.table_orm).filter(*self._filter).first()
-        return self.table_schema().dump(single_data)
+        if single_data:
+            return self.table_schema().dump(single_data)
+        return {}
 
     def _get_multi(self):
         """多条查询"""
@@ -62,6 +65,7 @@ class BaseView(Resource):
         total = multi_data.total
         return {'items': items, 'total': total}
 
+    @handle_api_error
     def get(self):
         # 获取全部
         self.handle_filter()
@@ -71,8 +75,9 @@ class BaseView(Resource):
             data = self._get_single()
         return generate_response(data)
 
+    @handle_api_error
     def post(self):
-        self.handle_response_params()
+        self.handle_request_params()
         form_data = dict()
         for key, value in self.form_data.items():
             if hasattr(self.table_orm, key):
@@ -86,8 +91,9 @@ class BaseView(Resource):
         self.response_callback()
         return generate_response(message='创建成功', data=self.response_data)
 
+    @handle_api_error
     def put(self):
-        self.handle_response_params()
+        self.handle_request_params()
         obj = db.session.query(self.table_orm).filter(self.table_orm.id == self.table_id).first()
         form_data = dict()
         for key, value in self.form_data.items():
@@ -103,8 +109,9 @@ class BaseView(Resource):
         self.response_callback()
         return generate_response(message='修改成功', data=self.response_data)
 
+    @handle_api_error
     def delete(self):
-        self.handle_response_data()
+        self.handle_request_params()
         with db.auto_commit():
             if hasattr(self.table_orm, 'active'):
                 db.session.query(self.table_orm).filter(self.table_orm.id == self.table_id).update({'active': 0})

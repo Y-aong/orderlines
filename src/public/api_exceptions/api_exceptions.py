@@ -24,7 +24,7 @@ class ParameterException(APIException):
 
 class NotFundException(APIException):
     code = 404
-    msg = "user not fund"
+    msg = "system_oauth not fund"
     error_code = 1003
 
 
