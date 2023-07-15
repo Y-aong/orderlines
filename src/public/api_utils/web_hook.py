@@ -11,7 +11,7 @@ from flask import request, Flask
 from jwt import DecodeError
 
 from public.api_exceptions.api_exceptions import JWTVerifyException
-from public.base_response import generate_abort, generate_response
+from public.base_response import generate_abort
 from public.api_utils.jwt_utils import verify_token
 from public.logger import logger
 
@@ -20,8 +20,8 @@ class WebHook:
     def __init__(self, app=None):
         if app is not None:
             self.init_app(app)
-        self.black_list = ['/refresh_token']
-        self.white_list = ['/token']
+        self.black_list = []
+        self.white_list = ['/refresh_token', '/token']
 
     def init_app(self, app: Flask):
         app.before_request(self.authentication)

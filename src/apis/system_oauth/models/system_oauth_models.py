@@ -37,6 +37,10 @@ class SystemUser(Base):
         if db_password != _password:
             raise ValueError(f'用户名或者密码错误')
 
+    def get_all_permission(self):
+        """获取用户的所有权限"""
+        pass
+
 
 class SystemGroup(Base):
     __tablename__ = 'system_group'
