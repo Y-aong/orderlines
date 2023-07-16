@@ -21,7 +21,10 @@ class WebHook:
         if app is not None:
             self.init_app(app)
         self.black_list = []
-        self.white_list = ['/refresh_token', '/token']
+        self.white_list = ['/refresh_token', '/token',
+                           '/teacher', '/student',
+                           '/fan', '/star'
+                           ]
 
     def init_app(self, app: Flask):
         app.before_request(self.authentication)

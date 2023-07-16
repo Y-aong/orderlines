@@ -28,6 +28,7 @@ def _register_db(app: Flask):
     from apis.system_oauth.models import (
         SystemUser, SystemRole, SystemPermission, SystemGroup, SystemDepartment,
         SystemUserGroupRelation, SystemGroupPermissionRelation, SystemUserRoleRelation, SystemDeptUserRelation)
+    from apis.test.models import Teacher, Student
 
     db.init_app(app)
     with app.app_context():
@@ -38,10 +39,12 @@ def _register_resource(app):
     from apis.order_lines import order_line_blue
     from apis.schedule_plan import schedule_plan_blue
     from apis.system_oauth import system_oauth_blue
+    from apis.test import test_blue
 
     app.register_blueprint(system_oauth_blue)
     app.register_blueprint(order_line_blue)
     app.register_blueprint(schedule_plan_blue)
+    app.register_blueprint(test_blue)
 
 
 def create_app():

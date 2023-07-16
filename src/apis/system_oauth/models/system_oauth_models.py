@@ -6,6 +6,18 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：用户权限模块
+用户——群组 多对多
+用户——角色 多对多
+部门——用户 一对多
+角色——权限 多对多
+群组——权限 多对多
+
+用户 角色 权限 群组 部门
+用户群组关系表
+用户角色关系表
+角色权限关系表
+群组权限关系表
+
 """
 from sqlalchemy import func
 
