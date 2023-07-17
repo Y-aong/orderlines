@@ -9,9 +9,9 @@
 """
 
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 
-from apis.system_oauth.models import SystemUser, SystemUserGroupRelation, SystemUserRoleRelation
+from apis.system_oauth.models import SystemUser, SystemUserGroupRelation
 from public.api_utils.jwt_utils import encrypt_password
 
 
@@ -21,19 +21,17 @@ class SystemUserSchema(SQLAlchemyAutoSchema):
         dump_only=True
     )
     create_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+    dept_id = auto_field()
 
     class Meta:
         model = SystemUser
+        exclude = ['active']
 
 
 class SystemUserGroupRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemUserGroupRelation
+        exclude = ['active']
 
 
-class SystemUserRoleRelationSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = SystemUserRoleRelation
 
-
-# print(encrypt_password('123'))

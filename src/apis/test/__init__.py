@@ -17,4 +17,3 @@ test_api = Api(test_blue)
 
 test_api.add_resource(TeacherView, TeacherView.url)
 test_api.add_resource(StudentView, StudentView.url)
-

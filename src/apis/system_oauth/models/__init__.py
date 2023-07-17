@@ -9,4 +9,5 @@
 """
 from apis.system_oauth.models.system_oauth_models import (
     SystemUser, SystemRole, SystemPermission, SystemGroup, SystemDepartment,
-    SystemUserGroupRelation, SystemGroupPermissionRelation, SystemUserRoleRelation, SystemDeptUserRelation)
+    SystemRolePermissionRelation, SystemUserGroupRelation, SystemUserRoleRelation,
+    SystemGroupPermissionRelation, SystemRolePermissionRelation)

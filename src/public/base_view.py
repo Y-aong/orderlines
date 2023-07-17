@@ -87,6 +87,7 @@ class BaseView(Resource):
             obj = self.table_orm(**task)
             db.session.add(obj)
         self.response_data['table_id'] = obj.id
+        self.table_id = obj.id
         self.handle_response_data()
         self.response_callback()
         return generate_response(message='创建成功', data=self.response_data)

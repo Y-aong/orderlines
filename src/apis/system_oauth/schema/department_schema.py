@@ -7,12 +7,16 @@
 # version    ：python 3.7
 # Description：部门序列化类
 """
-
+from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.system_oauth.models import SystemDepartment
+from apis.system_oauth.schema.user_schema import SystemUserSchema
 
 
 class SystemDepartmentSchema(SQLAlchemyAutoSchema):
+    users = fields.Nested(SystemUserSchema, many=True, dump_only=True, only=('id', 'username'))
+
     class Meta:
         model = SystemDepartment
+        exclude = ['active']

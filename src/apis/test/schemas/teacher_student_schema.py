@@ -8,7 +8,7 @@
 # Description：
 """
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 
 from apis.test.models import Teacher, Student
 
@@ -23,6 +23,7 @@ def get_teacher(obj):
 
 class StudentSchema(SQLAlchemyAutoSchema):
     teacher = fields.Function(serialize=lambda obj: get_teacher(obj))
+    teacher_id = auto_field()
 
     class Meta:
         model = Student

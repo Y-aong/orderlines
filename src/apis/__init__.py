@@ -26,8 +26,8 @@ def _register_db(app: Flask):
     from apis.order_lines.models import TaskModel, TaskInstanceModel, ProcessInstanceModel, ProcessModel, VariableModel
     from apis.schedule_plan.models import IntervalPlan, DatePlan, CrontabPlan, ApschedulerJobs
     from apis.system_oauth.models import (
-        SystemUser, SystemRole, SystemPermission, SystemGroup, SystemDepartment,
-        SystemUserGroupRelation, SystemGroupPermissionRelation, SystemUserRoleRelation, SystemDeptUserRelation)
+        SystemUser, SystemRole, SystemPermission, SystemGroup, SystemDepartment, SystemUserRoleRelation,
+        SystemUserGroupRelation, SystemGroupPermissionRelation, SystemRolePermissionRelation)
     from apis.test.models import Teacher, Student
 
     db.init_app(app)

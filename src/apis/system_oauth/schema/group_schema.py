@@ -15,3 +15,4 @@ from apis.system_oauth.models import SystemGroup
 class SystemGroupSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemGroup
+        exclude = ['active']

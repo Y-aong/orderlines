@@ -11,6 +11,7 @@ from flask import request, Flask
 from jwt import DecodeError
 
 from public.api_exceptions.api_exceptions import JWTVerifyException
+
 from public.base_response import generate_abort
 from public.api_utils.jwt_utils import verify_token
 from public.logger import logger
@@ -21,10 +22,7 @@ class WebHook:
         if app is not None:
             self.init_app(app)
         self.black_list = []
-        self.white_list = ['/refresh_token', '/token',
-                           '/teacher', '/student',
-                           '/fan', '/star'
-                           ]
+        self.white_list = ['/refresh_token', '/token', '/user']
 
     def init_app(self, app: Flask):
         app.before_request(self.authentication)
@@ -37,17 +35,27 @@ class WebHook:
     def check_white_list(self):
         return True if request.path in self.white_list else False
 
+    def check_role_permission(self):
+        """检查用户角色权限"""
+        pass
+
+    def check_group_permission(self):
+        """检查用户群组权限"""
+        pass
+
     def authentication(self):
         """权限认证"""
 
+        # 检查黑名单
         self.check_black_list()
+        # 检查白名单
         if not self.check_white_list():
             # 检查token
             authorization = request.headers.get('Authorization')
             if authorization and authorization.startswith('Bearer '):
                 token = authorization.replace('Bearer ', '')
                 try:
-                    verify_token(token)
+                    payload = verify_token(token)
                 except JWTVerifyException:
                     return generate_abort(400, message='token过期请重新登录')
                 except DecodeError:
