@@ -32,6 +32,3 @@ class SystemUserGroupRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemUserGroupRelation
         exclude = ['active']
-
-
-

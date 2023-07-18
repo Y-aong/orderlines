@@ -7,8 +7,11 @@
 # version    ：python 3.7
 # Description：群组视图
 """
-from apis.system_oauth.models import SystemGroup
+from flask import request
+
+from apis.system_oauth.models import SystemGroup, SystemGroupPermissionRelation
 from apis.system_oauth.schema.group_schema import SystemGroupSchema
+from public.base_model import db
 from public.base_view import BaseView
 
 
@@ -19,3 +22,17 @@ class GroupView(BaseView):
         super(GroupView, self).__init__()
         self.table_orm = SystemGroup
         self.table_schema = SystemGroupSchema
+
+    def handle_response_data(self):
+        permission_ids = self.form_data.get('permission_ids')
+        if request.method in ['POST', 'PUT'] and permission_ids:
+            for permission_id in permission_ids:
+                obj = SystemGroupPermissionRelation(permission_id=permission_id, group_id=self.table_id)
+                db.session.add(obj)
+                db.session.commit()
+
+        elif request.method == 'DELETE':
+            with db.auto_commit():
+                db.session.query(
+                    SystemGroupPermissionRelation
+                ).filter(SystemGroupPermissionRelation.group_id == self.table_id).delete()

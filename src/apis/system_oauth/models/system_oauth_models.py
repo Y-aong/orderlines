@@ -51,9 +51,6 @@ class SystemUser(Base):
         if db_password != _password:
             raise ValueError(f'用户名或者密码错误')
 
-    # @staticmethod
-
-
 
 class SystemGroup(Base):
     __tablename__ = 'system_group'
@@ -89,7 +86,7 @@ class SystemGroupPermissionRelation(Base):
     __table_name__ = 'system_group_permission_relation'
     __table_args__ = {'extend_existing': True}
     group_id = db.Column(db.Integer, comment='群组id')
-    permissions_id = db.Column(db.Integer, comment='权限id')
+    permission_id = db.Column(db.Integer, comment='权限id')
 
 
 class SystemRole(Base):
@@ -120,4 +117,3 @@ class SystemDepartment(Base):
     pid = db.Column(db.Integer, comment='部门父id')
     desc = db.Column(db.String(255), comment='部门描述')
     users = db.relationship('SystemUser', backref='system_department')
-

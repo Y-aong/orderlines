@@ -17,5 +17,3 @@ class SystemUserPermissionSchema(SQLAlchemyAutoSchema):
     name = fields.String()
     user_id = fields.Integer()
     username = fields.String()
-
-
