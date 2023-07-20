@@ -73,7 +73,6 @@ class SystemPermission(Base):
     __tablename__ = 'system_permission'
     __table_args__ = {'extend_existing': True}
     name = db.Column(db.String(128), comment='权限名')
-    sign = db.Column(db.String(128), unique=True, comment='权限标识')
     menu = db.Column(db.Boolean, default=False, comment='是否为菜单, True为菜单,False为接口')
     method = db.Column(db.Enum('GET', 'POST', 'PUT', 'DELETE'), comment='方法')
     path = db.Column(db.String(128), comment='请求路径正则')

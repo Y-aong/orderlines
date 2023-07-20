@@ -27,6 +27,7 @@ class WebHook:
         self.white_list = ['/refresh_token', '/token', '/user']
 
     def init_app(self, app: Flask):
+        print(app.url_map.__dict__['_rules'])
         app.before_request(self.authentication)
 
     def check_black_list(self):
