@@ -10,6 +10,7 @@
 from celery import Celery
 from flask import Flask
 
+from public.api_utils.orderlines_plugin import OrderlinesPlugHelper
 from public.api_utils.url_path_plugin import UrlPathPlugin
 from public.api_utils.web_hook import WebHook
 
@@ -20,6 +21,7 @@ celery.config_from_object('tasks.celery_config')
 def _register_plugin(app):
     url_plugin = UrlPathPlugin()
     url_plugin.init_app(app)
+    OrderlinesPlugHelper().init_plugin()
 
 
 def _register_webhook(app):
@@ -34,7 +36,6 @@ def _register_db(app: Flask):
     from apis.system_oauth.models import (
         SystemUser, SystemRole, SystemPermission, SystemGroup, SystemDepartment, SystemUserRoleRelation,
         SystemUserGroupRelation, SystemGroupPermissionRelation, SystemRolePermissionRelation)
-    from apis.test.models import Teacher, Student
 
     db.init_app(app)
     with app.app_context():
@@ -45,12 +46,10 @@ def _register_resource(app):
     from apis.order_lines import order_line_blue
     from apis.schedule_plan import schedule_plan_blue
     from apis.system_oauth import system_oauth_blue
-    from apis.test import test_blue
 
     app.register_blueprint(system_oauth_blue)
     app.register_blueprint(order_line_blue)
     app.register_blueprint(schedule_plan_blue)
-    app.register_blueprint(test_blue)
 
 
 def create_app():
