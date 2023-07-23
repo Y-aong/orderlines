@@ -8,8 +8,8 @@
 # Description：
 """
 from conf.config import OrderLinesConfig
-from order_lines.libraries.BaseTask import run_keyword_variant, BaseTask
-from order_lines.utils.base_orderlines_type import BasePluginResult, BasePluginParam
+from order_lines.libraries.BaseTask import BaseTask
+from order_lines.utils.base_orderlines_type import BasePluginParam
 
 
 class BuiltIn(BaseTask):
@@ -18,10 +18,10 @@ class BuiltIn(BaseTask):
     def __init__(self):
         super(BuiltIn, self).__init__()
 
-    @run_keyword_variant('BuiltIn')
-    def start(self, base_param: BasePluginParam) -> BasePluginResult:
+    def start(self, base_param: BasePluginParam) -> None:
+        """开始节点"""
         return {'status': self.success}
 
-    @run_keyword_variant('BuiltIn')
-    def end(self, base_param: BasePluginParam) -> BasePluginResult:
+    def end(self, base_param: BasePluginParam) -> None:
+        """结束节点"""
         return {'status': self.success}

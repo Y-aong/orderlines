@@ -16,23 +16,16 @@
     第一：声明式：并行任务中声明为任务组id，即parallel_task_ids中声明为任务组的id，这是在创建时就将任务组声明了
     第二：寻找式：并行任务中为所有的任务id,让框架自己寻找任务组，但是任务中必须要有pre_id和next_id
 """
-from typing import List
+
 import gevent
-from pydantic import Field
-from pydantic.fields import FieldInfo
 
 from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
-from order_lines.libraries.Group import GroupType
+from order_lines.libraries.Group import GroupParam
 from order_lines.running.process_runner import ProcessRunner
-from order_lines.utils.base_orderlines_type import BasePluginResult, GateWayParam
+from order_lines.utils.base_orderlines_type import ParallelParam
 from order_lines.utils.parallel_util import ParallelUtils
 from order_lines.utils.utils import get_current_node
-from public.language_type import get_desc_with_language
-
-
-class ParallelType(GateWayParam):
-    parallel_task_ids: List[str] = Field(get_desc_with_language('parallel_task_ids'))
 
 
 class Parallel(BaseTask):
@@ -64,7 +57,7 @@ class Parallel(BaseTask):
         else:
             return self.parallel_helper.get_group_id(parallel_task_id)
 
-    def _build_group_task(self, group_id, parallel_type):
+    def _build_group_task(self, group_id: list, parallel_type: ParallelParam):
         """
         获取的任务组
         :param group_id:并行任务id
@@ -86,21 +79,16 @@ class Parallel(BaseTask):
                     'result': current_node.get('result'),
                     '__task_config__': current_node.get('task_config'),
                 }
-                print(f'param::{param}')
-                group_param = GroupType(**param)
+                group_param = GroupParam(**param)
                 return group.task_group(group_param)
 
-    def parallel_task(self, parallel_type: ParallelType) -> BasePluginResult:
+    def parallel_task(self, parallel_type: ParallelParam) -> dict:
         """
         运行并行任务组
         :param parallel_type:并行任务id组
         :return:
         """
-        print(parallel_type.model_dump())
-        task_config = parallel_type.__task_config__
-        if isinstance(task_config, FieldInfo):
-            task_config = task_config.default
-
+        task_config = parallel_type.task_config
         parallel_task_ids = self._get_group(parallel_type.parallel_task_ids)
         runner_type = task_config.get('runner')
         if runner_type == 'process':
@@ -126,10 +114,9 @@ class Parallel(BaseTask):
         使用进程的方式并行，这主要适用计算密集型
         :param parallel_task_ids: 并行任务id组
         :param task_config: 任务配置信息
-        :param parallel_type: 任务名称
         :return:
         """
         pool_size = task_config.get('pool_size')
         timeout = task_config.get('timeout')
         process_runner = ProcessRunner(pool_size)
-        return process_runner.spawn(self._build_group_task, parallel_task_ids, timeout)
+        return process_runner.spawn(self._build_group_task, parallel_task_ids, parallel_type, timeout)

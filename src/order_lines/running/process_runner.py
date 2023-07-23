@@ -11,6 +11,7 @@ from multiprocessing import Pool, context
 from conf.config import OrderLinesConfig
 from order_lines.utils.const import CPU_COUNT
 from order_lines.utils.exceptions import TimeOutException
+from public.logger import logger
 
 
 class ProcessRunner:
@@ -20,20 +21,22 @@ class ProcessRunner:
 
         self.pool_size = pool_size
 
-    def spawn(self, func, parallel_task_ids: list, timeout):
+    def spawn(self, func, parallel_task_ids: list, parallel_type, timeout):
         """
         进程方式运行函数
         :param func:要运行的函数
         :param parallel_task_ids:并行任务函数
+        :param parallel_type:并行任务函数
         :param timeout:超时时间
         :return:
         """
         try:
+            logger.info('parallel with process')
             pool = Pool(self.pool_size)
             task_result = dict()
             timeout = timeout if timeout else OrderLinesConfig.task_timeout
             for group_id in parallel_task_ids:
-                t = pool.apply_async(func, args=(group_id,))
+                t = pool.apply_async(func, args=(group_id, parallel_type))
                 task_result[group_id] = t
             for group_id, task in task_result.items():
                 task_result[group_id] = task.get(timeout=timeout)

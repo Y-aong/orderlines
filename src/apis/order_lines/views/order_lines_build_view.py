@@ -21,7 +21,7 @@ from public.base_response import generate_response
 
 
 class OrderLinesBuildView(Resource):
-    url = '/build/process'
+    url = '/orderlines/build'
 
     def __init__(self):
         self.form_data = request.json

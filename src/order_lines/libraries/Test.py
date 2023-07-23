@@ -12,27 +12,42 @@
 """
 import time
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 
 from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
-from order_lines.utils.base_orderlines_type import BasePluginResult, BasePluginParam
+from order_lines.utils.base_orderlines_type import BasePluginParam
 
 
-class TestType(BasePluginParam):
+class TestParam(BasePluginParam):
     a: int = Field(description='测试参数a')
     b: int = Field(description='测试参数b')
+
+
+class AddResult(BaseModel):
+    add_value: int = Field(description='相加的得到的值')
+
+
+class SubtractionResult(BaseModel):
+    subtraction_value: int = Field(description='相减的得到的值')
+
+
+class MultiResult(BaseModel):
+    multi_value: int = Field(description='相乘的得到的值')
 
 
 class Test(BaseTask):
     version = OrderLinesConfig.version
 
-    def test_add(self, test_type: TestType, ) -> BasePluginResult:
+    def test_add(self, test_type: TestParam) -> AddResult:
+        """加法"""
         time.sleep(3)
         return {'add_value': test_type.a + test_type.b}
 
-    def test_subtraction(self, test_type: TestType, ) -> BasePluginResult:
+    def test_subtraction(self, test_type: TestParam) -> SubtractionResult:
+        """减法"""
         return {'subtraction_value': test_type.a - test_type.b}
 
-    def test_multi(self, test_type: TestType, ) -> BasePluginResult:
-        return {'subtraction_value': test_type.a * test_type.b}
+    def test_multi(self, test_type: TestParam) -> MultiResult:
+        """乘法"""
+        return {'multi_value': test_type.a * test_type.b}

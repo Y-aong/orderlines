@@ -41,7 +41,7 @@ async def build_task(process_node: List[dict], task_id: str, process_info):
             task_config = node.get('task_config') if node.get('task_config') else {}
             task_kwargs: dict = node.get('method_kwargs')
             task_kwargs = task_kwargs if task_kwargs else {}
-            task_kwargs.setdefault('__task_config__', task_config)
+            task_kwargs.setdefault('task_config', task_config)
             if task_type in ['group', 'parallel', 'process_control']:
                 task_kwargs['process_node'] = process_node
                 task_kwargs['process_info'] = process_info
@@ -64,11 +64,14 @@ def sync_task(handler: AbstractHandler, task_module, method_name, task_kwargs):
     task_kwargs = task_kwargs if task_kwargs else {}
     if task_module == 'Group' or task_module == 'Parallel':
         flag, annotation = get_method_param_annotation(getattr(module, method_name))
-        task_result = handler.handle(module, method_name,  annotation(**task_kwargs))
+        assert flag, 'task group and parallel params must be a pydantic param'
+        task_result = handler.handle(module, method_name, annotation(**task_kwargs))
     else:
         flag, annotation = get_method_param_annotation(getattr(module, method_name))
-        print(module, method_name)
-        task_result = handler.handle(module, method_name, annotation(**task_kwargs))
+        if flag:
+            task_result = handler.handle(module, method_name, annotation(**task_kwargs))
+        else:
+            task_result = handler.handle(module, method_name, **task_kwargs)
     assert isinstance(task_result, dict), '任务返回值必须为字典'
     from order_lines import StatusEnum
     task_result.setdefault('status', StatusEnum.green.value)

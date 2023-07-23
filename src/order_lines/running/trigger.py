@@ -17,7 +17,7 @@ from typing import List
 from werkzeug.local import Local
 
 from order_lines.operators.process import ProcessInstanceOperator
-from order_lines.libraries.ProcessControl import ProcessControl, ProcessControlType
+from order_lines.libraries.ProcessControl import ProcessControl, ProcessControlParam
 
 from order_lines.utils.process_action_enum import StatusEnum, ProcessStatus
 
@@ -75,7 +75,7 @@ class Trigger:
                 if node.get('task_type') == 'process_control':
                     # next_id等于流程控制函数运行后的返回值
                     process_control_kw: dict = node.get('method_kwargs')
-                    process_control_param = ProcessControlType(**process_control_kw)
+                    process_control_param = ProcessControlParam(**process_control_kw)
                     return ProcessControl().process_control(process_control_param)
                 return node.get('next_id')
         return 0

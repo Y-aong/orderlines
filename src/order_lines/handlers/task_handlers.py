@@ -10,9 +10,9 @@
 import traceback
 
 from order_lines.handlers.base_handler import AbstractHandler
-from order_lines.libraries.Group import Group, GroupType
-from order_lines.libraries.Parallel import Parallel, ParallelType
-from order_lines.libraries.ProcessControl import ProcessControl, ProcessControlType
+from order_lines.libraries.Group import Group, GroupParam
+from order_lines.libraries.Parallel import Parallel, ParallelParam
+from order_lines.libraries.ProcessControl import ProcessControl
 from order_lines.utils.process_action_enum import StatusEnum
 from public.logger import logger
 
@@ -38,7 +38,7 @@ class CommonHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                return {'status': StatusEnum.red.value, 'error_info': f'异常堆栈:{traceback.format_exc()}\n错误信息:{e}'}
+                return {'status': StatusEnum.red.value, 'error_info': f'错误信息:{e}\n异常堆栈:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
 
@@ -48,20 +48,17 @@ class ProcessControlHandler(AbstractHandler):
 
         if hasattr(module(), method_name):
             try:
-                print(f'process_control_param::{task_kwargs}')
-
-                # process_control_param = ProcessControlType(**task_kwargs)
                 task_id = ProcessControl().process_control(task_kwargs)
                 return {'task_id': task_id, 'status': StatusEnum.green.value}
             except Exception as e:
-                logger.error(f'流程控制运行异常::{e},\n{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, 'error_info': f'异常堆栈:{traceback.format_exc()}\n错误信息:{e}'}
+                logger.error(f'流程控制网关运行异常::{e},\n{traceback.format_exc()}')
+                return {'status': StatusEnum.red.value, 'error_info': f'错误信息:{e}\n异常堆栈:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
 
 
 class GroupHandler(AbstractHandler):
-    def handle(self, module, method_name: str, task_kwargs: GroupType) -> dict:
+    def handle(self, module, method_name: str, task_kwargs: GroupParam) -> dict:
 
         if hasattr(module, method_name):
             process_info = task_kwargs.process_info
@@ -71,14 +68,15 @@ class GroupHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                logger.error(f'任务组运行失败::{e}, \n{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, 'error_info': f'异常堆栈:{traceback.format_exc()}\n错误信息:{e}'}
+                logger.error(f'任务组运行失败::{e},\n{traceback.format_exc()}')
+                return {'status': StatusEnum.red.value, '错误信息:{e}\nerror_info': f'异常堆栈:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
 
 
 class ParallelHandler(AbstractHandler):
-    def handle(self, module, method_name: str, task_kwargs: ParallelType) -> dict:
+    def handle(self, module, method_name: str, task_kwargs: ParallelParam) -> dict:
+
         if hasattr(module, method_name):
             process_info = task_kwargs.process_info
             process_node = task_kwargs.process_node
@@ -88,7 +86,7 @@ class ParallelHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                logger.error(f'并行网关运行失败::{e}, \n堆栈信息::{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, 'error_info': f'异常堆栈:{traceback.format_exc()}\n错误信息:{e}'}
+                logger.error(f'并行网关运行失败::{e},\n堆栈信息::{traceback.format_exc()}')
+                return {'status': StatusEnum.red.value, '错误信息:{e}\nerror_info': f'异常堆栈:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)

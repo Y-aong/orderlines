@@ -12,4 +12,4 @@ from .task_instance_view import TaskInstanceView
 from .process_view import ProcessView
 from .process_instance_view import ProcessInstanceView
 from .order_lines_build_view import OrderLinesBuildView
-from .order_lines_start import OrderLinesStart
+from .order_lines_start_view import OrderLinesStartView

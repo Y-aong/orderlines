@@ -9,9 +9,6 @@
 """
 import inspect
 import json
-from typing import MutableMapping
-
-from order_lines.utils.order_lines_types import is_string, is_dict_like
 
 
 def get_current_node(task_id, process_node):
@@ -25,9 +22,8 @@ def get_current_node(task_id, process_node):
     raise AttributeError(f'根据task id{task_id, type(task_id)}找不到任务节点')
 
 
-
-
 def get_variable_value(variable_value, variable_type):
+    """get variable value by type"""
     if not variable_value:
         return None
     if variable_type == 'int':
@@ -44,25 +40,6 @@ def get_variable_value(variable_value, variable_type):
         return json.loads(variable_value)
     else:
         return None
-
-
-def normalize(string, ignore=(), caseless=True, spaceless=True):
-    """根据给定的规范规范化给定的字符串"""
-    empty = '' if is_string(string) else b''
-    if isinstance(ignore, bytes):
-        # Iterating bytes in Python3 yields integers.
-        ignore = [bytes([i]) for i in ignore]
-    if spaceless:
-        string = empty.join(string.split())
-    if caseless:
-        string = string.lower()
-        ignore = [i.lower() for i in ignore]
-    # both if statements below enhance performance a little
-    if ignore:
-        for ign in ignore:
-            if ign in string:
-                string = string.replace(ign, empty)
-    return string
 
 
 def get_method_param_annotation(method):

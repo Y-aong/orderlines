@@ -59,7 +59,7 @@ nodes = [
         "task_type": "common",
         "method_kwargs": {
             "a": 10,
-            "b": 12
+            "b": 123
         },
         "task_config": None,
         "task_module": "Test",

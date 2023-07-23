@@ -10,25 +10,11 @@
 模式1:对于流程返回值的判断走任务A还是任务B
 模式2:对于流程的运行状态进行判断，成功——任务A，失败——任务B
 """
-from typing import Any, Dict
-
-from pydantic import Field, BaseModel
 
 from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
 from order_lines.running.module_check import CheckModule
-from order_lines.utils.base_orderlines_type import BasePluginParam
-from public.language_type import get_desc_with_language
-
-
-class ProcessControlType(BasePluginParam):
-    conditions: Any = Field(description=get_desc_with_language('conditions'))
-    expression: Dict = Field(description=get_desc_with_language('expression'))
-    process_info: Dict = Field(description='流程信息')
-
-
-class ProcessControlResult(BaseModel):
-    task_id: str = Field(description=get_desc_with_language('task_id'))
+from order_lines.utils.base_orderlines_type import ProcessControlParam, ProcessControlResult
 
 
 class ProcessControl(BaseTask):
@@ -40,11 +26,10 @@ class ProcessControl(BaseTask):
         self.expression = None
         self.modules = CheckModule().get_module()
 
-    def process_control(self, process_control_type: ProcessControlType) -> ProcessControlResult:
+    def process_control(self, process_control_type: ProcessControlParam) -> ProcessControlResult:
         """
-        process control is similar if elif else
+        流程控制，控制流程的运行节点
         :param process_control_type:流程控制参数
-
         :return:
         """
         task_status = process_control_type.expression.get('success')

@@ -5,31 +5,52 @@
 # Time       ：2023/7/22 11:07
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：orderlines的基础类型
+# Description：orderlines base type
 """
-from typing import Union
+from typing import Union, List
 
 from pydantic import BaseModel, Field
 
-from public.language_type import get_desc_with_language
-
-
-class BasePluginResult(BaseModel):
-    status: str = Field(description=get_desc_with_language('status'))
+from order_lines.utils.language_type import get_desc_with_language
 
 
 class BasePluginParam(BaseModel):
-    process_id: str = Field(description='任务id')
-    task_id: str = Field(description='任务id')
-    result: Union[None, str, list, dict, int] = Field(description=get_desc_with_language('result'), title='result')
-    __task_config__: dict = Field(default=dict(), description='任务配置')
+    process_id: str = Field(description=get_desc_with_language('process_id'), title='process_id')
+    task_id: str = Field(description=get_desc_with_language('task_id'), title='task id')
+    result: Union[None, list, dict] = Field(description=get_desc_with_language('result'), title='result')
+    task_config: dict = Field(default=dict(), description=get_desc_with_language('task_config'), title='task config')
 
 
 class GateWayParam(BasePluginParam):
-    process_name: str = Field(description='流程名称')
-    process_info: dict = Field(description='流程信息')
-    process_node: list = Field(description='流程节点')
+    process_name: str = Field(description=get_desc_with_language('process_name'), title='process name')
+    process_info: dict = Field(description=get_desc_with_language('process_info'), title='process info')
+    process_node: list = Field(description=get_desc_with_language('process_node'), title='process node')
 
 
-class GroupResultType(BaseModel):
-    pass
+class EmailParam(BaseModel):
+    process_name: str = Field(description=get_desc_with_language('precess_name'), title='precess_name')
+    node_info: dict = Field(description=get_desc_with_language('node_info'), title='node_info')
+    error_info: dict = Field(description=get_desc_with_language('error_info'), title='error_info')
+    status: str = Field(description=get_desc_with_language('status'), title='status')
+
+
+class EmailResult(BaseModel):
+    status: str = Field(description=get_desc_with_language('status'), title='task status')
+
+
+class GroupParam(GateWayParam):
+    group_ids: List[str] = Field(description=get_desc_with_language('group_ids'), title='group_ids')
+
+
+class ParallelParam(GateWayParam):
+    parallel_task_ids: List[str] = Field(get_desc_with_language('parallel_task_ids'), title='parallel_task_ids')
+
+
+class ProcessControlParam(BasePluginParam):
+    conditions: list = Field(description=get_desc_with_language('conditions'), title='conditions')
+    expression: dict = Field(description=get_desc_with_language('expression'), title='expression')
+    process_info: dict = Field(description=get_desc_with_language('process_info'), title='process_info')
+
+
+class ProcessControlResult(BaseModel):
+    task_id: str = Field(description=get_desc_with_language('task_id'), title='task_id')

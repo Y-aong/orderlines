@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : order_lines_start.py
+# File       : order_lines_start_view.py
 # Time       ：2023/3/12 14:44
 # Author     ：Y-aong
 # version    ：python 3.7
@@ -13,8 +13,8 @@ from flask_restful import Resource
 from public.base_response import generate_response
 
 
-class OrderLinesStart(Resource):
-    url = '/order_lines_start'
+class OrderLinesStartView(Resource):
+    url = '/order_lines/start'
 
     def __init__(self):
         self.form_data = request.json

@@ -11,23 +11,12 @@ import datetime
 import smtplib
 
 from email.mime.text import MIMEText
-from typing import Union
-
-from pydantic import Field, BaseModel
 
 from conf.config import EmailConfig, OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
-from order_lines.utils.base_orderlines_type import BasePluginResult
-from public.language_type import get_desc_with_language
+from order_lines.utils.base_orderlines_type import EmailParam, EmailResult
 from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
-
-
-class EmailType(BaseModel):
-    process_name: str = Field(description=get_desc_with_language('precess_name'), title='precess_name')
-    node_info: dict = Field(description=get_desc_with_language('node_info'), title='node_info')
-    error_info: dict = Field(description=get_desc_with_language('error_info'), title='error_info')
-    status: Union[None, str] = Field(description=get_desc_with_language('status'), title='status')
 
 
 class Email(BaseTask):
@@ -63,7 +52,7 @@ class Email(BaseTask):
               f'{content}'
         return title, msg
 
-    def send_msg(self, email_info: EmailType) -> BasePluginResult:
+    def send_msg(self, email_info: EmailParam) -> EmailResult:
         """
         发送消息测试库，可以作为callback方法
         :param email_info: 邮件信息
