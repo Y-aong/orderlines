@@ -33,30 +33,42 @@
 """
 import traceback
 from typing import List
+
+from pydantic import Field
+
+from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
 from order_lines.running.listen_running import ListenRunning
+from order_lines.utils.base_orderlines_type import GateWayParam, BasePluginResult
 
 from order_lines.utils.exceptions import OrderLineStopException
 from order_lines.utils.process_action_enum import StatusEnum as Status
+from public.language_type import get_desc_with_language
 from public.logger import logger
 from order_lines.utils.utils import get_current_node
 
 
+class GroupType(GateWayParam):
+    group_ids: List[str] = Field(description=get_desc_with_language('group_ids'), title='group_ids')
+
+
 class Group(BaseTask):
+    version = OrderLinesConfig.version
+
     def __init__(self, process_info, process_node: List[dict]):
         super(Group, self).__init__()
         # group node节点的task_id
         self.process_node = process_node
         self.listen_running = ListenRunning(process_info)
 
-    def task_group(self, group_ids: list, **kwargs) -> dict:
+    def task_group(self, group_type: GroupType) -> BasePluginResult:
         """
         根据子任务id组合为任务链
         :return:
         """
         group_result = dict()
         from order_lines.handlers.task_handlers import CommonHandler
-        for task_id in group_ids:
+        for task_id in group_type.group_ids:
             node = get_current_node(task_id, self.process_node)
             task_type = node.get('task_type')
             assert task_type == 'common', '任务组中的子任务必须是普通任务类型'
@@ -70,7 +82,7 @@ class Group(BaseTask):
                 try:
                     from order_lines.running.task_build import sync_task
                     task_result = sync_task(_handler, task_module, method_name, task_kwargs)
-                    logger.error(f'任务组函数运行结果:{task_result}')
+                    logger.info(f'任务组函数运行结果:{task_result}')
                     task_status = task_result.get('status')
                     self.listen_running.update(node, task_instance, task_table_id, task_result, task_status)
                     group_result[str(task_id)] = task_result
@@ -79,7 +91,7 @@ class Group(BaseTask):
                     error_info = traceback.format_exc()
                     self.listen_running.update(node, task_instance, task_table_id, error_info, Status.yellow.value)
                 except Exception as e:
-                    logger.error(f'任务组函数运行失败:{traceback.format_exc(), e}')
+                    logger.error(f'任务组函数运行失败:{traceback.format_exc(), e, traceback.format_exc()}')
                     error_info = traceback.format_exc()
                     self.listen_running.update(node, task_instance, task_table_id, error_info, Status.red.value)
         return {'status': Status.green.value, **group_result}

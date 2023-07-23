@@ -10,41 +10,59 @@
 模式1:对于流程返回值的判断走任务A还是任务B
 模式2:对于流程的运行状态进行判断，成功——任务A，失败——任务B
 """
-from typing import Any
+from typing import Any, Dict
 
-from order_lines.libraries.BaseTask import BaseTask, run_keyword_variant
+from pydantic import Field, BaseModel
+
+from conf.config import OrderLinesConfig
+from order_lines.libraries.BaseTask import BaseTask
 from order_lines.running.module_check import CheckModule
+from order_lines.utils.base_orderlines_type import BasePluginParam
+from public.language_type import get_desc_with_language
+
+
+class ProcessControlType(BasePluginParam):
+    conditions: Any = Field(description=get_desc_with_language('conditions'))
+    expression: Dict = Field(description=get_desc_with_language('expression'))
+    process_info: Dict = Field(description='流程信息')
+
+
+class ProcessControlResult(BaseModel):
+    task_id: str = Field(description=get_desc_with_language('task_id'))
 
 
 class ProcessControl(BaseTask):
+    version = OrderLinesConfig.version
+
     def __init__(self):
         super(ProcessControl, self).__init__()
         self.condition = None
         self.expression = None
         self.modules = CheckModule().get_module()
 
-    @run_keyword_variant('ProcessControl')
-    def process_control(self, conditions: Any, expression: dict, **kwargs) -> int:
+    def process_control(self, process_control_type: ProcessControlType) -> ProcessControlResult:
         """
         process control is similar if elif else
-        :param conditions:条件
-        :param expression:条件表达式
+        :param process_control_type:流程控制参数
+
         :return:
         """
-        task_status = expression.get('success')
+        task_status = process_control_type.expression.get('success')
         if task_status:
-            task_id = self.control_by_status(conditions, expression, **kwargs)
+            task_id = self._control_by_status(process_control_type.conditions,
+                                              process_control_type.expression,
+                                              process_control_type.process_info)
         else:
-            task_id = self.control_by_condition(conditions, expression)
+            task_id = self._control_by_condition(process_control_type.conditions, process_control_type.expression)
         return task_id
 
-    def get_module(self, node: dict):
+    def _get_module(self, node: dict):
         return self.modules.get(node.get('module_name'))
 
     @staticmethod
-    def get_task_status(task_id, process_instance_id):
+    def _get_task_status(task_id, process_instance_id):
         # 通过task_id和process_instance_id找到task_status
-        from public import get_session
+        from public.base_model import get_session
         from apis.order_lines.models import TaskInstanceModel
         session = get_session()
         task_status = session.query(TaskInstanceModel).filter(
@@ -54,10 +72,10 @@ class ProcessControl(BaseTask):
         # 这里因为运行到这里，不可能出现pending和running
         return task_status if task_status in ['success', 'failure'] else 'failure'
 
-    def control_by_status(self, condition, expression, **kwargs) -> int:
+    def _control_by_status(self, conditions, expression, process_info) -> int:
         """
         根据任务状态进行判断
-        :param condition:task_id如1001
+        :param conditions:task_id如1001
         :param expression:{
                             'success': {
                                 'task_id':'2',
@@ -72,14 +90,14 @@ class ProcessControl(BaseTask):
                             }
         :return: task_id
         """
-        process_instance_id = kwargs.get('process_info').get('process_instance_id')
+        process_instance_id = process_info.get('process_instance_id')
         # 根据上一个节点的task_id获取到task_status
-        task_status = self.get_task_status(condition, process_instance_id)
-        assert expression.get(task_status), f'根据此任务id::{condition}找不到任务状态::{task_status}'
-        self.get_module(expression.get(task_status))
+        task_status = self._get_task_status(conditions, process_instance_id)
+        assert expression.get(task_status), f'根据此任务id::{conditions}找不到任务状态::{task_status}'
+        self._get_module(expression.get(task_status))
         return expression.get(task_status).get('task_id')
 
-    def control_by_condition(self, conditions: list, expression: dict) -> int:
+    def _control_by_condition(self, conditions: list, expression: dict) -> int:
         """
         根据任务的返回值进行判断
         :param conditions:list [
@@ -118,15 +136,15 @@ class ProcessControl(BaseTask):
             condition_name = list(temps.keys()).pop()
             for temp in list(temps.values()):
                 for item in temp:
-                    flag = self.parse_condition(item)
+                    flag = self._parse_condition(item)
                     condition_filter.append(flag)
             if all(condition_filter) and expression.get(condition_name):
-                self.get_module(expression.get(condition_name))
+                self._get_module(expression.get(condition_name))
                 return expression.get(condition_name).get('task_id')
 
         raise AttributeError('can not find condition')
 
-    def parse_condition(self, condition_data: dict) -> bool:
+    def _parse_condition(self, condition_data: ProcessControlType) -> bool:
         """解析条件"""
         target = condition_data.get('target')
         self.condition = condition_data.get('condition')

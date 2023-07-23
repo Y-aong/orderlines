@@ -11,27 +11,27 @@ from order_lines.enter_point import OrderLines
 
 nodes = [
     {
-        "task_id": 1000,
+        "task_id": "1000",
         "task_name": "start",
         "method_name": "start",
         "task_type": "start",
         "method_kwargs": {},
         "prev_id": None,
-        "next_id": 1001,
+        "next_id": "1001",
         "task_config": None,
         "task_module": "BuiltIn",
         "desc": None
     },
     {
-        "task_id": 1001,
+        "task_id": "1001",
         "task_name": "并行网关",
         "method_name": "parallel_task",
         "task_type": "parallel",
         "method_kwargs": {
-            "parallel_task_ids": [1002, 1005]
+            "parallel_task_ids": ["1002", "1005"]
         },
-        "prev_id": 1001,
-        "next_id": 1007,
+        "prev_id": "1001",
+        "next_id": "1007",
         "task_config": {
             'runner': 'gevent'
         },
@@ -39,19 +39,19 @@ nodes = [
         "desc": None
     },
     {
-        "task_id": 1002,
+        "task_id": "1002",
         "task_name": "任务组1",
         "method_name": "task_group",
         "task_type": "group",
         "method_kwargs": {
-            "group_ids": [1003, 1004]
+            "group_ids": ["1003", "1004"]
         },
         "task_config": None,
         "task_module": "Group",
         "desc": None
     },
     {
-        "task_id": 1003,
+        "task_id": "1003",
         "task_name": "add1",
         "method_name": "test_add",
         "task_type": "common",
@@ -71,7 +71,7 @@ nodes = [
         "desc": None
     },
     {
-        "task_id": 1004,
+        "task_id": "1004",
         "task_name": "subtraction1",
         "method_name": "test_subtraction",
         "task_type": "common",
@@ -91,19 +91,19 @@ nodes = [
         "desc": None
     },
     {
-        "task_id": 1005,
+        "task_id": "1005",
         "task_name": "任务组2",
         "method_name": "task_group",
         "task_type": "group",
         "method_kwargs": {
-            "group_ids": [1006]
+            "group_ids": ["1006"]
         },
         "task_config": None,
         "task_module": "Group",
         "desc": None
     },
     {
-        "task_id": 1006,
+        "task_id": "1006",
         "task_name": "减法",
         "method_name": "test_subtraction",
         "task_type": "common",
@@ -116,12 +116,12 @@ nodes = [
         "desc": None
     },
     {
-        "task_id": 1007,
+        "task_id": "1007",
         "task_name": "end",
         "method_name": "end",
         "task_type": "end",
         "method_kwargs": {},
-        "prev_id": 1001,
+        "prev_id": "1001",
         "next_id": None,
         "task_config": None,
         "task_module": "BuiltIn",

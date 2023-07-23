@@ -11,13 +11,28 @@ import datetime
 import smtplib
 
 from email.mime.text import MIMEText
-from conf.config import EmailConfig
+from typing import Union
+
+from pydantic import Field, BaseModel
+
+from conf.config import EmailConfig, OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
+from order_lines.utils.base_orderlines_type import BasePluginResult
+from public.language_type import get_desc_with_language
 from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
 
 
+class EmailType(BaseModel):
+    process_name: str = Field(description=get_desc_with_language('precess_name'), title='precess_name')
+    node_info: dict = Field(description=get_desc_with_language('node_info'), title='node_info')
+    error_info: dict = Field(description=get_desc_with_language('error_info'), title='error_info')
+    status: Union[None, str] = Field(description=get_desc_with_language('status'), title='status')
+
+
 class Email(BaseTask):
+    version = OrderLinesConfig.version
+
     def __init__(self):
         super(Email, self).__init__()
         self.mail_host = EmailConfig.mail_host
@@ -32,7 +47,7 @@ class Email(BaseTask):
             str(StatusEnum.yellow.value): '运行超时',
         }
 
-    def build_msg(self, process_name: str, node_info: dict, error_or_result=None, status=None):
+    def _build_msg(self, process_name: str, node_info: dict, error_or_result=None, status=None):
         """构建发送邮件信息"""
         task_name = node_info.get("task_name")
         if status != StatusEnum.green.value:
@@ -48,19 +63,16 @@ class Email(BaseTask):
               f'{content}'
         return title, msg
 
-    def send_msg(self, process_name: str, node_info: dict, error_info=None, status=None):
+    def send_msg(self, email_info: EmailType) -> BasePluginResult:
         """
         发送消息测试库，可以作为callback方法
-        :param process_name: 流程名称
-        :param node_info: 节点信息
-        :param error_info: 错误信息
-        :param status: 任务状态
+        :param email_info: 邮件信息
         :return:
         """
         if not EmailConfig.is_send:
             logger.info('回调函数调用成功，不发送邮件')
             return {'status': StatusEnum.green.value}
-        title, msg = self.build_msg(process_name, node_info, error_info, status)
+        title, msg = self._build_msg(**email_info.model_dump())
         message = MIMEText(msg, 'plain', 'utf-8')
         # 邮件主题
         message['Subject'] = title

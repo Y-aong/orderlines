@@ -7,18 +7,21 @@
 # version    ：python 3.7
 # Description：
 """
-
+from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import run_keyword_variant, BaseTask
+from order_lines.utils.base_orderlines_type import BasePluginResult, BasePluginParam
 
 
 class BuiltIn(BaseTask):
+    version = OrderLinesConfig.version
+
     def __init__(self):
         super(BuiltIn, self).__init__()
 
     @run_keyword_variant('BuiltIn')
-    def start(self, **kwargs):
+    def start(self, base_param: BasePluginParam) -> BasePluginResult:
         return {'status': self.success}
 
     @run_keyword_variant('BuiltIn')
-    def end(self, **kwargs):
+    def end(self, base_param: BasePluginParam) -> BasePluginResult:
         return {'status': self.success}

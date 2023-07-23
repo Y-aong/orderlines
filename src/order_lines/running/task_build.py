@@ -10,7 +10,9 @@
 from typing import List
 
 from order_lines.running.module_check import CheckModule
-from order_lines.handlers.task_handlers import *
+from order_lines.handlers.task_handlers import DefaultHandler, \
+    CommonHandler, ProcessControlHandler, ParallelHandler, GroupHandler, AbstractHandler
+from order_lines.utils.utils import get_method_param_annotation
 
 handler_context = {
     'start': DefaultHandler(),
@@ -61,10 +63,14 @@ def sync_task(handler: AbstractHandler, task_module, method_name, task_kwargs):
     module = module_check.modules.get(task_module)
     task_kwargs = task_kwargs if task_kwargs else {}
     if task_module == 'Group' or task_module == 'Parallel':
-        task_result = handler.handle(module, method_name, task_kwargs)
+        flag, annotation = get_method_param_annotation(getattr(module, method_name))
+        task_result = handler.handle(module, method_name,  annotation(**task_kwargs))
     else:
-        task_result = handler.handle(module, method_name, task_kwargs)
+        flag, annotation = get_method_param_annotation(getattr(module, method_name))
+        print(module, method_name)
+        task_result = handler.handle(module, method_name, annotation(**task_kwargs))
     assert isinstance(task_result, dict), '任务返回值必须为字典'
+    from order_lines import StatusEnum
     task_result.setdefault('status', StatusEnum.green.value)
     return task_result
 

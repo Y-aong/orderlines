@@ -7,6 +7,7 @@
 # version    ：python 3.7
 # Description：order_line工具类
 """
+import inspect
 import json
 from typing import MutableMapping
 
@@ -21,7 +22,9 @@ def get_current_node(task_id, process_node):
     for node in process_node:
         if node.get('task_id') == task_id:
             return node
-    raise AttributeError(f'根据task id {task_id} 找不到任务节点')
+    raise AttributeError(f'根据task id{task_id, type(task_id)}找不到任务节点')
+
+
 
 
 def get_variable_value(variable_value, variable_type):
@@ -60,3 +63,19 @@ def normalize(string, ignore=(), caseless=True, spaceless=True):
             if ign in string:
                 string = string.replace(ign, empty)
     return string
+
+
+def get_method_param_annotation(method):
+    """
+    获取方法的参数类型注解
+    @param method: 插件方法
+    @return: flag, 参数注解
+    flag 为是否使用pydantic
+    """
+    sig = inspect.signature(method)
+    parameters = sig.parameters  # 参数有序字典
+    arg_keys = tuple(arg for arg in parameters.keys() if arg != 'self')
+    if len(arg_keys) == 1:
+        for arg_name in arg_keys:
+            return True, parameters[arg_name].annotation
+    return False, tuple(parameters.get(arg) for arg in parameters.keys() if arg != 'self')

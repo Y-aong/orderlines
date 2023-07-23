@@ -12,20 +12,27 @@
 """
 import time
 
-from order_lines.libraries.BaseTask import BaseTask, run_keyword_variant
+from pydantic import Field
+
+from conf.config import OrderLinesConfig
+from order_lines.libraries.BaseTask import BaseTask
+from order_lines.utils.base_orderlines_type import BasePluginResult, BasePluginParam
+
+
+class TestType(BasePluginParam):
+    a: int = Field(description='测试参数a')
+    b: int = Field(description='测试参数b')
 
 
 class Test(BaseTask):
+    version = OrderLinesConfig.version
 
-    @run_keyword_variant('Test')
-    def test_add(self, a: int, b: int, **kwargs) -> dict:
+    def test_add(self, test_type: TestType, ) -> BasePluginResult:
         time.sleep(3)
-        return {'add_value': a + b}
+        return {'add_value': test_type.a + test_type.b}
 
-    @run_keyword_variant('Test')
-    def test_subtraction(self, a: int, b: int, **kwargs) -> dict:
-        return {'subtraction_value': a - b}
+    def test_subtraction(self, test_type: TestType, ) -> BasePluginResult:
+        return {'subtraction_value': test_type.a - test_type.b}
 
-    @run_keyword_variant('Test')
-    def test_multi(self, a: int, b: int, **kwargs) -> dict:
-        return {'subtraction_value': a * b}
+    def test_multi(self, test_type: TestType, ) -> BasePluginResult:
+        return {'subtraction_value': test_type.a * test_type.b}

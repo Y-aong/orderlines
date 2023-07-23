@@ -12,8 +12,8 @@ from typing import Any
 from apis.order_lines.models import VariableModel
 
 
-class VariableOperator:
-    def __init__(self, task_id: str, variable_name: Any):
+class VariableModelOperator:
+    def __init__(self, task_id: str, variable_name: str):
         self.task_id = task_id
         self.variable_name = variable_name
 

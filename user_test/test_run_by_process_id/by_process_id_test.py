@@ -7,8 +7,9 @@
 # version    ：python 3.7
 # Description：
 """
-from public import OrderLinesHelper
+
 from order_lines import OrderLines
+from public.order_lines_helper import OrderLinesHelper
 
 if __name__ == "__main__":
     process = OrderLinesHelper('1001').get_process()

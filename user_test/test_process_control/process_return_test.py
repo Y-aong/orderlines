@@ -11,19 +11,19 @@ from order_lines.enter_point import OrderLines
 
 nodes = [
     {
-        "task_id": 1011,
+        "task_id": "1011",
         "task_name": "start",
         "method_name": "start",
         "task_type": "start",
         "method_kwargs": None,
         "prev_id": None,
-        "next_id": 1012,
+        "next_id": "1012",
         "task_config": None,
         "task_module": "BuiltIn",
         "desc": None
     },
     {
-        "task_id": 1012,
+        "task_id": "1012",
         "task_name": "add",
         "method_name": "test_add",
         "task_type": "common",
@@ -31,8 +31,8 @@ nodes = [
             "a": 2,
             "b": 786
         },
-        "prev_id": 1011,
-        "next_id": 1013,
+        "prev_id": "1011",
+        "next_id": "1013",
         "task_config": {
             "task_strategy": 'skip'
         },
@@ -48,7 +48,7 @@ nodes = [
     },
 
     {
-        "task_id": 1013,
+        "task_id": "1013",
         "task_name": "process_control",
         "method_name": "process_control",
         "task_type": "process_control",
@@ -64,23 +64,23 @@ nodes = [
                 }
             ],
             "expression": {
-                'A': {'task_id': 1014},
-                'B': {'task_id': 1015}
+                'A': {'task_id': "1014"},
+                'B': {'task_id': "1015"}
             },
-            "prev_id": 1012,
+            "prev_id": "1012",
             "next_id": None,
             "task_config": None,
             "task_module": "ProcessControl",
             "desc": None
         },
-        "prev_id": 1012,
+        "prev_id": "1012",
         "next_id": None,
         "task_config": None,
         "task_module": "ProcessControl",
         "desc": None
     },
     {
-        "task_id": 1014,
+        "task_id": "1014",
         "task_name": "add",
         "method_name": "test_subtraction",
         "task_type": "common",
@@ -88,14 +88,14 @@ nodes = [
             "a": 2,
             "b": 712
         },
-        "prev_id": 1013,
-        "next_id": 1016,
+        "prev_id": "1013",
+        "next_id": "1016",
         "task_config": None,
         "task_module": "Test",
         "desc": None
     },
     {
-        "task_id": 1015,
+        "task_id": "1015",
         "task_name": "add",
         "method_name": "test_add",
         "task_type": "common",
@@ -103,19 +103,19 @@ nodes = [
             "a": 2,
             "b": 78
         },
-        "prev_id": 1013,
-        "next_id": 1016,
+        "prev_id": "1013",
+        "next_id": "1016",
         "task_config": None,
         "task_module": "Test",
         "desc": None
     },
     {
-        "task_id": 1016,
+        "task_id": "1016",
         "task_name": "end",
         "method_name": "end",
         "task_type": "end",
         "method_kwargs": None,
-        "prev_id": [1014, 1015],
+        "prev_id": ["1014", "1015"],
         "next_id": None,
         "task_config": None,
         "task_module": "BuiltIn",

@@ -15,6 +15,7 @@ import async_timeout
 from conf.config import OrderLinesConfig
 from order_lines.running.module_check import CheckModule
 from order_lines.running.task_build import build_task
+from order_lines.utils.utils import get_method_param_annotation
 from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum as Status
 
@@ -38,7 +39,13 @@ class BaseStrategy:
         module_check.check_module(OrderLinesConfig.callback_module)
         module = module_check.modules.get(OrderLinesConfig.callback_module)
         if notice_type:
-            getattr(module(), callback_func)(self.process_name, self.node_info, error_or_result, status)
+            method = getattr(module(), callback_func)
+            flag, annotation = get_method_param_annotation(method)
+            if flag:
+                email_info = {'process_name': self.process_name, 'node_info': self.node_info,
+                              'error_info': error_or_result, 'status': status}
+                callback_func_param = annotation(**email_info)
+                method(callback_func_param)
 
 
 class RunningStrategy:
@@ -94,7 +101,8 @@ class RunningStrategy:
                 logger.info(f'开始重试第{flag}次')
 
                 async with async_timeout.timeout(self.timeout):
-                    task = asyncio.create_task(build_task(self.process_node, self.current_task_id, self.process_info))
+                    task = asyncio.create_task(
+                        build_task(self.process_node, self.current_task_id, self.process_info))
                     await task
                 if task.result().get('status') == Status.green.value:
                     flag = await self.trigger.parse()

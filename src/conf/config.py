@@ -32,6 +32,7 @@ class OrderLinesConfig:
     sleep_time = _ctx.get('sleep_time')
     task_timeout = _ctx.get('task_timeout')
     process_timeout = _ctx.get('process_timeout')
+    version = _ctx.get('version')
 
 
 class EmailConfig:
@@ -69,3 +70,8 @@ class LoggerConfig:
     linux_logger_path = _ctx.get('linux_logger_path')
     FMT = _ctx.get('FMT')
     DATE_FMT = _ctx.get('DATE_FMT')
+
+
+class LanguageConfig:
+    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('language')
+    language_type = _ctx.get('language_type')

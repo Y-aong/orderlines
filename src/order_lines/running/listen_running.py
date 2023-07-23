@@ -45,7 +45,7 @@ class ListenRunning:
         task_type = current_node.get('task_type')
         task_kwargs = self.variable_handler.handle_node_params(task_kwargs, task_type)
         current_node['method_kwargs'] = task_kwargs
-        task_instance = TaskInstance(current_node, self.process_info)
+        task_instance = TaskInstanceOperator(current_node, self.process_info)
         task_table_id = task_instance.insert()
         return task_instance, task_table_id
 
@@ -79,8 +79,8 @@ class ListenRunning:
     @staticmethod
     def stop_helper(process_instance_id):
         """停止流程"""
-        return TaskInstance.stop_helper(process_instance_id)
+        return TaskInstanceOperator.stop_helper(process_instance_id)
 
     @staticmethod
     def get_task_build_time(process_instance_id):
-        return TaskInstance.get_task_build_time(process_instance_id)
+        return TaskInstanceOperator.get_task_build_time(process_instance_id)

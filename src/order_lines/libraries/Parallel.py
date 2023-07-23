@@ -18,22 +18,33 @@
 """
 from typing import List
 import gevent
+from pydantic import Field
+from pydantic.fields import FieldInfo
 
 from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
+from order_lines.libraries.Group import GroupType
 from order_lines.running.process_runner import ProcessRunner
+from order_lines.utils.base_orderlines_type import BasePluginResult, GateWayParam
 from order_lines.utils.parallel_util import ParallelUtils
 from order_lines.utils.utils import get_current_node
+from public.language_type import get_desc_with_language
+
+
+class ParallelType(GateWayParam):
+    parallel_task_ids: List[str] = Field(get_desc_with_language('parallel_task_ids'))
 
 
 class Parallel(BaseTask):
+    version = OrderLinesConfig.version
+
     def __init__(self, process_info, process_node):
         super(Parallel, self).__init__()
         self.process_info = process_info
         self.process_node = process_node
         self.parallel_helper = ParallelUtils(self.process_node)
 
-    def check_is_group(self, parallel_task_id) -> bool:
+    def _check_is_group(self, parallel_task_id) -> bool:
         """检查参数中是不是group_id"""
         for task_id in parallel_task_id:
             current_node = get_current_node(task_id, self.process_node)
@@ -41,19 +52,19 @@ class Parallel(BaseTask):
                 return True
         return False
 
-    def get_group(self, parallel_task_id: list):
+    def _get_group(self, parallel_task_id: list):
         """
         并行任务的第二种运行方式，是让框架自己帮你寻找任务组
         :param parallel_task_id: 任务id
         :return:
         """
-        flag = self.check_is_group(parallel_task_id)
+        flag = self._check_is_group(parallel_task_id)
         if flag:
             return parallel_task_id
         else:
             return self.parallel_helper.get_group_id(parallel_task_id)
 
-    def build_group_task(self, group_id):
+    def _build_group_task(self, group_id, parallel_type):
         """
         获取的任务组
         :param group_id:并行任务id
@@ -64,25 +75,40 @@ class Parallel(BaseTask):
                 group_ids = node.get('method_kwargs').get('group_ids')
                 from order_lines.libraries.Group import Group
                 group = Group(self.process_info, self.process_node)
-                return group.task_group(group_ids)
+                current_node = get_current_node(parallel_type.task_id, parallel_type.process_node)
+                param = {
+                    'group_ids': group_ids,
+                    'process_name': parallel_type.process_name,
+                    'process_info': parallel_type.process_info,
+                    'process_node': parallel_type.process_node,
+                    'process_id': parallel_type.process_id,
+                    'task_id': parallel_type.task_id,
+                    'result': current_node.get('result'),
+                    '__task_config__': current_node.get('task_config'),
+                }
+                print(f'param::{param}')
+                group_param = GroupType(**param)
+                return group.task_group(group_param)
 
-    def parallel_task(self, parallel_task_ids: List[int], **kwargs):
+    def parallel_task(self, parallel_type: ParallelType) -> BasePluginResult:
         """
         运行并行任务组
-        :param parallel_task_ids:并行任务id组
+        :param parallel_type:并行任务id组
         :return:
         """
-        task_config = kwargs.get('__task_config__')
-        task_config = task_config if task_config else {}
-        parallel_task_ids = self.get_group(parallel_task_ids)
+        print(parallel_type.model_dump())
+        task_config = parallel_type.__task_config__
+        if isinstance(task_config, FieldInfo):
+            task_config = task_config.default
+
+        parallel_task_ids = self._get_group(parallel_type.parallel_task_ids)
         runner_type = task_config.get('runner')
         if runner_type == 'process':
-            print(f'使用进程')
-            return self.parallel_by_process(parallel_task_ids, task_config)
+            return self._parallel_by_process(parallel_task_ids, task_config, parallel_type)
         else:
-            return self.parallel_by_gevent(parallel_task_ids, task_config)
+            return self._parallel_by_gevent(parallel_task_ids, task_config, parallel_type)
 
-    def parallel_by_gevent(self, parallel_task_ids, task_config):
+    def _parallel_by_gevent(self, parallel_task_ids, task_config, parallel_type):
         """
         使用gevent协程并行
         :param parallel_task_ids:并行任务id组
@@ -91,18 +117,19 @@ class Parallel(BaseTask):
         """
         timeout = task_config.get('timeout')
         timeout = timeout if timeout else OrderLinesConfig.task_timeout
-        jobs = [gevent.spawn(self.build_group_task, group_ids) for group_ids in parallel_task_ids]
+        jobs = [gevent.spawn(self._build_group_task, group_ids, parallel_type) for group_ids in parallel_task_ids]
         gevent.joinall(jobs, timeout=timeout)
         return {parallel_task_ids[index]: job.value for index, job in enumerate(jobs)}
 
-    def parallel_by_process(self, parallel_task_ids, task_config: dict):
+    def _parallel_by_process(self, parallel_task_ids, task_config: dict, parallel_type):
         """
         使用进程的方式并行，这主要适用计算密集型
         :param parallel_task_ids: 并行任务id组
         :param task_config: 任务配置信息
+        :param parallel_type: 任务名称
         :return:
         """
         pool_size = task_config.get('pool_size')
         timeout = task_config.get('timeout')
         process_runner = ProcessRunner(pool_size)
-        return process_runner.spawn(self.build_group_task, parallel_task_ids, timeout)
+        return process_runner.spawn(self._build_group_task, parallel_task_ids, timeout)
