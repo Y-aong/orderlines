@@ -5,7 +5,7 @@
 # Time       ：2023/1/15 11:37
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：order_lines 异常类
+# Description：order_lines exception
 """
 
 

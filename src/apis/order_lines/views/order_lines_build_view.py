@@ -39,7 +39,7 @@ class OrderLinesBuildView(Resource):
             process_obj = ProcessModel(**process)
             db.session.add(process_obj)
         db.session.commit()
-        # 生成task
+        # generate task
         for node in node_info:
             node['process_id'] = process_id
             task_obj = db.session.query(TaskModel).filter(

@@ -5,7 +5,7 @@
 # Time       ：2023/1/29 21:30
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：变量
+# Description：Variable Model Operator
 """
 from typing import Any
 
@@ -33,7 +33,8 @@ class VariableModelOperator:
     @staticmethod
     def update_db(process_instance_id: str, task_name: str, variable_value: Any, **kwargs) -> int:
         """
-        修改变量信息，变量名一旦创建不能修改
+        修改变量信息。已创建的变量名不能修改
+        Modify variable information. A created variable name cannot be modified
         :param process_instance_id:
         :param task_name:
         :param variable_value: 变量值
@@ -50,8 +51,9 @@ class VariableModelOperator:
     def select_data(process_instance_id, variable_name):
         """
         获取流程中的变量数据，一个流程中变量名是唯一的
+        Gets data about variables in a process where variable names are unique
         :param process_instance_id:流程实例id
-        :param variable_name:流程id
+        :param variable_name:变量名称
         :return:
         """
         filter_data = {'variable_name': variable_name, 'process_instance_id': process_instance_id}

@@ -5,7 +5,7 @@
 # Time       ：2023/7/9 16:15
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：用户序列化类
+# Description：User serialized class
 """
 
 from marshmallow import fields

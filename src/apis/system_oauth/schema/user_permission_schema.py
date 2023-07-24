@@ -5,7 +5,7 @@
 # Time       ：2023/7/17 22:55
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：用户权限序列化类
+# Description：User permission serialized class
 """
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema

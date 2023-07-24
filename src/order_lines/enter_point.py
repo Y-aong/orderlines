@@ -5,7 +5,7 @@
 # Time       ：2023/3/7 21:04
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：order_lines入口
+# Description：order_lines enter point
 """
 import threading
 import time
@@ -41,21 +41,21 @@ class OrderLines:
         process_status = process_instance.process_status if process_instance else None
         if process_status == StatusEnum.yellow.value:
             task_names = self.listen_running.stop_helper(self.process_instance_id)
-            logger.info(f'任务{",".join(task_names)}停止')
+            logger.info(f'task {",".join(task_names)} stop')
 
         while process_status in [StatusEnum.grey.value, StatusEnum.blue.value]:
             process_instance = ProcessInstanceOperator.select_data(self.process_instance_id)
             process_status = process_instance.process_status
             # 检查是否停止
             if process_status == StatusEnum.green.value:
-                logger.info(f'流程{self.process_name}正常运行结束')
+                logger.info(f'process {self.process_name} run success')
                 break
             elif process_status == StatusEnum.red.value:
-                logger.info(f'流程{self.process_name}运行失败')
+                logger.info(f'process {self.process_name} run failure')
                 break
             elif process_status == StatusEnum.yellow.value:
                 task_names = self.listen_running.stop_helper(self.process_instance_id)
-                logger.info(f'任务{",".join(task_names)}停止, {self.process_instance_id}')
+                logger.info(f'task {",".join(task_names)} stop, {self.process_instance_id}')
                 break
 
             time.sleep(0.5)

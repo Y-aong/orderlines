@@ -5,7 +5,9 @@
 # Time       ：2023/7/22 10:40
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：语言类型
+# Description：
+    语言类型
+    linguistic type
 """
 from conf.config import LanguageConfig
 

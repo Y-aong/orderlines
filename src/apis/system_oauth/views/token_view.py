@@ -5,7 +5,7 @@
 # Time       ：2023/7/9 16:49
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：登录接口
+# Description：token view
 """
 from flask import request
 from flask_restful import Resource

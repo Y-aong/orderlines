@@ -5,7 +5,9 @@
 # Time       ：2023/2/26 22:02
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：创建任务
+# Description：
+    创建任务
+    build task
 """
 from typing import List
 
@@ -52,10 +54,11 @@ async def build_task(process_node: List[dict], task_id: str, process_info):
 def sync_task(handler: AbstractHandler, task_module, method_name, task_kwargs):
     """
     将普通任务封装为同步任务
-    :param handler:
-    :param task_module:
-    :param method_name:
-    :param task_kwargs:
+    Encapsulate a common task as a synchronization task
+    :param handler: handler
+    :param task_module: task class module
+    :param method_name: method name
+    :param task_kwargs: task params
     :return:
     """
     module_check = CheckModule()
@@ -72,12 +75,11 @@ def sync_task(handler: AbstractHandler, task_module, method_name, task_kwargs):
             task_result = handler.handle(module, method_name, annotation(**task_kwargs))
         else:
             task_result = handler.handle(module, method_name, **task_kwargs)
-    assert isinstance(task_result, dict), '任务返回值必须为字典'
+    assert isinstance(task_result, dict), 'The task return value must be a dictionary'
     from order_lines import StatusEnum
     task_result.setdefault('status', StatusEnum.green.value)
     return task_result
 
 
 async def async_task(handler: AbstractHandler, task_module, method_name, task_kwargs):
-    """将普通任务封装为异步任务"""
     return sync_task(handler, task_module, method_name, task_kwargs)

@@ -5,7 +5,9 @@
 # Time       ：2023/1/10 22:48
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：具体任务节点的处理
+# Description：
+特定任务节点的处理
+Processing of specific task nodes
 """
 import traceback
 
@@ -38,7 +40,8 @@ class CommonHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                return {'status': StatusEnum.red.value, 'error_info': f'错误信息:{e}\n异常堆栈:{traceback.format_exc()}'}
+                return {'status': StatusEnum.red.value,
+                        'error_info': f'error info:{e}\ntraceback:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
 
@@ -51,8 +54,9 @@ class ProcessControlHandler(AbstractHandler):
                 task_id = ProcessControl().process_control(task_kwargs)
                 return {'task_id': task_id, 'status': StatusEnum.green.value}
             except Exception as e:
-                logger.error(f'流程控制网关运行异常::{e},\n{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, 'error_info': f'错误信息:{e}\n异常堆栈:{traceback.format_exc()}'}
+                logger.error(f'The process control gateway is abnormal.error info:{e},'
+                             f'\ntraceback:{traceback.format_exc()}')
+                return {'status': StatusEnum.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
 
@@ -68,8 +72,8 @@ class GroupHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                logger.error(f'任务组运行失败::{e},\n{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, '错误信息:{e}\nerror_info': f'异常堆栈:{traceback.format_exc()}'}
+                logger.error(f'The task group fails to run.error info:{e},\n{traceback.format_exc()}')
+                return {'status': StatusEnum.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
 
@@ -86,7 +90,7 @@ class ParallelHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                logger.error(f'并行网关运行失败::{e},\n堆栈信息::{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, '错误信息:{e}\nerror_info': f'异常堆栈:{traceback.format_exc()}'}
+                logger.error(f'The parallel gateway fails to run.error info:{e},\ntraceback:{traceback.format_exc()}')
+                return {'status': StatusEnum.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)

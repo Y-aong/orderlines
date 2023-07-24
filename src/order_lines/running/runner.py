@@ -5,7 +5,9 @@
 # Time       ：2023/2/16 21:13
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：流程运行
+# Description：
+    流程运行
+    process running
 """
 import asyncio
 import json
@@ -44,7 +46,6 @@ class TaskRunner(threading.Thread):
         asyncio.run(self.task_run())
 
     def get_task_timeout(self):
-        """获取任务超时时间"""
         task_config = get_current_node(self.current_task_id, self.process_node).get('task_config')
         if task_config and isinstance(task_config, str):
             task_config = json.loads(task_config)
@@ -62,12 +63,9 @@ class TaskRunner(threading.Thread):
         return False
 
     async def task_run(self):
-        """
-        真正运行任务节点
-        :return:
-        """
+        """Actually run the task node"""
         while self.is_run and not self.stop:
-            # 取数据
+            # get node
             self.current_task_id = self.task_deque.get()
             current_node = get_current_node(self.current_task_id, self.process_node)
             task_instance, task_table_id = self.listen_running.insert(current_node)
@@ -79,16 +77,16 @@ class TaskRunner(threading.Thread):
             except Exception as e:
                 await self.on_failure(e, current_node, task_instance, task_table_id)
 
-            # 任务之间休眠0.1
             self.stop = await self.process_is_stop()
             if not self.is_run and not self.stop:
                 logger.info(
-                    f'流程名称:{self.process_info.get("process_name")},流程id:{self.process_info.get("process_id")}结束')
+                    f'process name:{self.process_info.get("process_name")},'
+                    f'process id:{self.process_info.get("process_id")} run complete')
                 break
             await asyncio.sleep(0.01)
 
     async def on_running(self, current_node, task_instance, task_table_id):
-        """运行时的函数处理"""
+        """Processing at run time"""
         timeout = self.get_task_timeout()
         async with async_timeout.timeout(timeout):
             task = asyncio.create_task(build_task(self.process_node, self.current_task_id, self.process_info))
@@ -102,21 +100,21 @@ class TaskRunner(threading.Thread):
                 await self.trigger.update_process_info(Status.red.value, traceback.format_exc())
 
     async def on_stop(self, err, current_node, task_instance, task_table_id):
-        """任务停止时的操作"""
+        """The operation when the task stops"""
         error_info = traceback.format_exc()
-        logger.info(f'current_task_id::{self.current_task_id}, 运行停止::{error_info, err}')
+        logger.info(f'current_task_id::{self.current_task_id}, run stop::{error_info, err}')
         self.listen_running.update(current_node, task_instance, task_table_id, error_info, Status.yellow.value)
         await self.trigger.update_process_info(Status.yellow.value, traceback.format_exc())
         self.is_run = False
 
     async def on_failure(self, err, current_node, task_instance, task_table_id):
-        """任务失败时的操作"""
+        """The operation when the task fails"""
         if isinstance(err, asyncio.TimeoutError):
-            error_info = {'error_info': '任务运行超时，请检查timeout'}
-            logger.info(f'current_task_id::{self.current_task_id}, 运行超时::{error_info, err}')
+            error_info = {'error_info': 'The task has timeout. Check timeout'}
+            logger.info(f'current_task_id::{self.current_task_id}, run timeout::{error_info, err}')
         else:
             error_info = {'error_info': traceback.format_exc()}
-            logger.info(f'current_task_id::{self.current_task_id}, 运行失败::{error_info, err}')
+            logger.info(f'current_task_id::{self.current_task_id}, run timeout::{error_info, err}')
         timeout = self.get_task_timeout()
         strategy = RunningStrategy(self.process_info, self.process_node, self.current_task_id, self.trigger, timeout)
         self.is_run, task_or_error, task_status = await strategy.running_strategy(error_info, current_node)

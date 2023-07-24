@@ -5,10 +5,15 @@
 # Time       ：2023/3/5 14:13
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：并行任务组中寻找任务组，这是并行任务组中的第二种方式，
+# Description：
+并行任务组中寻找任务组，这是并行任务组中的第二种方式，
 就是并行任务组中给定的是所有的task下，需要框架自己需要找到任务组
 其实可以算得上一个算法题
 给定两个数组如下，
+Look for task groups in parallel task groups, this is the second way in parallel task groups,
+The parallel task group is given for all tasks, and the framework itself needs to find the task group
+It's actually an algorithm problem
+Given two arrays as follows,
 data = [
     {
         'task_id': 1001,
@@ -68,9 +73,10 @@ class ParallelUtils:
     def solution(self, task_id, parallel_task_ids: list, group_ids: list):
         """
         并行网关中参数，这里的task_id为普通任务节点的task_id
-        :param task_id: 当前task_id
-        :param parallel_task_ids:
-        :param group_ids: 任务组id
+        Parameter of parallel gateway, where task_id is the task_id of a common task node
+        :param task_id: task id
+        :param parallel_task_ids:parallel task ids
+        :param group_ids: task group id
         :return:
         """
         group_ids = copy.deepcopy(group_ids)

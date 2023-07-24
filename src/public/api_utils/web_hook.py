@@ -31,8 +31,8 @@ class WebHook:
 
     def check_black_list(self):
         if request.path in self.black_list:
-            logger.info(f'已阻止黑名单{request.path}')
-            return generate_abort(code=401, message='黑名单用户')
+            logger.info(f'Blocked blacklist {request.path}')
+            return generate_abort(code=401, message='url in blacklist')
 
     def check_white_list(self):
         return True if request.path in self.white_list else False
@@ -65,11 +65,8 @@ class WebHook:
     def authentication(self):
         """权限认证"""
 
-        # 检查黑名单
         self.check_black_list()
-        # 检查白名单
         if not self.check_white_list():
-            # 检查token
             authorization = request.headers.get('Authorization')
             if authorization and authorization.startswith('Bearer '):
                 token = authorization.replace('Bearer ', '')
@@ -81,8 +78,8 @@ class WebHook:
                     if not role_permission and not group_permission:
                         return generate_abort(401, data='Permission Denied')
                 except JWTVerifyException:
-                    return generate_abort(400, data='token过期请重新登录')
+                    return generate_abort(400, data='Please log in again after the token expires.')
                 except DecodeError:
-                    return generate_abort(400, data='token验证失败，请检查用户名密码')
+                    return generate_abort(400, data='Please check the user name and password.')
             else:
-                return generate_abort(401, data='认证失败，用户未认证')
+                return generate_abort(401, data='Authentication failed because the user is not authenticated.')

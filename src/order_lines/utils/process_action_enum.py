@@ -5,7 +5,9 @@
 # Time       ：2023/1/11 21:20
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：流程和任务状态
+# Description：
+    流程和任务状态
+    Process and task status
 """
 import enum
 

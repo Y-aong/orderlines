@@ -17,24 +17,28 @@ class Match:
         同一个流程中的变量名是唯一的不可重复
         变量名目前只可以支持字母和下划线不支持数字
         变量指的是value和add_value
+        There are two types of variables. The variables are ${value} and ${add_value}+1 configured in the process
+        Variable names in the same process are unique and cannot be repeated
+        Currently, variable names can only support letters and underscores but not numbers
+        The variables are value and add_value
         :param _variable_name:
         """
         self._variable_name = _variable_name
 
     def variable_name(self) -> str:
-        """
-        获取变量名
-        :return:变量名称
-        """
         if any([True for item in self._variable_name if item in ['+', '-', '*', '/']]):
-            # 这种是变量中存在+，-，*，/等四则运算
+            # 变量中存在+，-，*，/等四则运算
+            # There are +, -, *, / and other four operations in the variable
             variable_name = self.get_variable_name()
         else:
             variable_name = self._variable_name.replace('${', '').replace('}', '')
         return self.check_variable_name(variable_name)
 
     def get_variable_name(self):
-        """从带有四则运行的变量中获取到变量名称"""
+        """
+        从带有四则运行的变量中获取到变量名称,
+        Gets the variable name from the variable with four runs
+        """
         if '${' not in self._variable_name and '}' not in self._variable_name:
             return self._variable_name
         if '+' in self._variable_name:
@@ -52,5 +56,5 @@ class Match:
     def check_variable_name(self, variable_name):
         for temp in variable_name:
             if not temp.isalpha() and temp != '_':
-                raise VariableException(f'{self.variable_name}设置错误，变量只能为字母和_组成')
+                raise VariableException(f'{self.variable_name}Incorrect setting, variables can only be letters and _')
         return variable_name

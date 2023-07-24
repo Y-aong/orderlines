@@ -31,7 +31,6 @@ class OrderlinesPlugHelper:
             self.insert_info_plugin_info(plugin)
 
     def insert_info_plugin_info(self, plugin):
-        """将插件信息插入数据库"""
 
         methods = plugin.get('methods')
         for method in methods:
@@ -59,7 +58,7 @@ class OrderlinesPlugHelper:
                 self.session.commit()
 
     def parse_pydantic_annotation(self, annotation: BaseModel, is_params=True):
-        """解析pydantic类型的注解"""
+        """解析pydantic类型的注解,Parse annotations of type pydantic"""
         field_infos = list()
         properties = annotation.model_json_schema().get('properties')
         model_fields = annotation.model_fields
@@ -97,7 +96,7 @@ class OrderlinesPlugHelper:
 
     @staticmethod
     def handle_func_doc(func_doc: str) -> str:
-        """处理函数的注释"""
+        """处理函数的注释,Handles comments of functions"""
         if not func_doc:
             return ''
 

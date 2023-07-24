@@ -13,7 +13,7 @@ from order_lines.variable.match import Match
 class VariableOperator:
     def __init__(self, variable_key, real_variable_value, variable_type):
         """
-        变量运算
+        变量运算,Variable operation
         :param variable_key:  "result": [
             {
                 "variable_key": variable_value,
@@ -22,8 +22,9 @@ class VariableOperator:
             }
         ],
         流程中配置的变量名如${value}, ${add_value}+1
-        :param real_variable_value: 对应数据库中add_value的值
-        :param variable_type: 对应数据库中变量的类型
+        The variable name configured in the process is ${value}, ${add_value}+1
+        :param real_variable_value: 对应数据库中add_value的值,The value corresponding to add value in the database
+        :param variable_type: 对应数据库中变量的类型,Indicates the type of a variable in the database
         """
 
         self.variable_key = variable_key
@@ -33,8 +34,8 @@ class VariableOperator:
 
     def variable_operator(self):
         """
-        变量的运算
-        :return:真正的变量值供流程使用
+        变量的运算， variable operator
+        :return:真正的变量值供流程使用，The real variable values are used by the process
         """
         match = '${' + self.variable_name + "}"
         variable_value = self._variable_handler(match)

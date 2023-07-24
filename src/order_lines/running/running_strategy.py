@@ -5,8 +5,9 @@
 # Time       ：2023/2/26 10:23
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：任务运行过程中的异常处理策略
-            重试，抛出，忽略
+# Description：
+    任务运行过程中的异常处理策略.重试，抛出，忽略
+    Exception handling policy during task running. retry, raise, skip
 """
 import asyncio
 
@@ -28,6 +29,7 @@ class BaseStrategy:
     def handle(self, notice_type: str, status: str, callback_func=None, error_or_result=None):
         """
         任务运行出错，异常的处理策略
+        Task execution error, abnormal handling policy
         :param notice_type:
         :param error_or_result:
         :param status:
@@ -42,8 +44,12 @@ class BaseStrategy:
             method = getattr(module(), callback_func)
             flag, annotation = get_method_param_annotation(method)
             if flag:
-                email_info = {'process_name': self.process_name, 'node_info': self.node_info,
-                              'error_info': error_or_result, 'status': status}
+                email_info = {
+                    'process_name': self.process_name,
+                    'node_info': self.node_info,
+                    'error_info': error_or_result,
+                    'status': status
+                }
                 callback_func_param = annotation(**email_info)
                 method(callback_func_param)
 
@@ -59,7 +65,7 @@ class RunningStrategy:
 
     async def running_strategy(self, error_or_result, current_node: dict):
         """
-        任务运行过程中的异常处理策略
+        Exception handling policy during task running
         :param error_or_result:
         :param current_node:
         :return:
@@ -72,33 +78,29 @@ class RunningStrategy:
         callback_func = task_config.get('callback_func', OrderLinesConfig.callback_func)
 
         if isinstance(error_or_result, dict) and error_or_result.get('status') == Status.green.value:
-            # 使用数据
             flag = await self.trigger.parse()
             return flag, error_or_result, Status.green.value
         else:
-            # 调用回调函数
+            # Call the callback function
             strategy = BaseStrategy(self.process_name, current_node)
             status = error_or_result.get('status')
             strategy.handle(notice_type, status, callback_func, error_or_result)
-        # 直接抛错
         if task_strategy == 'RAISE':
             return False, error_or_result, Status.red.value
-        # 忽略错误
         elif task_strategy == Status.pink.value:
             await self.trigger.parse()
             error_or_result['status'] = Status.pink.value
             return True, error_or_result, Status.pink.value
-        # 任务重试
         elif task_strategy == Status.orange.value:
             return await self.retry_strategy(error_or_result)
 
     async def retry_strategy(self, error_or_result):
-        """重试策略"""
+        """Retry strategy"""
         retry_time = OrderLinesConfig.retry_time
         flag = 1
         while flag < retry_time:
             try:
-                logger.info(f'开始重试第{flag}次')
+                logger.info(f'Start retry {flag} times')
 
                 async with async_timeout.timeout(self.timeout):
                     task = asyncio.create_task(
@@ -110,7 +112,7 @@ class RunningStrategy:
                 else:
                     flag += 1
             except Exception as e:
-                _error_info = f'第{flag}次报错。错误信息::{e}'
+                _error_info = f'The {flag} times error occurs for the second time. Error message::{e}'
                 logger.info(_error_info)
                 flag += 1
         error_or_result['status'] = Status.red.value

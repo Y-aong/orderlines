@@ -13,9 +13,9 @@ from public.base_model import Base, db
 class PluginInfo(Base):
     __tablename__ = 'base_plugin_info'
 
-    class_name = db.Column(db.String(64), comment='插件库类名')
-    version = db.Column(db.String(64), comment='插件库版本')
-    method_name = db.Column(db.String(64), comment='插件库方法名')
-    method_desc = db.Column(db.String(255), comment='插件库方法描述')
-    parameters = db.Column(db.JSON, comment='插件库方法参数, list类型')
-    return_value = db.Column(db.JSON, comment='插件库返回值参数')
+    class_name = db.Column(db.String(64), comment='Plug-in library class name')
+    version = db.Column(db.String(64), comment='Plug-in library version')
+    method_name = db.Column(db.String(64), comment='Plug-in library method name')
+    method_desc = db.Column(db.String(255), comment='Plug-in library method desc')
+    parameters = db.Column(db.JSON, comment='Plug-in library method parma, type is list')
+    return_value = db.Column(db.JSON, comment='Plug-in library returns value parameters')

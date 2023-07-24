@@ -5,9 +5,14 @@
 # Time       ：2023/2/19 19:36
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：解析流程的方式
+# Description：
+解析流程
 1、使用flask线程隔离的方式进行隔离线程
 2、使用队列的方式运行任务的取出和放入，这里主要考虑到多线程下的数据安全
+Parser process
+1. Use flask thread isolation to isolate threads
+2, the use of queues to run the extraction and insertion of tasks, mainly considering the data security
+ under multi-threading
 """
 import asyncio
 import datetime
@@ -25,6 +30,7 @@ from order_lines.utils.process_action_enum import StatusEnum, ProcessStatus
 class Trigger:
     """
     解析任务将任务id放入任务队列中
+    The parsing task places the task id in the task queue
     """
     local_process = Local()
 
@@ -37,7 +43,6 @@ class Trigger:
         self.current_task_id = self.start_node_id
         self.process_instance = ProcessInstanceOperator(process_info)
         if not hasattr(self.local_process, self.process_instance_id):
-            # 将流程运行信息插入数据
             process_instance = self.process_instance.select_data(self.process_instance_id)
             if process_instance:
                 process_info.setdefault('process_status', ProcessStatus.grey.value)
@@ -54,7 +59,10 @@ class Trigger:
     def get_start_node_id(self) -> int:
         """
         获取流程/子流程中的开始节点
-        :return: 返回流程的开始节点id，子流程开始节点
+        Gets the start node in the process/subprocess
+        :return:
+                返回流程的开始节点id，子流程开始节点,
+                Returns the id of the start node of the process, the start node of the subprocess
         """
         task_ids = list()
         for node in self.process_node:
@@ -68,7 +76,7 @@ class Trigger:
     def get_next_node_id(self) -> int:
         """
         根据当前当前正在运行的id获取到下一个要运行node_id
-        :return:
+        Obtain the next node_id based on the id that is currently running
         """
         for node in self.process_node:
             if node.get('task_id') == self.current_task_id:
@@ -81,12 +89,7 @@ class Trigger:
         return 0
 
     async def update_process_info(self, process_status: str, error_info=None):
-        """
-        修改流程状态
-        :param process_status: 流程状态
-        :param error_info: 流程错误信息
-        :return:
-        """
+        """Modify process state"""
         process_info = {
             'end_time': self.current_time,
             'process_status': process_status,
@@ -106,6 +109,7 @@ class Trigger:
 
         if self.task_deque.empty():
             # 当队列为空代表着这个任务已经运行成功
+            # When the queue is empty, the task has run successfully
             self.task_deque.put(_next_node_id)
             self.current_task_id = _next_node_id
             await asyncio.sleep(0.01)

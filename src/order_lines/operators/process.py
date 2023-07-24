@@ -5,7 +5,9 @@
 # Time       ：2023/1/10 22:41
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：任务流程操作api
+# Description：
+任务流程操作api
+process instance operator
 """
 import datetime
 import json
@@ -39,8 +41,9 @@ class ProcessInstanceOperator:
     def update_db(process_instance_id: str, **kwargs) -> int:
         """
         修改变量信息，变量名一旦创建不能修改
+        Modify variable information. A created variable name cannot be modified
         :param process_instance_id:
-        :return: variable_id
+        :return: instance id
         """
         filter_data = {'process_instance_id': process_instance_id}
         return ProcessInstanceModel.update_db(ProcessInstanceModel, filter_data, kwargs)
@@ -49,8 +52,7 @@ class ProcessInstanceOperator:
     def select_data(process_instance_id=None):
         """
         获取流程中的变量数据
-        :param process_instance_id:流程运行实例id
-        :return:
+        Get variable data in the process
         """
         filter_data = {'process_instance_id': process_instance_id}
         return ProcessInstanceModel.select_db(ProcessInstanceModel, filter_data)

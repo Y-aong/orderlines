@@ -5,7 +5,9 @@
 # Time       ：2023/1/10 20:31
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：使用责任链模式进行处理
+# Description：
+使用责任链模式处理任务
+Use chain of responsibility mode handle task
 """
 from abc import ABC, abstractmethod
 

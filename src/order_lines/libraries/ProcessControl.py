@@ -5,10 +5,16 @@
 # Time       ：2023/1/16 21:56
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：流程控制
+# Description：流程控制, Process control
+流程控制
 流程控制也是网关的一种，包括两种模式
 模式1:对于流程返回值的判断走任务A还是任务B
 模式2:对于流程的运行状态进行判断，成功——任务A，失败——任务B
+
+Process control
+Process control is also a kind of gateway, including two modes
+Mode 1: The process return value is determined by task A or Task B
+Mode 2: Judging the running state of the process, success - Task A, failure - Task B
 """
 
 from conf.config import OrderLinesConfig
@@ -29,7 +35,8 @@ class ProcessControl(BaseTask):
     def process_control(self, process_control_type: ProcessControlParam) -> ProcessControlResult:
         """
         流程控制，控制流程的运行节点
-        :param process_control_type:流程控制参数
+        Control the running nodes of the flow
+        :param process_control_type:process control param type
         :return:
         """
         task_status = process_control_type.expression.get('success')
@@ -46,7 +53,6 @@ class ProcessControl(BaseTask):
 
     @staticmethod
     def _get_task_status(task_id, process_instance_id):
-        # 通过task_id和process_instance_id找到task_status
         from public.base_model import get_session
         from apis.order_lines.models import TaskInstanceModel
         session = get_session()
@@ -55,11 +61,13 @@ class ProcessControl(BaseTask):
             TaskInstanceModel.task_id == task_id
         ).first().task_status.lower()
         # 这里因为运行到这里，不可能出现pending和running
+        # pending and running are not possible here because we're running here
         return task_status if task_status in ['success', 'failure'] else 'failure'
 
     def _control_by_status(self, conditions, expression, process_info) -> int:
         """
         根据任务状态进行判断
+        Determine the task status
         :param conditions:task_id如1001
         :param expression:{
                             'success': {
@@ -77,14 +85,16 @@ class ProcessControl(BaseTask):
         """
         process_instance_id = process_info.get('process_instance_id')
         # 根据上一个节点的task_id获取到task_status
+        # The task status is obtained based on the task id of the previous node
         task_status = self._get_task_status(conditions, process_instance_id)
-        assert expression.get(task_status), f'根据此任务id::{conditions}找不到任务状态::{task_status}'
+        assert expression.get(task_status), f'user task id::{conditions} can not find task status ::{task_status}'
         self._get_module(expression.get(task_status))
         return expression.get(task_status).get('task_id')
 
     def _control_by_condition(self, conditions: list, expression: dict) -> int:
         """
         根据任务的返回值进行判断
+        Make a judgment based on the return value of the task
         :param conditions:list [
             {
                 'A': [{'condition': 1, 'target': 1, 'sign': '='},
@@ -129,7 +139,7 @@ class ProcessControl(BaseTask):
 
         raise AttributeError('can not find condition')
 
-    def _parse_condition(self, condition_data: ProcessControlType) -> bool:
+    def _parse_condition(self, condition_data: ProcessControlParam) -> bool:
         """解析条件"""
         target = condition_data.get('target')
         self.condition = condition_data.get('condition')

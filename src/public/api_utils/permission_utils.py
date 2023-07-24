@@ -17,6 +17,7 @@ from apis.system_oauth.schema.user_permission_schema import SystemUserPermission
 def get_user_id_by_payload(payload: dict):
     """
     根据payload获取用户id
+    Gets the user id based on payload
     @param payload:
     @return:
     """
@@ -42,7 +43,7 @@ def get_role_by_user(user_id):
 
 
 def get_user_role_permission(user_id):
-    """获取用户权限"""
+    """获取用户权限,Obtain user permission"""
     session = get_session()
     permission_info = session.query(
         SystemPermission.method,
@@ -61,7 +62,7 @@ def get_user_role_permission(user_id):
 
 
 def get_user_group_permission(user_id):
-    """获取用户群组权限"""
+    """获取用户群组权限，Obtain user group permissions"""
     session = get_session()
     permission_info = session.query(
         SystemPermission.method,

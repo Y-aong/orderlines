@@ -5,7 +5,9 @@
 # Time       ：2023/2/26 10:34
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：发送邮件
+# Description：
+send email 用于任务失败回调
+Used for task failure callback
 """
 import datetime
 import smtplib
@@ -30,54 +32,51 @@ class Email(BaseTask):
         self.sender = EmailConfig.sender
         self.receivers = EmailConfig.receivers
         self.error_status = {
-            str(StatusEnum.red.value): '运行失败',
-            str(StatusEnum.pink.value): '失败跳过',
-            str(StatusEnum.orange.value): '失败重试',
-            str(StatusEnum.yellow.value): '运行超时',
+            str(StatusEnum.red.value): 'run failure',
+            str(StatusEnum.yellow.value): 'run stop',
+            str(StatusEnum.pink.value): 'failure skip',
+            str(StatusEnum.orange.value): 'failure retry',
         }
 
     def _build_msg(self, process_name: str, node_info: dict, error_or_result=None, status=None):
-        """构建发送邮件信息"""
+        """Build the send mail message"""
         task_name = node_info.get("task_name")
         if status != StatusEnum.green.value:
-            content = f'错误信息:{error_or_result}'
-            title = f'流程{process_name},任务{task_name}{self.error_status.get(status, status)}'
+            content = f'error info:{error_or_result}'
+            title = f'process{process_name},task{task_name}{self.error_status.get(status, status)}'
         else:
-            content = f'运行信息:任务运行成功,运行结果{error_or_result}'
-            title = f'流程{process_name},任务{task_name}{self.error_status.get(status, status)}'
-        msg = f'流程名称:{process_name} \n' \
-              f'任务名称:{node_info.get("task_name")} \n' \
-              f'任务参数:{node_info.get("method_kwargs")} \n' \
-              f'运行时间:{datetime.datetime.now()} \n' \
+            content = f'success:process run success,run result{error_or_result}'
+            title = f'process:{process_name},task:{task_name}{self.error_status.get(status, status)}'
+        msg = f'process_name:{process_name} \n' \
+              f'task_name:{node_info.get("task_name")} \n' \
+              f'method_kwargs:{node_info.get("method_kwargs")} \n' \
+              f'run_time:{datetime.datetime.now()} \n' \
               f'{content}'
         return title, msg
 
     def send_msg(self, email_info: EmailParam) -> EmailResult:
         """
-        发送消息测试库，可以作为callback方法
-        :param email_info: 邮件信息
+        发送消息测试库，可用作回调方法
+        Send message test library, which can be used as callback method
+        :param email_info: email info
         :return:
         """
         if not EmailConfig.is_send:
-            logger.info('回调函数调用成功，不发送邮件')
+            logger.info('The callback function was called successfully, and no mail was send')
             return {'status': StatusEnum.green.value}
         title, msg = self._build_msg(**email_info.model_dump())
         message = MIMEText(msg, 'plain', 'utf-8')
-        # 邮件主题
         message['Subject'] = title
-        # 发送方信息
         message['From'] = self.sender
-        # 接受方信息
         message['To'] = ','.join(self.receivers)
-        # 登录并发送邮件
         try:
             smtp_obj = smtplib.SMTP()
             smtp_obj.connect(self.mail_host, 25)
             smtp_obj.login(self.mail_user, self.mail_pwd)
             smtp_obj.sendmail(self.sender, self.receivers, message.as_string())
             smtp_obj.quit()
-            logger.info('邮件发送成功')
+            logger.info('email send success')
             return {'status': StatusEnum.green.value}
         except smtplib.SMTPException as e:
-            logger.error(f'邮件发送失败, 异常信息:{e}')
+            logger.error(f'email send failure, error info:{e}')
             return {'status': StatusEnum.red.value}

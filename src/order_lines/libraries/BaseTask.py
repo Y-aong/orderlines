@@ -5,7 +5,7 @@
 # Time       ：2023/1/15 16:49
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：base task 这里想做任务的动态注册
+# Description：base task model
 """
 
 from order_lines.utils.process_action_enum import StatusEnum

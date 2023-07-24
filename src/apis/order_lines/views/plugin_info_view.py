@@ -5,7 +5,7 @@
 # Time       ：2023/7/23 22:40
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：插件信息视图
+# Description：Plug-in information view
 """
 from apis.order_lines.models import PluginInfo
 from apis.order_lines.schema.plugin_info_schema import PluginInfoSchema

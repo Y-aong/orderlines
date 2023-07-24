@@ -16,8 +16,9 @@ from order_lines.libraries import STANDARD_LIBS
 def dynamic_import(module_name: str, class_name):
     """
     动态导入组件库，这里类名必须要和模块名一致
-    :param module_name: 模块名，参考配置文件中的标准库
-    :param class_name: 类名元组
+    Import component libraries dynamically, where the class name must match the module name
+    :param module_name: 模块名，参考配置文件中的标准库.Module name, refer to the standard library in the configuration file
+    :param class_name: 类名元组.Class name tuple
     :return:
     """
     modules = dict()

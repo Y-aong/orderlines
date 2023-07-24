@@ -5,7 +5,7 @@
 # Time       ：2023/7/9 16:38
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：角色视图
+# Description：role view
 """
 from flask import request
 

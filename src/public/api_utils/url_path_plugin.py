@@ -5,7 +5,9 @@
 # Time       ：2023/7/19 21:52
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：获取全部的url路径
+# Description：
+    获取全部的url路径
+    Gets all url paths
 """
 from flask import Flask
 

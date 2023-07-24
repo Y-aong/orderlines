@@ -6,6 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
+内建函数包含开始结束任务
+Built-in functions contain start and end tasks
 """
 from conf.config import OrderLinesConfig
 from order_lines.libraries.BaseTask import BaseTask
@@ -19,9 +21,9 @@ class BuiltIn(BaseTask):
         super(BuiltIn, self).__init__()
 
     def start(self, base_param: BasePluginParam) -> None:
-        """开始节点"""
+        """start node"""
         return {'status': self.success}
 
     def end(self, base_param: BasePluginParam) -> None:
-        """结束节点"""
+        """end node"""
         return {'status': self.success}

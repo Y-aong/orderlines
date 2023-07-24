@@ -39,7 +39,7 @@ class ScheduleTaskView(BaseView):
         self.table_schema = self.table_schemas.get(self.trigger)
         self.patrol_task_id = None
         self.task_name = None
-        self.exe_type = '定时启动'
+        self.exe_type = 'schedule start'
         self.job_id = None
         self.apscheduler_utils = ApschedulerUtils()
 

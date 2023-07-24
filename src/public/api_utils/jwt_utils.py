@@ -38,9 +38,9 @@ def verify_token(token, secret=None):
     try:
         payload = jwt.decode(token, secret, algorithms=["HS256"])
     except ExpiredSignatureError:
-        raise JWTVerifyException("当前token已经过期了")
+        raise JWTVerifyException("The current token has expired")
     except DecodeError:
-        raise DecodeError("jwt解析失败")
+        raise DecodeError("jwt parsing failed")
 
     return payload
 

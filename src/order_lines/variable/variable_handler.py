@@ -5,7 +5,9 @@
 # Time       ：2023/2/22 22:46
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：变量运算, 目前支持int四则运算，和str拼接
+# Description：
+    变量运算, 目前支持int四则运算，和str拼接
+    Variable operation, currently support int four operations, and str concatenation
 """
 from typing import List
 from copy import deepcopy
@@ -19,11 +21,6 @@ from order_lines.variable.variable_operator import VariableOperator
 class VariableHandler:
 
     def __init__(self, task_id: str, task_name: str, process_info: dict):
-        """
-        :param task_id:任务id
-        :param task_name:任务名称
-        :param process_info: 流程id
-        """
         self.task_id = task_id
         self.task_name = task_name
         self.process_info = process_info
@@ -34,7 +31,8 @@ class VariableHandler:
     def handle_param_with_variable(self, params_value):
         """
         获取流程中的带有变量的参数
-        :param params_value:
+        Gets parameters with variables in the process
+        :param params_value:param value
         :return:
         """
         variable_name = Match(params_value).get_variable_name()
@@ -62,6 +60,7 @@ class VariableHandler:
     def handle_process_control_params(self, node_params: dict):
         """
         对于流程控制节点进行单独判断
+        Process control nodes are judged individually
         :param node_params:
          {
             "conditions": [
@@ -99,11 +98,13 @@ class VariableHandler:
     def handle_node_params(self, node_params: dict, task_type):
         """
         解析流程中的参数
+        Parse the parameters in the process
         :param node_params: { "a": "${add_value}", "b": 2}
-        :param task_type: 任务类型
+        :param task_type: task type
         :return:
         """
-        # 1、普通流程判断流程中的参数是否存在变量
+        # 普通流程判断流程中的参数是否存在变量
+        # Common node whether parameters in the process have variables
         if not node_params:
             return {}
         if task_type == 'process_control':
@@ -114,8 +115,9 @@ class VariableHandler:
     def handle_node_return(self, node_results: List[dict], task_result: dict):
         """
         处理任务返回值的
-        :param node_results: 流程的返回值参数
-        :param task_result: 任务的返回值
+        Process task return value
+        :param node_results: 流程的返回值参数,The return value parameter of the process
+        :param task_result: 任务的返回值,The return value of the task
         :return:task_result
         """
         if not node_results:
@@ -132,10 +134,10 @@ class VariableHandler:
 
     def _update_variable_value(self, task_variable_value, node_result, node_variable_value):
         """
-        更新数据variable_value
-        :param task_variable_value:真正的数据值
-        :param node_result: 变量的信息
-        :param node_variable_value: 节点中变量配置的值
+        update variable_value
+        :param task_variable_value:真正的数据值,Real data values
+        :param node_result: 变量的信息,Variable information
+        :param node_variable_value: 节点中变量配置的值,The value of the variable configuration in the node
         :return:
         """
         if task_variable_value:
@@ -146,13 +148,11 @@ class VariableHandler:
             variable_operator = VariableOperator(node_variable_value, task_variable_value, variable_type)
             real_variable_value = variable_operator.variable_operator()
             if variable_instance:
-                # 变量存在
-                logger.info(f'变量{variable_name, real_variable_value, node_result}修改数据库成功')
+                logger.info(f'variable {variable_name, real_variable_value, node_result} update db success')
                 node_result.setdefault('variable_name', variable_name)
                 variable.update_db(self.process_instance_id, self.task_name, real_variable_value, **node_result)
             else:
-                # 变量不存在
-                logger.info(f'变量{variable_name, real_variable_value, node_result}添加数据库成功')
+                logger.info(f'variable {variable_name, real_variable_value, node_result} add db success')
                 variable.insert_db(self.process_info, real_variable_value, node_result, self.task_name)
 
             return real_variable_value

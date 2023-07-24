@@ -5,7 +5,9 @@
 # Time       ：2023/2/19 22:30
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：使用进程方式运行任务
+# Description：
+    使用进程方式运行任务
+    Run tasks in process mode
 """
 from multiprocessing import Pool, context
 from conf.config import OrderLinesConfig
@@ -21,13 +23,14 @@ class ProcessRunner:
 
         self.pool_size = pool_size
 
-    def spawn(self, func, parallel_task_ids: list, parallel_type, timeout):
+    def spawn(self, method, parallel_task_ids: list, parallel_type, timeout):
         """
         进程方式运行函数
-        :param func:要运行的函数
-        :param parallel_task_ids:并行任务函数
-        :param parallel_type:并行任务函数
-        :param timeout:超时时间
+        Run functions in process mode
+        :param method:target method
+        :param parallel_task_ids:parallel task ids
+        :param parallel_type:parallel task param
+        :param timeout:timeout
         :return:
         """
         try:
@@ -36,11 +39,11 @@ class ProcessRunner:
             task_result = dict()
             timeout = timeout if timeout else OrderLinesConfig.task_timeout
             for group_id in parallel_task_ids:
-                t = pool.apply_async(func, args=(group_id, parallel_type))
+                t = pool.apply_async(method, args=(group_id, parallel_type))
                 task_result[group_id] = t
             for group_id, task in task_result.items():
                 task_result[group_id] = task.get(timeout=timeout)
 
             return task_result
         except context.TimeoutError:
-            raise TimeOutException(f'流程运行超时')
+            raise TimeOutException(f'Process running timeout')

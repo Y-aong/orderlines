@@ -5,21 +5,18 @@
 # Time       ：2023/1/29 22:24
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：order_line工具类
+# Description：order_line util
 """
 import inspect
 import json
 
 
 def get_current_node(task_id, process_node):
-    """
-    根据当前任务id获取当前正在运行的任务
-    :return:当前的任务信息
-    """
+    """Obtain the currently running task based on the task id"""
     for node in process_node:
         if node.get('task_id') == task_id:
             return node
-    raise AttributeError(f'根据task id{task_id, type(task_id)}找不到任务节点')
+    raise AttributeError(f'use task id {task_id} The task node cannot be found')
 
 
 def get_variable_value(variable_value, variable_type):
@@ -45,12 +42,13 @@ def get_variable_value(variable_value, variable_type):
 def get_method_param_annotation(method):
     """
     获取方法的参数类型注解
-    @param method: 插件方法
-    @return: flag, 参数注解
-    flag 为是否使用pydantic
+    Gets the parameter type annotation for the method
+    @param method: method
+    @return: flag, param_annotation
+    flag is use pydantic
     """
     sig = inspect.signature(method)
-    parameters = sig.parameters  # 参数有序字典
+    parameters = sig.parameters
     arg_keys = tuple(arg for arg in parameters.keys() if arg != 'self')
     if len(arg_keys) == 1:
         for arg_name in arg_keys:

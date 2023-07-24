@@ -5,7 +5,9 @@
 # Time       ：2023/1/10 22:35
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：任务节点操作api
+# Description：
+任务节点操作api
+task instance operator
 """
 import copy
 import datetime
@@ -60,7 +62,6 @@ class TaskInstanceOperator:
 
     @staticmethod
     def stop_helper(process_instance_id):
-        # 获取任务名称
         session = get_session()
         task_info = session.query(TaskInstanceModel.task_name, TaskInstanceModel.id).filter(
             TaskInstanceModel.process_instance_id == process_instance_id,
@@ -79,8 +80,8 @@ class TaskInstanceOperator:
     @staticmethod
     def get_task_build_time(process_instance_id):
         """
-        获取正在运行中的流程信息
-        :return:
+        获取正在运行中的流程信息,
+        Gets information about a running process
         """
         session = get_session()
         task_info = session.query(TaskInstanceModel.task_id, TaskInstanceModel.start_time).filter(
