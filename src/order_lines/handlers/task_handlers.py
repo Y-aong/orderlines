@@ -9,7 +9,10 @@
     特定任务节点的处理
     Processing of specific task nodes
 """
+import json
 import traceback
+
+from pydantic import BaseModel
 
 from order_lines.handlers.base_handler import AbstractHandler
 from order_lines.libraries.Group import Group, GroupParam
@@ -20,7 +23,7 @@ from public.logger import logger
 
 
 class DefaultHandler(AbstractHandler):
-    def handle(self, module, method_name: str, task_kwargs: dict) -> dict:
+    def handle(self, module, method_name: str, task_kwargs: BaseModel) -> dict:
 
         if hasattr(module, method_name):
             func = getattr(module(), method_name)
@@ -31,23 +34,27 @@ class DefaultHandler(AbstractHandler):
 
 class CommonHandler(AbstractHandler):
 
-    def handle(self, module, method_name: str, task_kwargs: dict) -> dict:
+    def handle(self, module, method_name: str, task_kwargs: BaseModel) -> dict:
 
         if hasattr(module, method_name):
+            task_kwargs = self.handle_on_receive(task_kwargs, module)
             try:
                 func = getattr(module(), method_name)
                 result: dict = func(task_kwargs)
                 result.setdefault('status', StatusEnum.green.value)
-                return result
+                return self.handle_on_receive(task_kwargs, module)
             except Exception as e:
-                return {'status': StatusEnum.red.value,
-                        'error_info': f'error info:{e}\ntraceback:{traceback.format_exc()}'}
+                error = self.handle_on_receive(e, module)
+                return {
+                    'status': StatusEnum.red.value,
+                    'error_info': json.dumps({'error info': error, 'traceback': traceback.format_exc()})
+                }
         else:
             return super().handle(module, method_name, task_kwargs)
 
 
 class ProcessControlHandler(AbstractHandler):
-    def handle(self, module, method_name: str, task_kwargs: dict) -> dict:
+    def handle(self, module, method_name: str, task_kwargs: BaseModel) -> dict:
 
         if hasattr(module(), method_name):
             try:
@@ -56,7 +63,10 @@ class ProcessControlHandler(AbstractHandler):
             except Exception as e:
                 logger.error(f'The process control gateway is abnormal.error info:{e},'
                              f'\ntraceback:{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
+                return {
+                    'status': StatusEnum.red.value,
+                    'error_info': json.dumps({'error info': e, 'traceback': traceback.format_exc()})
+                }
         else:
             return super().handle(module, method_name, task_kwargs)
 
@@ -73,7 +83,10 @@ class GroupHandler(AbstractHandler):
                 return result
             except Exception as e:
                 logger.error(f'The task group fails to run.error info:{e},\n{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
+                return {
+                    'status': StatusEnum.red.value,
+                    'error_info': json.dumps({'error info': e, 'traceback': traceback.format_exc()})
+                }
         else:
             return super().handle(module, method_name, task_kwargs)
 

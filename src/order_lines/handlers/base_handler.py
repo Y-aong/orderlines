@@ -10,6 +10,9 @@
     Use chain of responsibility mode handle task
 """
 from abc import ABC, abstractmethod
+from typing import Any
+
+from pydantic import BaseModel
 
 
 class Handler(ABC):
@@ -24,12 +27,42 @@ class Handler(ABC):
 class AbstractHandler(Handler):
     _next_handler: Handler = None
 
+    @staticmethod
+    def handle_on_receive(param: Any, module):
+        """
+        处理函数参数
+        @param param:
+        @param module:
+        @return:
+        """
+        if hasattr(module, 'on_receive'):
+            receive_param = getattr(module(), 'on_receive')(param)
+            return receive_param if receive_param else param
+
+        return param
+
+    @staticmethod
+    def handle_on_success(result: Any, module):
+        if hasattr(module, 'on_success'):
+            success_result = getattr(module(), 'on_success')(result)
+            return success_result if success_result else result
+
+        return result
+
+    @staticmethod
+    def handle_on_failure(error: str, module):
+        if hasattr(module, 'on_failure'):
+            failure_error = getattr(module(), 'on_failure')(error)
+            return failure_error if failure_error else error
+
+        return error
+
     def set_next(self, handler: Handler) -> Handler:
         self._next_handler = handler
         return handler
 
     @abstractmethod
-    def handle(self, module, method_name: str, task_kwargs: dict) -> dict:
+    def handle(self, module, method_name: str, task_kwargs: BaseModel) -> dict:
         if self._next_handler:
             return self._next_handler.handle(module, method_name, task_kwargs)
         return {}
