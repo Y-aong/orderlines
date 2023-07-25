@@ -5,7 +5,9 @@
 # Time       ：2023/7/7 21:56
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：Task model serialization class
+# Description：
+    任务模型序列化类
+    Task model serialization class
 """
 import json
 

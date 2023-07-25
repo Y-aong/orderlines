@@ -5,7 +5,9 @@
 # Time       ：2023/1/15 16:49
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：base task model
+# Description：
+任务模型基类
+base task model
 """
 
 from order_lines.utils.process_action_enum import StatusEnum

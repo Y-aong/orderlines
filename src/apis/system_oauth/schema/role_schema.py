@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:25
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：Role serialized class
+# Description：
+    角色序列化类
+    Role serialized class
 """
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema

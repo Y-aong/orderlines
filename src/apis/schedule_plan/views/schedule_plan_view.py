@@ -6,6 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
+    定时计划视图类
+    schedule task view
 """
 import uuid
 

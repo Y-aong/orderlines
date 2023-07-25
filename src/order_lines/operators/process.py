@@ -6,8 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
-任务流程操作api
-process instance operator
+    任务流程操作api
+    process instance operator
 """
 import datetime
 import json
@@ -42,8 +42,6 @@ class ProcessInstanceOperator:
         """
         修改变量信息，变量名一旦创建不能修改
         Modify variable information. A created variable name cannot be modified
-        :param process_instance_id:
-        :return: instance id
         """
         filter_data = {'process_instance_id': process_instance_id}
         return ProcessInstanceModel.update_db(ProcessInstanceModel, filter_data, kwargs)

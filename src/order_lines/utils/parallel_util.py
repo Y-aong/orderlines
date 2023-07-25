@@ -10,6 +10,7 @@
 就是并行任务组中给定的是所有的task下，需要框架自己需要找到任务组
 其实可以算得上一个算法题
 给定两个数组如下，
+
 Look for task groups in parallel task groups, this is the second way in parallel task groups,
 The parallel task group is given for all tasks, and the framework itself needs to find the task group
 It's actually an algorithm problem
@@ -89,10 +90,10 @@ class ParallelUtils:
             parallel_task_ids.remove(task_id)
 
         if next_id not in parallel_task_ids and group_ids:
-            # 终止条件
+            # 终止条件. end condition
             self.result.append(group_ids)
             return
-        # 节点的下一个节点在并行任务组中
+        # 节点的下一个节点在并行任务组中. The next node of the node is in the parallel task group
         if next_id in parallel_task_ids:
             group_ids.append(next_id)
             self.solution(next_id, parallel_task_ids, group_ids)

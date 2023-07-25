@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 22:37
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：web钩子函数
+# Description：
+    web钩子函数
+    web hook function
 """
 from flask import request, Flask
 from jwt import DecodeError
@@ -39,7 +41,7 @@ class WebHook:
 
     @staticmethod
     def check_role_permission(user_id):
-        """检查用户角色权限"""
+        """检查用户角色权限, Check user role permissions"""
         permissions = get_user_role_permission(user_id)
         role = get_role_by_user(user_id)
         if role == 'admin':
@@ -53,7 +55,7 @@ class WebHook:
 
     @staticmethod
     def check_group_permission(user_id):
-        """检查用户群组权限"""
+        """检查用户群组权限,Check user group permissions"""
         permissions = get_user_role_permission(user_id)
         path = request.path
         method = request.method
@@ -63,7 +65,7 @@ class WebHook:
         return False
 
     def authentication(self):
-        """权限认证"""
+        """权限认证, Permission authentication"""
 
         self.check_black_list()
         if not self.check_white_list():

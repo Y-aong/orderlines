@@ -5,8 +5,9 @@
 # Time       ：2023/2/26 21:33
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：任务组 Task group
+# Description：
 任务组
+
 1、任务组中只可以运行普通任务，不可以运行流程控制，并发任务等任务
 2、任务组是一个多个任务的集合，在主流程中只相当于一个普通节点
 3、任务组是一个责任链模式，必须是确定的任务，任务组的中的子任务和其他方式的运行方式不一样
@@ -14,6 +15,7 @@
 5、任务组的group_ids是一个列表，包含着当前任务中的所有子任务
 
 Task group
+
 1. Only common tasks, such as process control and concurrent tasks, can be run in a task group
 2, the task group is a collection of multiple tasks, in the main process is only equivalent to an ordinary node
 3, Task group is a chain of responsibility mode, must be a determined task,

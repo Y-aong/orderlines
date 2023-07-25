@@ -7,12 +7,14 @@
 # version    ：python 3.7
 # Description：流程控制, Process control
 流程控制
+
 流程控制也是网关的一种，包括两种模式
 模式1:对于流程返回值的判断走任务A还是任务B
 模式2:对于流程的运行状态进行判断，成功——任务A，失败——任务B
 
 Process control
-Process control is also a kind of gateway, including two modes
+
+process control is also a kind of gateway, including two modes
 Mode 1: The process return value is determined by task A or Task B
 Mode 2: Judging the running state of the process, success - Task A, failure - Task B
 """

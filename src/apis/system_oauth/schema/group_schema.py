@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:23
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：Group serialized class
+# Description：
+    群组序列化类
+    Group serialized class
 """
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema

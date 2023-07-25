@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:45
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：jwt工具类
+# Description：
+    jwt工具类
+    jwt utils
 """
 import datetime
 import hashlib

@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:26
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：Departmental serialized class
+# Description：
+    部门序列化类
+    Departmental serialized class
 """
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema

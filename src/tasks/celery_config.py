@@ -5,10 +5,8 @@
 # Time       ：2023/7/8 10:40
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：
+# Description：celery config
 """
-# !/usr/bin/env python
-# -*-coding:utf-8 -*-
 
 from conf.config import CeleryConfig
 

@@ -134,7 +134,7 @@ class VariableHandler:
 
     def _update_variable_value(self, task_variable_value, node_result, node_variable_value):
         """
-        update variable_value
+        更新变量值. update variable_value
         :param task_variable_value:真正的数据值,Real data values
         :param node_result: 变量的信息,Variable information
         :param node_variable_value: 节点中变量配置的值,The value of the variable configuration in the node

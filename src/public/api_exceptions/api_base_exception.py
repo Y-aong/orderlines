@@ -5,7 +5,9 @@
 # Time       ：2023/1/11 20:55
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：operators base exception
+# Description：
+    接口异常基类
+    api base exception
 """
 import typing as t
 from flask import request, json
@@ -17,7 +19,7 @@ class APIException(HTTPException):
     msg = 'sorry, we make a mistakeO(∩_∩)O哈哈~'
     error_code = 999
 
-    def __init__(self, msg=None, code=None, error_code=None, hearders=None):
+    def __init__(self, msg=None, code=None, error_code=None, herders=None):
 
         if code:
             self.code = code
@@ -27,7 +29,6 @@ class APIException(HTTPException):
             self.msg = msg
         super(APIException, self).__init__(msg, None)
 
-    # 定义返回字典
     def get_body(self, environ=None, scope: t.Optional[dict] = None):
         body = dict(
             msg=self.msg,

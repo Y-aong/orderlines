@@ -5,7 +5,9 @@
 # Time       ：2023/7/7 21:29
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：处理api接口的装饰器
+# Description：
+    处理api接口的装饰器
+    Decorators that handle api interfaces
 """
 
 import traceback
@@ -22,14 +24,14 @@ def handle_api_error(func):
         try:
             res = func(*args, **kwargs)
         except IntegrityError as e:
-            logger.info(f"接口名称::{request.url},\n异常堆栈::{traceback.format_exc()}, {e}")
-            return generate_abort(data=f'参数重复::{e}', code=400)
+            logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
+            return generate_abort(data=f'db parameter repetition::{e}', code=400)
         except ValueError as e:
-            logger.info(f"接口名称::{request.url},\n异常堆栈::{traceback.format_exc()}, {e}")
-            return generate_abort(data=f'客户端参数异常::{e}', code=400)
+            logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
+            return generate_abort(data=f'Client parameters are abnormal.{e}', code=400)
         except Exception as e:
-            logger.info(f"接口名称::{request.url},\n异常堆栈::{traceback.format_exc()}, {e}")
-            return generate_abort(data='服务器异常', code=500)
+            logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
+            return generate_abort(data='Server exception.', code=500)
         return res
 
     return wrapper

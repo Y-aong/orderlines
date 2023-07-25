@@ -5,7 +5,7 @@
 # Time       ：2023/1/14 22:34
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：flask方法入口
+# Description：flask enter point
 """
 
 from apis import create_app

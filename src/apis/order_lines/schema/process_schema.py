@@ -5,7 +5,9 @@
 # Time       ：2023/3/12 10:26
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：process serialization class
+# Description：
+    流程序列化类
+    process serialization class
 """
 import json
 

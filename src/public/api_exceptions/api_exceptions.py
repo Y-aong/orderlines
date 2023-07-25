@@ -5,7 +5,9 @@
 # Time       ：2023/1/11 20:54
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：operators 异常类
+# Description：
+    具体异常类
+    Concrete exception class
 """
 from .api_base_exception import APIException
 

@@ -5,7 +5,9 @@
 # Time       ：2023/7/23 22:06
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：orderlines插件信息表
+# Description：
+    orderlines插件信息表
+    Orderlines plug-in information table
 """
 from public.base_model import Base, db
 

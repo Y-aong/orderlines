@@ -5,7 +5,9 @@
 # Time       ：2023/7/7 21:48
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：process 模型类
+# Description：
+    process 模型类
+    process model class
 """
 from sqlalchemy import func
 

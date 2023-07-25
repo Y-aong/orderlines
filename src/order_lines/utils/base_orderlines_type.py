@@ -5,7 +5,9 @@
 # Time       ：2023/7/22 11:07
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：orderlines base type
+# Description：
+    orderlines 基础类型
+    orderlines base type
 """
 from typing import Union, List
 

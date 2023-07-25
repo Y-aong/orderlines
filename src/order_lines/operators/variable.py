@@ -5,7 +5,9 @@
 # Time       ：2023/1/29 21:30
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：Variable Model Operator
+# Description：
+    变量模块操作类
+    Variable Model Operator
 """
 from typing import Any
 

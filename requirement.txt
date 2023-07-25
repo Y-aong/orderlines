@@ -1,6 +1,7 @@
 alembic==1.7.7
 amqp==5.1.1
 aniso8601==9.0.1
+annotated-types==0.5.0
 antiorm==1.2.1
 APScheduler==3.10.1
 async-timeout==4.0.2
@@ -49,6 +50,8 @@ pandas==2.0.3
 pluggy==1.0.0
 prompt-toolkit==3.0.36
 pycparser==2.21
+pydantic==2.0.3
+pydantic-core==2.3.0
 PyJWT==2.3.0
 PyMySQL==1.0.2
 pytest==7.2.1
@@ -62,7 +65,7 @@ six==1.16.0
 soupsieve==2.4
 SQLAlchemy==1.4.40
 tomli==2.0.1
-typing_extensions==4.2.0
+typing-extensions==4.7.1
 tzdata==2023.3
 tzlocal==5.0.1
 urllib3==1.26.14

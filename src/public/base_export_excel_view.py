@@ -14,7 +14,7 @@ import pandas as pd
 from flask import make_response
 from flask_restful import Resource
 
-from public.api_handle_exception import handle_error
+from public.api_handle_exception import handle_api_error
 from public.base_model import db
 
 
@@ -55,7 +55,7 @@ class BaseExportExcelView(Resource):
         self.export_df = self.export_df[old_columns]
         self.export_df.columns = new_columns
 
-    @handle_error
+    @handle_api_error
     def get(self):
         self.make_response_date()
         out = io.BytesIO()

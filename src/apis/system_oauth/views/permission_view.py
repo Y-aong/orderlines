@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:42
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：permission view
+# Description
+    权限视图：
+    permission view
 """
 from apis.system_oauth.models import SystemPermission
 from apis.system_oauth.schema.permission_schema import SystemPermissionSchema

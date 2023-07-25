@@ -5,7 +5,9 @@
 # Time       ：2023/1/29 21:13
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：Variable model class
+# Description：
+    变量模型类
+    Variable model class
 """
 from public.base_model import Base, db
 

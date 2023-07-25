@@ -21,9 +21,15 @@ class BuiltIn(BaseTask):
         super(BuiltIn, self).__init__()
 
     def start(self, base_param: BasePluginParam) -> None:
-        """start node"""
+        """
+        开始节点
+        start node
+        """
         return {'status': self.success}
 
     def end(self, base_param: BasePluginParam) -> None:
-        """end node"""
+        """
+        结束节点
+        end node
+        """
         return {'status': self.success}

@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:35
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：dept view
+# Description：
+    部门视图
+    dept view
 """
 from apis.system_oauth.models import SystemDepartment
 from apis.system_oauth.schema.department_schema import SystemDepartmentSchema

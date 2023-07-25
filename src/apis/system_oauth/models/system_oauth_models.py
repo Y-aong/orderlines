@@ -5,14 +5,17 @@
 # Time       ：2023/7/9 10:27
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：user permission model
+# Description：
+    用户权限模型类
+    user permission model
+
 user——group  多对多
 dept ——user 一对多
 role ——permission  多对多
 role ——user 多对多
 group ——permission  多对多
 
-user role  permission  group  dept 
+user role  permission  group  dept
 user group relation
 role permission relation
 group permission relation
@@ -57,7 +60,6 @@ class SystemGroup(Base):
     __table_args__ = {'extend_existing': True}
     group_name = db.Column(db.String(128), unique=True, comment='group name')
     desc = db.Column(db.String(255), comment='group desc')
-    # owner owner
     owner_id = db.Column(db.Integer, comment='owner id')
     owner_name = db.Column(db.String(64), comment='owner name')
 

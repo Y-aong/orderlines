@@ -5,7 +5,9 @@
 # Time       ：2023/7/20 21:53
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：orderlines插件库插件，自动将插件中的函数信息写到数据库中
+# Description：
+    orderlines插件工具，自动将插件中的函数信息写到数据库中
+    The plug-in tool automatically writes the function information in the plug-in to the database
 """
 import inspect
 from typing import Any
@@ -96,7 +98,7 @@ class OrderlinesPlugHelper:
 
     @staticmethod
     def handle_func_doc(func_doc: str) -> str:
-        """处理函数的注释,Handles comments of functions"""
+        """处理函数的注释, Handles comments of functions"""
         if not func_doc:
             return ''
 

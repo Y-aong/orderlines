@@ -5,7 +5,9 @@
 # Time       ：2023/7/7 21:45
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：apscheduler配置信息
+# Description：
+    apscheduler配置信息
+    apscheduler Configuration information
 """
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
@@ -27,5 +29,7 @@ job_defaults = {
     'max_instances': 3
 }
 
-scheduler = BackgroundScheduler(jobstores=job_stores, executors=executors,
-                                job_defaults=job_defaults, timezone='Asia/Shanghai')
+scheduler = BackgroundScheduler(jobstores=job_stores,
+                                executors=executors,
+                                job_defaults=job_defaults,
+                                timezone='Asia/Shanghai')

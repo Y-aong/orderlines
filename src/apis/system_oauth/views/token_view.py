@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:49
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：token view
+# Description：
+    token 视图
+    token view
 """
 from flask import request
 from flask_restful import Resource

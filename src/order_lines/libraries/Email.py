@@ -6,8 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
-send email 用于任务失败回调
-Used for task failure callback
+    发送邮件, 用于任务失败回调
+    Used for task failure callback
 """
 import datetime
 import smtplib
@@ -39,7 +39,7 @@ class Email(BaseTask):
         }
 
     def _build_msg(self, process_name: str, node_info: dict, error_or_result=None, status=None):
-        """Build the send mail message"""
+        """构建发送邮件消息。Build mail message"""
         task_name = node_info.get("task_name")
         if status != StatusEnum.green.value:
             content = f'error info:{error_or_result}'

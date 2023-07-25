@@ -6,6 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
+    启动流程视图
+    start process view
 """
 from flask import request
 from flask_restful import Resource
@@ -21,6 +23,6 @@ class OrderLinesStartView(Resource):
 
     def post(self):
         process_id = self.form_data.get('process_id')
-        from tasks.order_lines_run import order_lines_run
-        order_lines_run.delay(process_id)
-        return generate_response(message='流程开始运行！')
+        from tasks.order_lines_run import orderlines_run
+        orderlines_run.delay(process_id)
+        return generate_response(message='process begin run!')

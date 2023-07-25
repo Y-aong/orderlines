@@ -5,8 +5,9 @@
 # Time       ：2023/2/27 22:53
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：并行网关  Parallel gateway
+# Description：
 并行网关
+
 1、并行网关中运行的是任务组，就算只是运行一个任务也是一个任务组
 2、并行网关可以使用两种方式来运行
     2.1 协程方式这种主要的运行方式就是使用协程的方式来运行，主要针对于io密集行数据
@@ -17,6 +18,7 @@
     第二：寻找式：并行任务中为所有的任务id,让框架自己寻找任务组，但是任务中必须要有pre_id和next_id
 
 Parallel gateway
+
 1, parallel gateway running is a task group, even if only running a task is a task group
 2. Parallel gateways can be run in two ways
     2.1 Coroutine mode This main mode of operation is the use of coroutine mode to run, mainly for io dense row data

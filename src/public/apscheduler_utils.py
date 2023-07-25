@@ -6,7 +6,9 @@
 # Time       ：2023/6/29 10:58
 # Author     ：YangYong
 # version    ：python 3.10
-# Description：定时计划的增删改查
+# Description：
+    定时计划的增删改查
+    Schedule additions, deletions, corrections and checks
 """
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.date import DateTrigger
@@ -19,7 +21,7 @@ from public.base_model import get_session
 
 class ApschedulerUtils:
     def __init__(self):
-        self.exe_type = '定时启动'
+        self.exe_type = 'schedule'
         self.cron_key = ['year', 'month', 'day', 'week', 'day_of_week', 'hour', 'minute', 'second']
         self.interval_key = ['weeks', 'days', 'hours', 'minutes', 'seconds']
         self.date_key = ['run_date']
@@ -49,7 +51,7 @@ class ApschedulerUtils:
         elif trigger_type == 'date':
             schedule_data = self.check_param(schedule_data, trigger_type)
         else:
-            raise ValueError(f'trigger::{trigger_type}参数异常')
+            raise ValueError(f'trigger::{trigger_type}Parameter error')
         scheduler.add_job(
             id=job_name,
             func=self.target_func,
@@ -80,12 +82,12 @@ class ApschedulerUtils:
             scheduler.modify_job(job_id=job_id, trigger=trigger_instance)
 
     def check_task(self, job_name):
-        """检查定时任务是否存在"""
+        """检查定时任务是否存在, Check whether scheduled tasks exist"""
         job = self.session.query(ApschedulerJobs).filter(ApschedulerJobs.id == job_name).first()
         return False if not job else True
 
     def delete_task(self, job_id):
-        """删除定时任务"""
+        """删除定时任务,Deleting a Scheduled Task"""
         if self.check_task(job_id):
             scheduler.remove_job(job_id)
 

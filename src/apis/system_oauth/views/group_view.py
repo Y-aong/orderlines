@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:39
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：group view
+# Description：
+    群组视图
+    group view
 """
 from flask import request
 

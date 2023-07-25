@@ -6,6 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
+    权限工具方法
+    permission util method
 """
 from apis.system_oauth.schema.user_schema import SystemUserSchema
 from public.base_model import get_session

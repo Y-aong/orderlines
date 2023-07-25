@@ -5,7 +5,9 @@
 # Time       ：2023/3/12 10:44
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：response基类
+# Description：
+    自定义response
+    custom response
 """
 
 from flask import jsonify, abort
@@ -13,10 +15,10 @@ from flask import jsonify, abort
 
 def generate_response(data=None, code=200, message='success'):
     """
-    自定义响应
-    :param code:状态码
-    :param data:返回数据
-    :param message:返回消息
+    自定义响应, custom response
+    :param code:状态码, status_code
+    :param data:返回数据, response data
+    :param message:返回消息, response_message
     :return:
     """
     success = True if code == 200 else False

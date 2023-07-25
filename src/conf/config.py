@@ -5,7 +5,9 @@
 # Time       ：2023/2/19 21:39
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：配置文件类
+# Description：
+    配置文件类
+    config model
 """
 import os.path
 

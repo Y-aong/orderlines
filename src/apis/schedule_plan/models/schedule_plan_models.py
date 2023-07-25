@@ -5,7 +5,9 @@
 # Time       ：2023/7/7 21:38
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：Timing schedule class
+# Description：
+    定时计划模型类
+    Timing schedule class
 """
 from public.base_model import Base, db
 
@@ -39,7 +41,7 @@ class CrontabPlan(Base):
     year = db.Column(db.String(32), comment='A four-figure year')
     month = db.Column(db.String(32), comment='Indicates that the value range is 1-12 month')
     day = db.Column(db.String(32), comment='Indicates that the value range is 1-31 day')
-    week = db.Column(db.String(32), comment='格里历2006年12月31日可以写成2006年-W52-7 扩展形式或2006W527 紧凑形式')
+    week = db.Column(db.String(32), comment='2006-12-31 or 2006-W52-7 or 2006W527')
     day_of_week = db.Column(db.String(32), comment='Indicates the day of the week,0-6 or mon,tue,wed,thu,fri,sat,sun')
     hour = db.Column(db.String(32), comment='Indicates that the value range is 0-23')
     minute = db.Column(db.String(32), comment='Indicates that the value range is 0-59')

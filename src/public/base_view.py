@@ -5,7 +5,9 @@
 # Time       ：2023/3/12 13:10
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：flask视图基类
+# Description：
+    视图基类
+    base view
 """
 from flask import request
 from flask_restful import Resource
@@ -39,26 +41,23 @@ class BaseView(Resource):
                 self._filter.append(getattr(self.table_orm, key) == value)
 
     def handle_request_params(self):
-        """处理请求参数"""
         pass
 
     def handle_response_data(self):
-        """处理返回值参数"""
         pass
 
     def response_callback(self):
-        """处理response的其他后续操作"""
         pass
 
     def _get_single(self):
-        """单条查询"""
+        """单条查询, Single query"""
         single_data = db.session.query(self.table_orm).filter(*self._filter).first()
         if single_data:
             return self.table_schema().dump(single_data)
         return {}
 
     def _get_multi(self):
-        """多条查询"""
+        """多条查询, Multiple query"""
         multi_data = db.session.query(self.table_orm).filter(*self._filter).order_by(
             self.table_orm.id).paginate(page=self.page, per_page=self.pre_page)
         items = self.table_schema().dump(multi_data.items, many=True)
@@ -67,7 +66,6 @@ class BaseView(Resource):
 
     @handle_api_error
     def get(self):
-        # 获取全部
         self.handle_filter()
         if not self.form_data or self.form_data.get('pre_page'):
             data = self._get_multi()
@@ -90,7 +88,7 @@ class BaseView(Resource):
         self.table_id = obj.id
         self.handle_response_data()
         self.response_callback()
-        return generate_response(message='创建成功', data=self.response_data)
+        return generate_response(message='create success', data=self.response_data)
 
     @handle_api_error
     def put(self):
@@ -102,13 +100,13 @@ class BaseView(Resource):
                 form_data.setdefault(key, value)
         info = self.table_schema().load(form_data)
         if not obj:
-            raise ValueError(f'根据table_id:{self.table_id}找不到记录')
+            raise ValueError(f'use table_id:{self.table_id} can not find')
         with db.auto_commit():
             db.session.query(self.table_orm).filter(self.table_orm.id == self.table_id).update(info)
         self.response_data['table_id'] = obj.id
         self.handle_response_data()
         self.response_callback()
-        return generate_response(message='修改成功', data=self.response_data)
+        return generate_response(message='update success', data=self.response_data)
 
     @handle_api_error
     def delete(self):
@@ -121,4 +119,4 @@ class BaseView(Resource):
 
         self.response_data['table_id'] = self.table_id
         self.response_callback()
-        return generate_response(message='删除成功', data=self.response_data)
+        return generate_response(message='delete success', data=self.response_data)

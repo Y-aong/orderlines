@@ -5,7 +5,9 @@
 # Time       ：2023/3/12 14:20
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：order lines 帮助类
+# Description：
+    orderlines 帮助类
+    orderlines helper class
 """
 from apis.order_lines.models import TaskModel
 from apis.order_lines.models.process import ProcessModel

@@ -6,8 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
-使用责任链模式处理任务
-Use chain of responsibility mode handle task
+    使用责任链模式处理任务
+    Use chain of responsibility mode handle task
 """
 from abc import ABC, abstractmethod
 

@@ -5,7 +5,9 @@
 # Time       ：2023/7/7 22:09
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：定时计划序列化类
+# Description：
+    定时计划序列化类
+    Serialize classes schedule plan
 """
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema

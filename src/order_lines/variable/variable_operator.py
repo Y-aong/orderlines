@@ -13,7 +13,7 @@ from order_lines.variable.match import Match
 class VariableOperator:
     def __init__(self, variable_key, real_variable_value, variable_type):
         """
-        变量运算,Variable operation
+        变量运算. Variable operation
         :param variable_key:  "result": [
             {
                 "variable_key": variable_value,
@@ -34,7 +34,7 @@ class VariableOperator:
 
     def variable_operator(self):
         """
-        变量的运算， variable operator
+        变量的运算. variable operator
         :return:真正的变量值供流程使用，The real variable values are used by the process
         """
         match = '${' + self.variable_name + "}"

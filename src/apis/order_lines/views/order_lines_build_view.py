@@ -6,6 +6,8 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
+    创建流程视图
+    build process view
 """
 
 from flask import request

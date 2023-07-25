@@ -5,7 +5,9 @@
 # Time       ：2023/3/7 21:04
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：order_lines enter point
+# Description：
+    orderlines 入口
+    orderlines enter point
 """
 import threading
 import time
@@ -33,8 +35,8 @@ class OrderLines:
 
     def watch_dog(self):
         """
-        任务运行看门狗，
-        每隔0.5秒检查一下数据库，查看流程运行实例的process_status
+        任务运行看门狗。每隔0.5秒检查一下数据库，查看流程运行实例的process_status
+        Task run watchdog.Check the database every 0.5 seconds to see the process_status of the process running instance
         :return:
         """
         process_instance = ProcessInstanceOperator.select_data(self.process_instance_id)
@@ -46,7 +48,6 @@ class OrderLines:
         while process_status in [StatusEnum.grey.value, StatusEnum.blue.value]:
             process_instance = ProcessInstanceOperator.select_data(self.process_instance_id)
             process_status = process_instance.process_status
-            # 检查是否停止
             if process_status == StatusEnum.green.value:
                 logger.info(f'process {self.process_name} run success')
                 break

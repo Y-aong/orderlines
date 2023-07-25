@@ -5,7 +5,9 @@
 # Time       ：2023/1/11 21:03
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：task  模型类
+# Description：
+    task 模型类
+    task model
 """
 
 from sqlalchemy import func

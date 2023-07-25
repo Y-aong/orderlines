@@ -5,7 +5,9 @@
 # Time       ：2023/7/9 16:28
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：user view
+# Description：
+    用户视图
+    user view
 """
 from flask import request
 

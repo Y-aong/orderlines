@@ -17,6 +17,7 @@ class Match:
         同一个流程中的变量名是唯一的不可重复
         变量名目前只可以支持字母和下划线不支持数字
         变量指的是value和add_value
+
         There are two types of variables. The variables are ${value} and ${add_value}+1 configured in the process
         Variable names in the same process are unique and cannot be repeated
         Currently, variable names can only support letters and underscores but not numbers
@@ -36,7 +37,7 @@ class Match:
 
     def get_variable_name(self):
         """
-        从带有四则运行的变量中获取到变量名称,
+        从带有四则运行的变量中获取到变量名称
         Gets the variable name from the variable with four runs
         """
         if '${' not in self._variable_name and '}' not in self._variable_name:

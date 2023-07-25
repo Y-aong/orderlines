@@ -12,7 +12,10 @@ import json
 
 
 def get_current_node(task_id, process_node):
-    """Obtain the currently running task based on the task id"""
+    """
+    根据任务id获取当前运行的任务
+    Obtain the currently running task based on the task id
+    """
     for node in process_node:
         if node.get('task_id') == task_id:
             return node
@@ -20,7 +23,7 @@ def get_current_node(task_id, process_node):
 
 
 def get_variable_value(variable_value, variable_type):
-    """get variable value by type"""
+    """按类型获取变量值. get variable value by type"""
     if not variable_value:
         return None
     if variable_type == 'int':

@@ -5,7 +5,9 @@
 # Time       ：2023/1/10 22:39
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：base model
+# Description：
+    模型基类
+    base model
 """
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from sqlalchemy import Column, SmallInteger

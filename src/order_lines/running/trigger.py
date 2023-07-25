@@ -7,9 +7,12 @@
 # version    ：python 3.7
 # Description：
 解析流程
+
 1、使用flask线程隔离的方式进行隔离线程
 2、使用队列的方式运行任务的取出和放入，这里主要考虑到多线程下的数据安全
+
 Parser process
+
 1. Use flask thread isolation to isolate threads
 2, the use of queues to run the extraction and insertion of tasks, mainly considering the data security
  under multi-threading

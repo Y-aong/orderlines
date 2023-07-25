@@ -5,12 +5,15 @@
 # Time       ：2023/1/10 21:09
 # Author     ：Y-aong
 # version    ：python 3.7
-# Description：测试的组件库
+# Description：
+测试的组件库
+
 1、任务函数的参数必须增加**kw,因为流程运行中可能会有其他的参数
 2、任务函数的返回值包含两个部分第一为运行状态，这里框架会自己处理，第二为自己的返回值，可以自定义
 3、有返回值必须为dict字段方便扩展
 
 Component library for testing
+
 1, the parameter of the task function must be increased by **kw, because there may be other parameters in the process
 2, the return value of the task function contains two parts: the first is the running state, which the framework will
  handle itself, and the second is its own return value, which can be customized
