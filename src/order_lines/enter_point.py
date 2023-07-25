@@ -63,7 +63,4 @@ class OrderLines:
 
     def run(self):
         t = TaskRunner(self.process_info, self.process_node, self.listen_running)
-        t.daemon = True
         t.start()
-        watch_dog = threading.Thread(target=self.watch_dog, args=())
-        watch_dog.start()

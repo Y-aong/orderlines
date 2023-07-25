@@ -19,6 +19,7 @@ from order_lines.libraries.Group import Group, GroupParam
 from order_lines.libraries.Parallel import Parallel, ParallelParam
 from order_lines.libraries.ProcessControl import ProcessControl
 from order_lines.utils.process_action_enum import StatusEnum
+from order_lines.utils.utils import get_method_param_annotation
 from public.logger import logger
 
 
@@ -34,17 +35,21 @@ class DefaultHandler(AbstractHandler):
 
 class CommonHandler(AbstractHandler):
 
-    def handle(self, module, method_name: str, task_kwargs: BaseModel) -> dict:
+    def handle(self, module, method_name: str, task_kwargs: dict) -> dict:
 
         if hasattr(module, method_name):
-            task_kwargs = self.handle_on_receive(task_kwargs, module)
             try:
+                flag, annotation = get_method_param_annotation(getattr(module, method_name))
+                if not flag:
+                    raise ValueError('plugin param is not pydantic type')
+                task_kwargs = annotation(**task_kwargs)
+                task_kwargs = self.handle_on_receive(task_kwargs, module, method_name)
                 func = getattr(module(), method_name)
                 result: dict = func(task_kwargs)
                 result.setdefault('status', StatusEnum.green.value)
-                return self.handle_on_receive(task_kwargs, module)
+                return self.handle_on_success(result, module, method_name)
             except Exception as e:
-                error = self.handle_on_receive(e, module)
+                error = self.handle_on_failure(e, module, method_name)
                 return {
                     'status': StatusEnum.red.value,
                     'error_info': json.dumps({'error info': error, 'traceback': traceback.format_exc()})

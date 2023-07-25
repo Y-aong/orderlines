@@ -50,6 +50,7 @@ class BaseStrategy:
                     'error_info': error_or_result,
                     'status': status
                 }
+                logger.info(f'send email info::{email_info}')
                 callback_func_param = annotation(**email_info)
                 method(callback_func_param)
 

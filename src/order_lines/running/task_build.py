@@ -65,16 +65,14 @@ def sync_task(handler: AbstractHandler, task_module, method_name, task_kwargs):
     module_check.check_module(task_module)
     module = module_check.modules.get(task_module)
     task_kwargs = task_kwargs if task_kwargs else {}
-    if task_module == 'Group' or task_module == 'Parallel':
+    if task_module == 'Group' or task_module == 'Parallel' or task_module == 'ProcessControl':
         flag, annotation = get_method_param_annotation(getattr(module, method_name))
         assert flag, 'task group and parallel params must be a pydantic param'
         task_result = handler.handle(module, method_name, annotation(**task_kwargs))
     else:
-        flag, annotation = get_method_param_annotation(getattr(module, method_name))
-        if flag:
-            task_result = handler.handle(module, method_name, annotation(**task_kwargs))
-        else:
-            task_result = handler.handle(module, method_name, **task_kwargs)
+        task_result = handler.handle(module, method_name, task_kwargs)
+
+    print(f'task_result::{task_result}')
     assert isinstance(task_result, dict), 'The task return value must be a dictionary'
     from order_lines import StatusEnum
     task_result.setdefault('status', StatusEnum.green.value)

@@ -29,7 +29,7 @@ data = [
         "method_name": "test_add",
         "task_type": "common",
         "method_kwargs": {
-            "a": "1",
+            "a": "q1",
             "b": 2
         },
         "prev_id": "1001",

@@ -20,7 +20,8 @@ class BasePluginParam(BaseModel):
     process_id: str = Field(description=get_desc_with_language('process_id'), title='process_id')
     task_id: str = Field(description=get_desc_with_language('task_id'), title='task id')
     result: Union[None, list, dict] = Field(description=get_desc_with_language('result'), title='result')
-    task_config: dict = Field(default=dict(), description=get_desc_with_language('task_config'), title='task config')
+    task_config: Union[None, dict] = Field(
+        default=dict(), description=get_desc_with_language('task_config'), title='task config')
 
 
 class GateWayParam(BasePluginParam):

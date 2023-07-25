@@ -11,7 +11,6 @@
 """
 from abc import ABC, abstractmethod
 from typing import Any
-
 from pydantic import BaseModel
 
 
@@ -28,31 +27,32 @@ class AbstractHandler(Handler):
     _next_handler: Handler = None
 
     @staticmethod
-    def handle_on_receive(param: Any, module):
+    def handle_on_receive(param: Any, module, method_name: str):
         """
         处理函数参数
         @param param:
         @param module:
+        @param method_name:
         @return:
         """
         if hasattr(module, 'on_receive'):
-            receive_param = getattr(module(), 'on_receive')(param)
+            receive_param = getattr(module(), 'on_receive')(param, method_name)
             return receive_param if receive_param else param
 
         return param
 
     @staticmethod
-    def handle_on_success(result: Any, module):
+    def handle_on_success(result: Any, module, method_name: str):
         if hasattr(module, 'on_success'):
-            success_result = getattr(module(), 'on_success')(result)
+            success_result = getattr(module(), 'on_success')(result, method_name)
             return success_result if success_result else result
 
         return result
 
     @staticmethod
-    def handle_on_failure(error: str, module):
+    def handle_on_failure(error: str, module, method_name: str):
         if hasattr(module, 'on_failure'):
-            failure_error = getattr(module(), 'on_failure')(error)
+            failure_error = getattr(module(), 'on_failure')(error, method_name)
             return failure_error if failure_error else error
 
         return error
