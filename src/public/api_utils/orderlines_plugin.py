@@ -25,6 +25,7 @@ class OrderlinesPlugHelper:
         self.session = get_session()
         self.base_params = ['process_id', 'process_name', 'process_info',
                             'process_node', 'task_id', 'task_config', 'result']
+        self.exclude_method = ['on_receive', 'on_success', 'on_failure']
 
     def init_plugin(self):
         modules = CheckModule().get_module()
@@ -135,7 +136,7 @@ class OrderlinesPlugHelper:
         class_info = dict()
         methods = list()
         for attr in dir(model):
-            if not attr.startswith('_') and callable(getattr(model, attr)):
+            if not attr.startswith('_') and callable(getattr(model, attr)) and attr not in self.exclude_method:
                 parameters_info, return_annotation, func_doc = self.get_func_info(model, attr)
                 methods.append({
                     'method_name': attr,
