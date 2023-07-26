@@ -34,7 +34,7 @@ class EmailParam(BaseModel):
     process_name: str = Field(description=get_desc_with_language('precess_name'), title='precess_name')
     node_info: dict = Field(description=get_desc_with_language('node_info'), title='node_info')
     error_info: dict = Field(description=get_desc_with_language('error_info'), title='error_info')
-    status: str = Field(description=get_desc_with_language('status'), title='status')
+    status: Union[str, None] = Field(description=get_desc_with_language('status'), title='status')
 
 
 class EmailResult(BaseModel):

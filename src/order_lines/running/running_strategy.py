@@ -98,10 +98,10 @@ class RunningStrategy:
     async def retry_strategy(self, error_or_result):
         """Retry strategy"""
         retry_time = OrderLinesConfig.retry_time
-        flag = 1
-        while flag < retry_time:
+        time = 1
+        while time < retry_time:
             try:
-                logger.info(f'Start retry {flag} times')
+                logger.info(f'Start retry {time} times')
 
                 async with async_timeout.timeout(self.timeout):
                     task = asyncio.create_task(
@@ -111,10 +111,10 @@ class RunningStrategy:
                     flag = await self.trigger.parse()
                     return flag, task.result(), Status.green.value
                 else:
-                    flag += 1
+                    time += 1
             except Exception as e:
-                _error_info = f'The {flag} times error occurs for the second time. Error message::{e}'
+                _error_info = f'The number of retries exceeded the maximum:{time}. Error message::{e}'
                 logger.info(_error_info)
-                flag += 1
+                time += 1
         error_or_result['status'] = Status.red.value
         return False, error_or_result, Status.red.value

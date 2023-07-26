@@ -22,7 +22,7 @@ from order_lines.running.running_strategy import RunningStrategy
 from order_lines.running.task_build import build_task
 from order_lines.utils.exceptions import OrderLineStopException
 from public.logger import logger
-from order_lines.utils.process_action_enum import StatusEnum as Status
+from order_lines.utils.process_action_enum import StatusEnum
 from order_lines.running.trigger import Trigger
 from order_lines.utils.utils import get_current_node
 
@@ -58,7 +58,7 @@ class TaskRunner(threading.Thread):
     async def process_is_stop(self):
         process_instance = self.trigger.process_instance.select_data(self.process_instance_id)
         process_status = process_instance.process_status
-        if process_status == Status.yellow.value:
+        if process_status == StatusEnum.yellow.value:
             return True
         return False
 
@@ -69,7 +69,7 @@ class TaskRunner(threading.Thread):
             self.current_task_id = self.task_deque.get()
             current_node = get_current_node(self.current_task_id, self.process_node)
             task_instance, task_table_id = self.listen_running.insert(current_node)
-            await self.trigger.update_process_info(Status.blue.value)
+            await self.trigger.update_process_info(StatusEnum.blue.value)
             try:
                 await asyncio.gather(self.on_running(current_node, task_instance, task_table_id))
             except OrderLineStopException as e:
@@ -96,15 +96,15 @@ class TaskRunner(threading.Thread):
                 self.process_info, self.process_node, self.current_task_id, self.trigger, timeout)
             self.is_run, task_or_error, task_status = await strategy.running_strategy(task_result, current_node)
             self.listen_running.update(current_node, task_instance, task_table_id, task_or_error, task_status)
-            if task_status != Status.green.value:
-                await self.trigger.update_process_info(Status.red.value, traceback.format_exc())
+            if task_status != StatusEnum.green.value:
+                await self.trigger.update_process_info(StatusEnum.red.value, traceback.format_exc())
 
     async def on_stop(self, err, current_node, task_instance, task_table_id):
         """The operation when the task stops"""
         error_info = traceback.format_exc()
         logger.info(f'current_task_id::{self.current_task_id}, run stop::{error_info, err}')
-        self.listen_running.update(current_node, task_instance, task_table_id, error_info, Status.yellow.value)
-        await self.trigger.update_process_info(Status.yellow.value, traceback.format_exc())
+        self.listen_running.update(current_node, task_instance, task_table_id, error_info, StatusEnum.yellow.value)
+        await self.trigger.update_process_info(StatusEnum.yellow.value, traceback.format_exc())
         self.is_run = False
 
     async def on_failure(self, err, current_node, task_instance, task_table_id):
@@ -120,5 +120,5 @@ class TaskRunner(threading.Thread):
         self.is_run, task_or_error, task_status = await strategy.running_strategy(error_info, current_node)
 
         self.listen_running.update(current_node, task_instance, task_table_id, error_info, task_status)
-        if task_status == Status.red.value:
+        if task_status == StatusEnum.red.value:
             await self.trigger.update_process_info(task_status, traceback.format_exc())

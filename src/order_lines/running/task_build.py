@@ -14,6 +14,7 @@ from typing import List
 from order_lines.running.module_check import CheckModule
 from order_lines.handlers.task_handlers import DefaultHandler, \
     CommonHandler, ProcessControlHandler, ParallelHandler, GroupHandler, AbstractHandler
+from order_lines.utils.process_action_enum import StatusEnum
 from order_lines.utils.utils import get_method_param_annotation
 
 handler_context = {
@@ -72,9 +73,8 @@ def sync_task(handler: AbstractHandler, task_module, method_name, task_kwargs):
     else:
         task_result = handler.handle(module, method_name, task_kwargs)
 
-    print(f'task_result::{task_result}')
     assert isinstance(task_result, dict), 'The task return value must be a dictionary'
-    from order_lines import StatusEnum
+
     task_result.setdefault('status', StatusEnum.green.value)
     return task_result
 
