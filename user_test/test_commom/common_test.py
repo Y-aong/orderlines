@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：测试简单流程
 """
-from order_lines.enter_point import OrderLines
+from order_lines.app import OrderLines
 
 data = [
     {
@@ -73,4 +73,4 @@ process_info = {
 }
 
 if __name__ == "__main__":
-    OrderLines(process_info, data).run()
+    OrderLines(process_info, data).start()

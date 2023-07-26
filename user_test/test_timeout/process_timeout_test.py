@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：测试流程超时,但是不建议配置流程操作，一般配置任务超时就可以了
 """
-from order_lines.enter_point import OrderLines
+from order_lines.app import OrderLines
 
 data = [
     {
@@ -78,4 +78,4 @@ process_info = {
 }
 
 if __name__ == '__main__':
-    OrderLines(process_info, data).run()
+    OrderLines(process_info, data).start()

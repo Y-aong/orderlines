@@ -79,11 +79,3 @@ class ListenRunning:
             return table_id
         else:
             raise ValueError(f'Invalid task status:{task_status}')
-
-    @staticmethod
-    def stop_helper(process_instance_id):
-        return TaskInstanceOperator.stop_helper(process_instance_id)
-
-    @staticmethod
-    def get_task_build_time(process_instance_id):
-        return TaskInstanceOperator.get_task_build_time(process_instance_id)

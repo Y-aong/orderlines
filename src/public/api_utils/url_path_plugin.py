@@ -22,25 +22,28 @@ class UrlPathPlugin:
 
         self.methods = ['GET', 'POST', 'PUT', 'DELETE']
         self.names = {
-            'GET': '增加',
-            'POST': '创建',
-            'PUT': '修改',
-            'DELETE': '删除',
+            'GET': 'get',
+            'POST': 'create',
+            'PUT': 'update',
+            'DELETE': 'delete',
         }
 
     def init_app(self, app: Flask):
         self.get_url_path_method(app)
 
     def get_url_path_method(self, app: Flask):
-        """获取所有的请求路径和请求方法"""
+        """
+        获取所有的请求路径和请求方法,
+        Gets all request paths and request methods
+        """
         rules = app.url_map.__dict__['_rules']
         for index in range(len(rules)):
             url_path = str(app.url_map.__dict__['_rules'][index])
             _methods = list(app.url_map.__dict__['_rules'][index].methods)
             methods = [item for item in _methods if item in self.methods]
             for method in methods:
-                name = f'{url_path.replace("/", "")}_{method}'
-                desc = f'{self.names.get(method)}_{url_path.replace("/", "")}'
+                name = f'{url_path.replace("/", "")}_{self.names.get(method).lower()}'
+                desc = f'{self.names.get(method).lower()}_{url_path.replace("/", "")}'
                 permission = {
                     'name': name,
                     'method': method,
@@ -55,3 +58,10 @@ class UrlPathPlugin:
                     obj = SystemPermission(**permission)
                     session.add(obj)
                     session.commit()
+
+    def create_super_admin(self):
+        """
+        创建默认的超级管理员用户。
+        Create a default super administrator
+        """
+        pass

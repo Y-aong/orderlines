@@ -8,7 +8,7 @@
 # Description：任务运行失败后的消息通知
 """
 
-from order_lines.enter_point import OrderLines
+from order_lines.app import OrderLines
 
 data = [
     {
@@ -76,4 +76,4 @@ process_info = {
 }
 
 if __name__ == "__main__":
-    OrderLines(process_info, data).run()
+    OrderLines(process_info, data).start()

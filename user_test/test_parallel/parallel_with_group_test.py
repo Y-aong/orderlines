@@ -7,9 +7,9 @@
 # version    ：python 3.7
 # Description：声明使用任务组运行并行任务
 """
-from order_lines.enter_point import OrderLines
+from order_lines.app import OrderLines
 
-nodes = [
+data = [
     {
         "task_id": '1000',
         "task_name": "start",
@@ -111,4 +111,4 @@ process_info = {
 }
 
 if __name__ == '__main__':
-    OrderLines(process_info, nodes).run()
+    OrderLines(process_info, data).start()

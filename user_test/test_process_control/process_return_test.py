@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：测试流程控制——返回值
 """
-from order_lines.enter_point import OrderLines
+from order_lines.app import OrderLines
 
 nodes = [
     {
@@ -129,4 +129,4 @@ process_info = {
     "creator": "blue",
 }
 if __name__ == '__main__':
-    OrderLines(process_info, nodes).run()
+    OrderLines(process_info, nodes).start()

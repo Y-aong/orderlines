@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：
 """
-from order_lines.enter_point import OrderLines
+from order_lines.app import OrderLines
 
 node_data = [
     {
@@ -87,4 +87,4 @@ process_info = {
 }
 
 if __name__ == '__main__':
-    OrderLines(process_info, node_data).run()
+    OrderLines(process_info, node_data).start()

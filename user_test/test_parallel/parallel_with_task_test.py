@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：测试并行任务，不声明任务组，让框架自己寻找
 """
-from order_lines.enter_point import OrderLines
+from order_lines.app import OrderLines
 
 nodes = [
     {
@@ -135,4 +135,4 @@ process_info = {
     "updater": None,
 }
 if __name__ == '__main__':
-    OrderLines(process_info, nodes).run()
+    OrderLines(process_info, nodes).start()

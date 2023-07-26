@@ -14,9 +14,6 @@ import datetime
 import json
 import uuid
 
-from sqlalchemy import or_
-
-from public.base_model import get_session
 from order_lines.utils.process_action_enum import StatusEnum
 from apis.order_lines.models import TaskInstanceModel
 
@@ -59,37 +56,3 @@ class TaskInstanceOperator:
             update_data['task_error_info'] = json.dumps(kwargs.get('error_info'))
         update_data['task_status'] = task_status
         return TaskInstanceModel.update_db(TaskInstanceModel, {'id': table_id}, update_data)
-
-    @staticmethod
-    def stop_helper(process_instance_id):
-        session = get_session()
-        task_info = session.query(TaskInstanceModel.task_name, TaskInstanceModel.id).filter(
-            TaskInstanceModel.process_instance_id == process_instance_id,
-            or_(TaskInstanceModel.task_status == StatusEnum.blue.value,
-                TaskInstanceModel.task_status == StatusEnum.grey.value)
-        ).all()
-        task_names = set()
-        for temp in task_info:
-            task_name, task_id = temp
-            task_names.add(task_name)
-            session.query(TaskInstanceModel).filter(
-                TaskInstanceModel.id == task_id
-            ).update({'task_status': StatusEnum.yellow.value})
-        return list(task_names)
-
-    @staticmethod
-    def get_task_build_time(process_instance_id):
-        """
-        获取正在运行中的流程信息,
-        Gets information about a running process
-        """
-        session = get_session()
-        task_info = session.query(TaskInstanceModel.task_id, TaskInstanceModel.start_time).filter(
-            TaskInstanceModel.process_instance_id == process_instance_id,
-            or_(TaskInstanceModel.task_status == StatusEnum.blue.value,
-                TaskInstanceModel.task_status == StatusEnum.grey.value))
-        result = list()
-        for temp in task_info:
-            task_id, start_time = temp
-            task_info.append({'task_id': task_id, 'start_time': start_time})
-        return result
