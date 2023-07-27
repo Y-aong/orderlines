@@ -56,11 +56,11 @@ class ProcessControl(BaseTask):
     @staticmethod
     def _get_task_status(task_id, process_instance_id):
         from public.base_model import get_session
-        from apis.order_lines.models import TaskInstanceModel
+        from apis.order_lines.models import TaskInstance
         session = get_session()
-        task_status = session.query(TaskInstanceModel).filter(
-            TaskInstanceModel.process_instance_id == process_instance_id,
-            TaskInstanceModel.task_id == task_id
+        task_status = session.query(TaskInstance).filter(
+            TaskInstance.process_instance_id == process_instance_id,
+            TaskInstance.task_id == task_id
         ).first().task_status.lower()
         # 这里因为运行到这里，不可能出现pending和running
         # pending and running are not possible here because we're running here

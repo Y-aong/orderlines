@@ -9,7 +9,7 @@
     任务实例视图
     task instance view
 """
-from apis.order_lines.models.task import TaskInstanceModel
+from apis.order_lines.models.task import TaskInstance
 from apis.order_lines.schema.task_schema import TaskInstanceSchema
 from public.base_view import BaseView
 
@@ -19,5 +19,5 @@ class TaskInstanceView(BaseView):
 
     def __init__(self):
         super(TaskInstanceView, self).__init__()
-        self.table_orm = TaskInstanceModel
+        self.table_orm = TaskInstance
         self.table_schema = TaskInstanceSchema

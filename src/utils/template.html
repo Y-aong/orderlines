@@ -1,0 +1,101 @@
+<html lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>report</title>
+
+    <style>
+
+        h1 {
+            text-align: center;
+            margin: 50px;
+            color: brown;
+        }
+
+        h2 {
+            margin-left: 5px;
+        }
+
+        p {
+            margin-left: 30px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .main {
+            width: 90%;
+            margin: 50px auto;
+            background: #fafafa;
+        }
+
+        table {
+            width: 95%;
+            margin-top: 20px;
+            border: 1px solid #000000;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #000000;
+            text-align: center;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body class="main">
+<div>
+    <h1>orderlines 流程运行报告</h1>
+    <h2>流程运行信息</h2>
+    <p>流程id：{{ process_id }}</p>
+    <p>流程名称：{{ process_name }}</p>
+    <p>开始时间：{{ start_time }} </p>
+    <p>结束时间：{{ start_time }} </p>
+    <p>流程配置：{{ process_config }} </p>
+    <p>流程参数：{{ process_params }} </p>
+    <p>流程参数：{{ process_params }} </p>
+    <p>运 行 者：{{ runner }}</p>
+    <p>运行者id：{{ runner_id }}</p>
+    <p>流程状态：{{ process_error_info }}</p>
+    <p>流程异常：{{ process_status }}</p>
+    <p style="margin-bottom: 50px">流程描述：{{ process_desc }}</p>
+
+    <h2>任务节点信息</h2>
+    <table>
+        <tr>
+            <th>任务id</th>
+            <th>任务名称</th>
+            <th>函数名称</th>
+            <th>任务参数</th>
+            <th>任务结果</th>
+            <th>任务状态</th>
+            <th>任务异常</th>
+            <th>模块名称</th>
+            <th>模块版本</th>
+            <th>任务描述</th>
+        </tr>
+
+        {% for item in items %}
+        <tr>
+            <td>{{ item.task_id }}</td>
+            <td>{{ item.task_name }}</td>
+            <td>{{ item.method_name }}</td>
+            <td>{{ item.task_kwargs }}</td>
+            <td>{{ item.task_result }}</td>
+            <td>{{ item.task_status }}</td>
+            <td>{{ item.error_info }}</td>
+            <td>{{ item.module_name }}</td>
+            <td>{{ item.module_version }}</td>
+            <td>{{ item.task_desc }}</td>
+        </tr>
+        {% endfor%}
+    </table>
+
+</div>
+
+
+</body>
+</html>

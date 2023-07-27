@@ -12,7 +12,6 @@
 from flask import request
 from flask_restful import Resource
 
-from conf.config import FlaskConfig
 from .api_handle_exception import handle_api_error
 from .base_model import db
 from .base_response import generate_response
@@ -27,18 +26,18 @@ class BaseView(Resource):
             self.form_data: dict = request.args
         else:
             self.form_data: dict = request.json
-        self._filter = list()
+        self.filter = list()
         self.table_id = self.form_data.get('id')
         self.response_data = dict()
-        self.page = FlaskConfig.PAGE
-        self.pre_page = FlaskConfig.PRE_PAGE
+        self.page = self.form_data.get('page')
+        self.pre_page = self.form_data.get('pre_page')
 
     def handle_filter(self):
         if self.table_orm:
-            self._filter.append(self.table_orm.active == 1)
+            self.filter.append(self.table_orm.active == 1)
         for key, value in self.form_data.items():
             if hasattr(self.table_orm, key):
-                self._filter.append(getattr(self.table_orm, key) == value)
+                self.filter.append(getattr(self.table_orm, key) == value)
 
     def handle_request_params(self):
         pass
@@ -58,11 +57,15 @@ class BaseView(Resource):
 
     def _get_multi(self):
         """多条查询, Multiple query"""
-        multi_data = db.session.query(self.table_orm).filter(*self._filter).order_by(
-            self.table_orm.id).paginate(page=self.page, per_page=self.pre_page)
-        items = self.table_schema().dump(multi_data.items, many=True)
-        total = multi_data.total
-        return {'items': items, 'total': total}
+        multi_data = db.session.query(self.table_orm).filter(*self.filter).order_by(
+            self.table_orm.id)
+        if self.page and self.pre_page:
+            multi_data = multi_data.paginate(page=int(self.page), per_page=int(self.pre_page))
+            items = self.table_schema().dump(multi_data.items, many=True)
+            total = multi_data.total
+            return {'items': items, 'total': total}
+        else:
+            return self.table_schema().dump(multi_data, many=True)
 
     @handle_api_error
     def get(self):

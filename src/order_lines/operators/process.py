@@ -12,7 +12,7 @@
 import datetime
 import json
 
-from apis.order_lines.models.process import ProcessInstanceModel
+from apis.order_lines.models.process import ProcessInstance
 from order_lines.utils.process_action_enum import ProcessStatus
 
 
@@ -35,7 +35,7 @@ class ProcessInstanceOperator:
         process_info['process_id'] = self.process_id
         process_info['runner'] = self.process_data.get('creator')
         process_info['process_status'] = ProcessStatus.grey.value
-        return ProcessInstanceModel.insert_db(ProcessInstanceModel, process_info)
+        return ProcessInstance.insert_db(ProcessInstance, process_info)
 
     @staticmethod
     def update_db(process_instance_id: str, **kwargs) -> int:
@@ -44,7 +44,7 @@ class ProcessInstanceOperator:
         Modify variable information. A created variable name cannot be modified
         """
         filter_data = {'process_instance_id': process_instance_id}
-        return ProcessInstanceModel.update_db(ProcessInstanceModel, filter_data, kwargs)
+        return ProcessInstance.update_db(ProcessInstance, filter_data, kwargs)
 
     @staticmethod
     def select_data(process_instance_id=None):
@@ -53,4 +53,4 @@ class ProcessInstanceOperator:
         Get variable data in the process
         """
         filter_data = {'process_instance_id': process_instance_id}
-        return ProcessInstanceModel.select_db(ProcessInstanceModel, filter_data)
+        return ProcessInstance.select_db(ProcessInstance, filter_data)

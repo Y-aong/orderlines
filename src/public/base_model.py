@@ -15,7 +15,7 @@ from contextlib import contextmanager
 
 from conf.config import FlaskConfig
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 def get_filter(table_orm, filter_data: dict):
@@ -29,8 +29,15 @@ def get_filter(table_orm, filter_data: dict):
 
 def get_session():
     db_uri = FlaskConfig.SQLALCHEMY_DATABASE_URI
-    engine = create_engine(db_uri)
-    return sessionmaker(engine)()
+    engine = create_engine(
+        url=db_uri,
+        max_overflow=10,
+        pool_size=15,
+        pool_timeout=30,
+        pool_recycle=-1
+    )
+    SessionFactory = sessionmaker(bind=engine)
+    return scoped_session(SessionFactory)
 
 
 class SQLAlchemy(_SQLAlchemy):

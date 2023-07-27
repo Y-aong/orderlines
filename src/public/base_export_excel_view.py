@@ -6,42 +6,34 @@
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：
+    导出excel基类
+    export excel base view
 """
+import datetime
 import io
 from urllib.parse import quote
 
 import pandas as pd
-from flask import make_response
-from flask_restful import Resource
+from flask import make_response, request
 
 from public.api_handle_exception import handle_api_error
-from public.base_model import db
+from public.base_view import BaseView
 
 
-class BaseExportExcelView(Resource):
+class BaseExportExcelView(BaseView):
 
     def __init__(self):
         super(BaseExportExcelView, self).__init__()
-        self.file_name = None
+        self.form_data = request.args
+        self.file_name = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.export_df = None
         self.response_data = None
         self.table_orm = None
         self.table_schema = None
-        self.columns = {}
-        self._filter = list()
-
-    def get_multi(self):
-        """多条查询"""
-        if hasattr(self.table_orm, 'active'):
-            self._filter.append(self.table_orm.active != 0)
-        elif hasattr(self.table_orm, 'is_active'):
-            self._filter.append(self.table_orm.is_active != 0)
-
-        multi_data = db.session.query(self.table_orm).filter(*self._filter).order_by(self.table_orm.id).all()
-        return self.table_schema().dump(multi_data, many=True)
 
     def get_response(self):
-        self.response_data = self.get_multi()
+        self.handle_filter()
+        self.response_data = self._get_multi()
 
     def make_response_date(self):
         self.get_response()

@@ -14,7 +14,7 @@ import json
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
-from apis.order_lines.models import TaskModel, TaskInstanceModel
+from apis.order_lines.models import Task, TaskInstance
 
 
 class TaskSchema(SQLAlchemyAutoSchema):
@@ -28,7 +28,7 @@ class TaskSchema(SQLAlchemyAutoSchema):
     )
 
     class Meta:
-        model = TaskModel
+        model = Task
 
 
 class TaskInstanceSchema(SQLAlchemyAutoSchema):
@@ -42,4 +42,4 @@ class TaskInstanceSchema(SQLAlchemyAutoSchema):
     )
 
     class Meta:
-        model = TaskInstanceModel
+        model = TaskInstance

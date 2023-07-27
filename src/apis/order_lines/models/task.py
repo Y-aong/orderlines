@@ -15,7 +15,7 @@ from sqlalchemy import func
 from public.base_model import Base, db
 
 
-class TaskModel(Base):
+class Task(Base):
     __tablename__ = 'base_task'
 
     task_id = db.Column(db.String(255), comment='task id')
@@ -36,7 +36,7 @@ class TaskModel(Base):
     process_id = db.Column(db.String(255), comment='process id')
 
 
-class TaskInstanceModel(Base):
+class TaskInstance(Base):
     __tablename__ = 'base_task_instance'
 
     task_id = db.Column(db.String(255), comment='task id')

@@ -14,7 +14,7 @@ from sqlalchemy import func
 from public.base_model import Base, db
 
 
-class ProcessModel(Base):
+class Process(Base):
     __tablename__ = 'base_process'
 
     process_id = db.Column(db.String(255), unique=True, comment='process id')
@@ -28,7 +28,7 @@ class ProcessModel(Base):
     updater = db.Column(db.String(30), comment='process updater')
 
 
-class ProcessInstanceModel(Base):
+class ProcessInstance(Base):
     __tablename__ = 'base_process_instance'
     process_id = db.Column(db.String(255), comment='process id')
     process_instance_id = db.Column(db.String(255), unique=True, comment='process run instance id')

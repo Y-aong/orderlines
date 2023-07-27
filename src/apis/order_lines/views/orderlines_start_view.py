@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : order_lines_start_view.py
+# File       : orderlines_start_view.py
 # Time       ：2023/3/12 14:44
 # Author     ：Y-aong
 # version    ：python 3.7
@@ -12,17 +12,19 @@
 from flask import request
 from flask_restful import Resource
 
+from public.api_handle_exception import handle_api_error
 from public.base_response import generate_response
 
 
 class OrderLinesStartView(Resource):
-    url = '/order_lines/start'
+    url = '/orderlines/start'
 
     def __init__(self):
         self.form_data = request.json
 
+    @handle_api_error
     def post(self):
-        process_id = self.form_data.get('process_id')
-        from tasks.order_lines_run import orderlines_run
-        orderlines_run.delay(process_id)
+        # self.form_data.get('process_id')
+        from tasks.orderlines_run import orderlines_run
+        orderlines_run.delay()
         return generate_response(message='process begin run!')

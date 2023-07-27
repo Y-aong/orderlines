@@ -9,7 +9,7 @@
     任务视图
     task view
 """
-from apis.order_lines.models.task import TaskModel
+from apis.order_lines.models.task import Task
 from apis.order_lines.schema.task_schema import TaskSchema
 from public.base_view import BaseView
 
@@ -19,5 +19,5 @@ class TaskView(BaseView):
 
     def __init__(self):
         super(TaskView, self).__init__()
-        self.table_orm = TaskModel
+        self.table_orm = Task
         self.table_schema = TaskSchema

@@ -11,5 +11,5 @@ from .task_view import TaskView
 from .task_instance_view import TaskInstanceView
 from .process_view import ProcessView
 from .process_instance_view import ProcessInstanceView
-from .order_lines_build_view import OrderLinesBuildView
-from .order_lines_start_view import OrderLinesStartView
+from .orderlines_build_view import OrderLinesBuildView
+from .orderlines_start_view import OrderLinesStartView

@@ -15,7 +15,7 @@ import json
 import uuid
 
 from order_lines.utils.process_action_enum import StatusEnum
-from apis.order_lines.models import TaskInstanceModel
+from apis.order_lines.models import TaskInstance
 
 
 class TaskInstanceOperator:
@@ -43,7 +43,7 @@ class TaskInstanceOperator:
         task_data['process_instance_id'] = self.process_instance_id
         task_data['start_time'] = datetime.datetime.now()
         task_data['task_status'] = StatusEnum.grey.value
-        return TaskInstanceModel.insert_db(TaskInstanceModel, task_data)
+        return TaskInstance.insert_db(TaskInstance, task_data)
 
     def update(self, table_id, task_status, **kwargs) -> int:
         update_data = dict()
@@ -55,4 +55,4 @@ class TaskInstanceOperator:
             update_data['task_result'] = json.dumps({'status': task_status})
             update_data['task_error_info'] = json.dumps(kwargs.get('error_info'))
         update_data['task_status'] = task_status
-        return TaskInstanceModel.update_db(TaskInstanceModel, {'id': table_id}, update_data)
+        return TaskInstance.update_db(TaskInstance, {'id': table_id}, update_data)

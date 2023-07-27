@@ -66,12 +66,7 @@ nodes = [
             "expression": {
                 'A': {'task_id': "1014"},
                 'B': {'task_id': "1015"}
-            },
-            "prev_id": "1012",
-            "next_id": None,
-            "task_config": None,
-            "task_module": "ProcessControl",
-            "desc": None
+            }
         },
         "prev_id": "1012",
         "next_id": None,

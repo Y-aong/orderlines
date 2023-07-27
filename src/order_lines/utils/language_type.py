@@ -54,11 +54,11 @@ languages = {
 }
 
 
-def get_desc_with_language(attr):
+def get_desc_by_lang(attr):
     language_module = languages.get(LanguageConfig.language_type.lower())
     if not language_module:
-        return ''
+        return attr
     if hasattr(language_module, attr):
         return getattr(language_module, attr)
     else:
-        return ''
+        return attr
