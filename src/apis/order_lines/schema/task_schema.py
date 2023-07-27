@@ -32,10 +32,13 @@ class TaskSchema(SQLAlchemyAutoSchema):
 
 
 class TaskInstanceSchema(SQLAlchemyAutoSchema):
-    method_kwargs = fields.Function(
-        serialize=lambda obj: json.loads(obj.method_kwargs) if obj.method_kwargs else {},
-        deserialize=lambda value: json.dumps(value)
-    )
+    start_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+    end_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+
+    # method_kwargs = fields.Function(
+    #     serialize=lambda obj: json.loads(obj.method_kwargs) if obj.method_kwargs else {},
+    #     deserialize=lambda value: json.dumps(value)
+    # )
     task_config = fields.Function(
         serialize=lambda obj: json.loads(obj.task_config) if obj.task_config else {},
         deserialize=lambda value: json.dumps(value)

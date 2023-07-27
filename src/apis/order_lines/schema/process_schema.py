@@ -59,6 +59,6 @@ class ProcessInstanceExportSchema(SQLAlchemyAutoSchema):
     task_name = fields.String()
     task_id = fields.String()
     method_name = fields.String()
-    task_kwargs = fields.Function(serialize=lambda obj: json.loads(obj.task_kwargs) if obj.task_kwargs else None)
+    method_kwargs = fields.Function(serialize=lambda obj: json.loads(obj.method_kwargs) if obj.method_kwargs else None)
     task_result = fields.Function(serialize=lambda obj: json.loads(obj.task_result) if obj.task_result else None)
     task_status = fields.String()

@@ -7,6 +7,8 @@
 # version    ：python 3.7
 # Description：
 """
+import os.path
+
 from celery import Celery
 from flask import Flask
 
@@ -54,7 +56,9 @@ def _register_resource(app):
 
 
 def create_app():
-    app = Flask(__name__)
+    src_file_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    template = os.path.join(src_file_path, 'templates')
+    app = Flask(__name__, template_folder=template)
     app.config.from_object('conf.config.FlaskConfig')
     _register_db(app)
     _register_resource(app)

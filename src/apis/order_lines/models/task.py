@@ -31,6 +31,7 @@ class Task(Base):
     task_type = db.Column(db.Enum('common', 'process_control', 'parallel', 'group', 'start', 'end'),
                           comment='task type')
     task_module = db.Column(db.String(50), comment='task module')
+    module_version = db.Column(db.String(64), default='1.0.0.1', comment='module version')
     task_config = db.Column(db.String(255), comment='task config')
     desc = db.Column(db.String(255), comment='task desc')
     process_id = db.Column(db.String(255), comment='process id')
@@ -42,8 +43,12 @@ class TaskInstance(Base):
     task_id = db.Column(db.String(255), comment='task id')
     task_instance_id = db.Column(db.String(255), comment='task run id')
     task_name = db.Column(db.String(50), comment='task name')
+    task_type = db.Column(db.Enum('common', 'process_control', 'parallel', 'group', 'start', 'end'),
+                          comment='task type')
+    task_module = db.Column(db.String(50), comment='task module')
+    task_config = db.Column(db.JSON, comment='task config')
     method_name = db.Column(db.String(20), comment='task run method name')
-    task_kwargs = db.Column(db.Text, comment='task run param')
+    method_kwargs = db.Column(db.JSON, comment='task run param')
     task_status = db.Column(db.String(20), comment='task run instance status')
     start_time = db.Column(db.DateTime, default=func.now(), comment='task instance start time')
     end_time = db.Column(db.DateTime, comment='task instance end time')
@@ -52,3 +57,5 @@ class TaskInstance(Base):
     task_result = db.Column(db.Text, comment='task return')
     task_error_info = db.Column(db.Text, comment='task run error info')
     process_instance_id = db.Column(db.String(255), comment='process instance id')
+    process_id = db.Column(db.String(255), comment='process id')
+    task_desc = db.Column(db.String(255), comment='task desc')
