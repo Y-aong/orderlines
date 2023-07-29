@@ -9,7 +9,6 @@
     任务流程操作api
     process instance operator
 """
-import datetime
 import json
 
 from apis.order_lines.models.process import ProcessInstance
@@ -27,7 +26,6 @@ class ProcessInstanceOperator:
 
     def insert_db(self):
         process_info = dict()
-        process_info['start_time'] = datetime.datetime.now()
         process_info.update(self.process_data)
         process_info['process_params'] = self.process_params
         process_info['process_config'] = self.process_config
@@ -35,6 +33,7 @@ class ProcessInstanceOperator:
         process_info['process_id'] = self.process_id
         process_info['runner'] = self.process_data.get('creator')
         process_info['process_status'] = ProcessStatus.grey.value
+        print(f'process_info::{process_info}')
         return ProcessInstance.insert_db(ProcessInstance, process_info)
 
     @staticmethod

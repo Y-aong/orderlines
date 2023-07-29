@@ -50,7 +50,7 @@ class BaseView(Resource):
 
     def _get_single(self):
         """单条查询, Single query"""
-        single_data = db.session.query(self.table_orm).filter(*self._filter).first()
+        single_data = db.session.query(self.table_orm).filter(*self.filter).first()
         if single_data:
             return self.table_schema().dump(single_data)
         return {}
@@ -74,7 +74,7 @@ class BaseView(Resource):
             data = self._get_multi()
         else:
             data = self._get_single()
-        return generate_response(data)
+        return generate_response(data, message='select success')
 
     @handle_api_error
     def post(self):

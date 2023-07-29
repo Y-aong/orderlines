@@ -36,8 +36,8 @@ def get_session():
         pool_timeout=30,
         pool_recycle=-1
     )
-    SessionFactory = sessionmaker(bind=engine)
-    return scoped_session(SessionFactory)
+    session_factory = sessionmaker(bind=engine)
+    return scoped_session(session_factory)
 
 
 class SQLAlchemy(_SQLAlchemy):

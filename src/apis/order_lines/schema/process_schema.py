@@ -12,37 +12,33 @@
 import json
 
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 
 from apis.order_lines.models.process import Process, ProcessInstance
-
-
-class ProcessSchema(SQLAlchemyAutoSchema):
-    process_params = fields.Function(
-        serialize=lambda obj: json.loads(obj.process_params) if obj.process_params else None,
-        deserialize=lambda value: json.dumps(value)
-    )
-    process_config = fields.Function(
-        serialize=lambda obj: json.loads(obj.process_config) if obj.process_config else None,
-        deserialize=lambda value: json.dumps(value)
-    )
-
-    class Meta:
-        model = Process
+from apis.order_lines.schema.task_schema import TaskInstanceSchema, TaskSchema
 
 
 class ProcessInstanceSchema(SQLAlchemyAutoSchema):
-    process_params = fields.Function(
-        serialize=lambda obj: json.loads(obj.process_params) if obj.process_params else None,
-        deserialize=lambda value: json.dumps(value)
-    )
-    process_config = fields.Function(
-        serialize=lambda obj: json.loads(obj.process_config) if obj.process_config else None,
-        deserialize=lambda value: json.dumps(value)
-    )
+    process_id = auto_field()
+    task_instance = fields.Nested(TaskInstanceSchema, many=True, dump_only=True)
+    start_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+    end_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = ProcessInstance
+        exclude = ['active']
+
+
+class ProcessSchema(SQLAlchemyAutoSchema):
+
+    process_instance = fields.Nested(ProcessInstanceSchema, many=True, dump_only=True)
+    task = fields.Nested(TaskSchema, many=True, dump_only=True)
+    insert_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+    update_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = Process
+        exclude = ['active']
 
 
 class ProcessInstanceExportSchema(SQLAlchemyAutoSchema):

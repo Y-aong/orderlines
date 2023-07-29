@@ -1,4 +1,4 @@
 from .plugin_info import PluginInfo
-from .task import Task, TaskInstance
 from .process import Process, ProcessInstance
+from .task import Task, TaskInstance
 from .variable import VariableModel
