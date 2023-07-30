@@ -7,7 +7,6 @@
 # version    ：python 3.7
 # Description：测试任务组
 """
-import json
 
 from order_lines.app import OrderLines
 

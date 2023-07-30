@@ -35,7 +35,6 @@ class Task(Base):
     task_config = db.Column(db.JSON, comment='task config')
     desc = db.Column(db.String(255), comment='task desc')
     # relation
-
     process_id = db.Column(db.String(255), db.ForeignKey('base_process.process_id'), comment='process id')
     task_instance = db.relationship('TaskInstance', backref='base_task')
 

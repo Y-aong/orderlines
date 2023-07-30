@@ -11,7 +11,6 @@
 """
 import copy
 import datetime
-import json
 import uuid
 
 from apis.order_lines.schema.task_schema import TaskInstanceSchema

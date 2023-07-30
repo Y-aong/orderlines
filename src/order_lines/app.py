@@ -15,6 +15,7 @@ from flask import Config
 
 from order_lines.running.listen_running import ListenRunning
 from order_lines.running.runner import TaskRunner
+from order_lines.utils.process_build_adapter import ProcessBuildAdapter
 from public.base_model import get_session
 
 
@@ -47,6 +48,7 @@ class OrderLines:
         self.process_info['process_instance_id'] = self.process_instance_id
         self.session = get_session()
         self.listen_running = ListenRunning(self.process_info)
+        self.process_build = ProcessBuildAdapter()
 
     def start(self):
         t = TaskRunner(self.process_info, self.process_node, self.listen_running)

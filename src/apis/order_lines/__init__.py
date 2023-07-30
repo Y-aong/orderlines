@@ -10,7 +10,8 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from apis.order_lines.views import TaskView, TaskInstanceView, ProcessView, ProcessInstanceView, OrderLinesBuildView
+from apis.order_lines.views import TaskView, TaskInstanceView, ProcessView, ProcessInstanceView
+from apis.order_lines.views.orderlines_build_view import ProcessBuildView
 from apis.order_lines.views.orderlines_start_view import OrderLinesStartView
 from apis.order_lines.views.plugin_info_view import PluginInfoView
 from apis.order_lines.views.process_instance_view import ProcessInstanceReportView, ProcessInstanceExcelReportView, \
@@ -23,7 +24,7 @@ order_line_api.add_resource(TaskView, TaskView.url)
 order_line_api.add_resource(TaskInstanceView, TaskInstanceView.url)
 order_line_api.add_resource(ProcessView, ProcessView.url)
 order_line_api.add_resource(ProcessInstanceView, ProcessInstanceView.url)
-order_line_api.add_resource(OrderLinesBuildView, OrderLinesBuildView.url)
+order_line_api.add_resource(ProcessBuildView, ProcessBuildView.url)
 order_line_api.add_resource(OrderLinesStartView, OrderLinesStartView.url)
 order_line_api.add_resource(PluginInfoView, PluginInfoView.url)
 order_line_api.add_resource(ProcessInstanceReportView, ProcessInstanceReportView.url)

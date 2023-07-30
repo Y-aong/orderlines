@@ -14,53 +14,28 @@ from flask import request
 
 from flask_restful import Resource
 
-from apis.order_lines.models import Task
-from apis.order_lines.models.process import Process
-from apis.order_lines.schema.process_schema import ProcessSchema
-from apis.order_lines.schema.task_schema import TaskSchema
-from public.base_model import db
+from order_lines.utils.process_build_adapter import ProcessBuildAdapter
+from public.api_handle_exception import handle_api_error
 from public.base_response import generate_response
 
 
-class OrderLinesBuildView(Resource):
-    url = '/orderlines/build'
+class ProcessBuildView(Resource):
+    url = '/process/build'
 
     def __init__(self):
-        self.form_data = request.json
+        self.form_data: dict = request.json
+        self.build_type = None
+        self.process_build = ProcessBuildAdapter()
+        self.build_types = {
+            'json': self.process_build.build_by_json,
+            'yaml': self.process_build.build_by_yaml,
+            'dict': self.process_build.build_by_dict,
+        }
 
+    @handle_api_error
     def post(self):
-        process_info = self.form_data.get('process_info')
-        node_info = self.form_data.get('process_node')
-        process_id = process_info.get('process_id')
-        # 生成process
-        process = ProcessSchema().load(process_info)
-        process_obj = db.session.query(Process).filter(Process.process_id == process_id).first()
-        if process_obj:
-            db.session.query(Process).filter(Process.process_id == process_id).update(process)
-        else:
-            process_obj = Process(**process)
-            db.session.add(process_obj)
-        db.session.commit()
-        # generate task
-        for node in node_info:
-            node['process_id'] = process_id
-            task_obj = db.session.query(Task).filter(
-                Task.process_id == process_id,
-                Task.task_id == node.get('task_id'),
-            ).first()
-            if not node.get('method_kwargs'):
-                node['method_kwargs'] = {}
-            if not node.get('task_config'):
-                node['task_config'] = {}
-            task = TaskSchema().load(node)
-            if task_obj:
-                db.session.query(Task).filter(
-                    Task.process_id == process_id,
-                    Task.task_id == node.get('task_id'),
-                ).update(task)
-            else:
-                task_obj = Task(**task)
-                db.session.add(task_obj)
-            db.session.commit()
-
-        return generate_response(data={'process_id': process_obj.id})
+        if not self.form_data.get('build_type'):
+            raise ValueError('build type must required')
+        self.build_type = self.form_data.pop('build_type')
+        table_id = self.build_types.get(self.build_type)(**self.form_data)
+        return generate_response({'id': table_id}, message='process build success')
