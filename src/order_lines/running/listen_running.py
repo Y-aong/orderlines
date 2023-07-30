@@ -9,24 +9,61 @@
     任务运行时的处理，主要是对于返回值的处理和参数的解析
     The processing of the task running is mainly the processing of the returned value and the parsing of the parameters
 """
+from typing import Union
+
+from apis.order_lines.models import Process
+from apis.order_lines.schema.process_schema import ProcessRunningSchema
 from order_lines.operators.task import TaskInstanceOperator
+from public.base_model import get_session
 from public.logger import logger
 from order_lines.utils.process_action_enum import StatusEnum
 from order_lines.variable.variable_handler import VariableHandler
 
 
 class ListenRunning:
-    def __init__(self, process_info):
-        self.process_info = process_info
-        self.process_id = process_info.get('process_id')
-        self.process_instance_id = process_info.get('process_instance_id')
-        self.process_name = process_info.get('process_name')
+    def __init__(self, process_instance_id: str, process_id: str):
+        # self.process_info = process_info
+        # self.process_id = process_info.get('process_id')
+        # self.process_instance_id = process_info.get('process_instance_id')
+        # self.process_name = process_info.get('process_name')
+        self.process_instance_id = process_instance_id
+        self.process_id = process_id
+        self.session = get_session()
         self.variable_handler = None
         self.error_strategy = {
             'failure': StatusEnum.red.value,
             'retry': StatusEnum.yellow.value,
             'skip': StatusEnum.pink.value
         }
+
+    @property
+    def process_info(self):
+        obj = self.session.query(Process).filter(Process.process_id == self.process_id).first()
+        return ProcessRunningSchema().dump(obj)
+
+    def parser_param_variable(self,
+                              current_task_id: str,
+                              task_name: str,
+                              task_kwargs: Union[None, dict],
+                              task_type: str,
+                              result: Union[dict, None]):
+        """
+        解析流程中的变量
+        parse param variable
+        @param current_task_id: current running task id
+        @param task_name: task name
+        @param task_kwargs: task node config param
+        @param task_type: task type
+        @param result:
+        @return:
+        """
+        task_kwargs.setdefault('task_id', current_task_id)
+        task_kwargs.setdefault('process_id', self.process_id)
+        task_kwargs.setdefault('process_name', self.process_info.get('process_name'))
+        task_kwargs.setdefault('result', result)
+        # parser parameter variable
+        self.variable_handler = VariableHandler(current_task_id, task_name, self.process_info)
+        return self.variable_handler.handle_node_params(task_kwargs, task_type)
 
     def insert(self, current_node: dict):
         """
@@ -38,15 +75,11 @@ class ListenRunning:
         current_task_id = current_node.get('task_id')
         task_name = current_node.get('task_name')
         task_kwargs: dict = current_node.get('method_kwargs')
-        task_kwargs = task_kwargs if isinstance(task_kwargs, dict) else {}
-        task_kwargs.setdefault('task_id', current_task_id)
-        task_kwargs.setdefault('process_id', self.process_id)
-        task_kwargs.setdefault('process_name', self.process_name)
-        task_kwargs.setdefault('result', current_node.get('result'))
-        # parser parameter variable
-        self.variable_handler = VariableHandler(current_task_id, task_name, self.process_info)
-        task_type = current_node.get('task_type')
-        task_kwargs = self.variable_handler.handle_node_params(task_kwargs, task_type)
+        task_kwargs = self.parser_param_variable(current_task_id,
+                                                 task_name,
+                                                 task_kwargs,
+                                                 current_node.get('task_type'),
+                                                 current_node.get('result'))
         current_node['method_kwargs'] = task_kwargs
         task_instance = TaskInstanceOperator(current_node, self.process_info)
         task_table_id = task_instance.insert()

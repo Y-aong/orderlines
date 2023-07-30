@@ -30,7 +30,6 @@ class ProcessInstanceSchema(SQLAlchemyAutoSchema):
 
 
 class ProcessSchema(SQLAlchemyAutoSchema):
-
     process_instance = fields.Nested(ProcessInstanceSchema, many=True, dump_only=True)
     task = fields.Nested(TaskSchema, many=True, dump_only=True)
     insert_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
@@ -39,6 +38,14 @@ class ProcessSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Process
         exclude = ['active']
+
+
+class ProcessRunningSchema(SQLAlchemyAutoSchema):
+    task_nodes = fields.Nested(TaskSchema, many=True, dump_only=True)
+
+    class Meta:
+        model = Process
+        exclude = ['active', 'id', 'update_time', 'insert_time']
 
 
 class ProcessInstanceExportSchema(SQLAlchemyAutoSchema):
