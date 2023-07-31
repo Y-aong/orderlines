@@ -26,7 +26,7 @@ def read_yaml():
 
 
 class OrderLinesConfig:
-    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('order_lines')
+    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('orderlines')
     std_lib_location = _ctx.get('standard_library_location')
     callback_func = _ctx.get('callback_func')
     callback_module = _ctx.get('callback_module')

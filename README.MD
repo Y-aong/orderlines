@@ -74,7 +74,7 @@ celery在这里不是必须的，可以替换为k8s，celery只是作为流程�
 ```python
 import time
 
-from order_lines.libraries.BaseTask import BaseTask, run_keyword_variant
+from orderlines.libraries.BaseTask import BaseTask, run_keyword_variant
 
 
 class Test(BaseTask):

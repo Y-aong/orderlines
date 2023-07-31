@@ -3,7 +3,7 @@
 order_lines:
   # 标准库文件位置
   standard_library_location:
-    - "order_lines.libraries"
+    - "orderlines.libraries"
   # 任务运行失败的回调模块
   callback_module: Email
   # 任务运行失败的回调函数
@@ -21,7 +21,7 @@ order_lines:
 flask:
   SQLALCHEMY_TRACK_MODIFICATIONS: True
   SQLALCHEMY_COMMIT_TEARDOWN: True
-  SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:123456@localhost:3306/order_lines"
+  SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:123456@localhost:3306/orderlines"
   SECRET_KEY: "0dfgy90abcsdafgdargdsf"
   PRE_PAGE: 10 # 分页
   PAGE: 1
@@ -42,7 +42,7 @@ email:
 celery:
   enable_utc: False
   timezone: "Asia/Shanghai"
-  beat_db_uri: "mysql+pymysql://root:123456@127.0.0.1:3306/order_lines"
+  beat_db_uri: "mysql+pymysql://root:123456@127.0.0.1:3306/orderlines"
   broker_url: "redis://127.0.0.1:6379/0"
   result_backend: "redis://127.0.0.1:6379/1"
 

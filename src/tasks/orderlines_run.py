@@ -11,7 +11,7 @@
 """
 
 from apis import celery
-from order_lines import OrderLines
+from orderlines import OrderLines
 
 
 @celery.task(name='orderlines_run')

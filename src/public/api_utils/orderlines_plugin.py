@@ -14,8 +14,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from apis.order_lines.models.plugin_info import PluginInfo
-from order_lines.running.module_check import CheckModule
+from apis.orderlines.models.plugin_info import PluginInfo
+from orderlines.running.module_check import CheckModule
 from public.base_model import get_session
 
 
