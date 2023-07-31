@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：使用进程方式运行任务组,任务组中运行的是计算密集型数据
 """
-from order_lines.app import OrderLines
+from orderlines.app import OrderLines
 
 nodes = [
     {

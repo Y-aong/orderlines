@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：声明使用任务组运行并行任务
 """
-from order_lines.app import OrderLines
+from orderlines.app import OrderLines
 
 data = [
     {

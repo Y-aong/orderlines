@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：测试并行任务，不声明任务组，让框架自己寻找
 """
-from order_lines.app import OrderLines
+from orderlines.app import OrderLines
 
 nodes = [
     {

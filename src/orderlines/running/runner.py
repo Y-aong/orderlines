@@ -30,7 +30,7 @@ from orderlines.utils.utils import get_current_node
 class TaskRunner(threading.Thread):
     stop = False
 
-    def __init__(self, process_info: dict, process_node: List[dict], listen_running):
+    def __init__(self, process_info: dict, process_node: List[dict], listen_running, dry=False):
         super(TaskRunner, self).__init__()
         self.process_info = process_info
         self.process_instance_id = process_info.get('process_instance_id')

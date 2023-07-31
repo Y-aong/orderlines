@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：任务失败直接跳过
 """
-from order_lines.app import OrderLines
+from orderlines.app import OrderLines
 
 data = [
     {

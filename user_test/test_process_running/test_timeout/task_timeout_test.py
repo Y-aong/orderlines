@@ -8,7 +8,7 @@
 # Description：测试任务运行超时
 """
 
-from order_lines.app import OrderLines
+from orderlines.app import OrderLines
 
 data = [
     {

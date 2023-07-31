@@ -8,7 +8,7 @@
 # Description：任务运行失败后的消息通知
 """
 
-from order_lines.app import OrderLines
+from orderlines.app import OrderLines
 
 data = [
     {

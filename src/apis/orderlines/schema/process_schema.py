@@ -41,7 +41,7 @@ class ProcessSchema(SQLAlchemyAutoSchema):
 
 
 class ProcessRunningSchema(SQLAlchemyAutoSchema):
-    task_nodes = fields.Nested(TaskSchema, many=True, dump_only=True)
+    task = fields.Nested(TaskSchema, many=True, dump_only=True)
 
     class Meta:
         model = Process

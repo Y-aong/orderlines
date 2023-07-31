@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：
 """
-from order_lines.utils.parallel_util import ParallelUtils
+from orderlines.utils.parallel_util import ParallelUtils
 
 
 def get_group_ids():

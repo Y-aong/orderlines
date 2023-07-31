@@ -21,7 +21,7 @@ from orderlines.variable.variable_handler import VariableHandler
 
 
 class ListenRunning:
-    def __init__(self, process_instance_id: str, process_id: str):
+    def __init__(self, process_instance_id: str, process_id: str = None):
         # self.process_info = process_info
         # self.process_id = process_info.get('process_id')
         # self.process_instance_id = process_info.get('process_instance_id')
