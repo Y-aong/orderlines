@@ -1,0 +1,62 @@
+name: rmss
+
+services:
+
+
+  orderlines_web:
+    container_name: orderlines_web
+    image: orderlines_web:${ORDERLINES_TAG}
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "15900:15900"
+    volumes:
+      - ${PROJECT_FILE_PATH}/logs/orderlines_web:/usr/orderlines_web
+    env_file:
+      - .env
+
+  celery_worker:
+    container_name: celery_worker
+    image: orderlines_worker:${ORDERLINES_TAG}
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ${PROJECT_FILE_PATH}/logs/celery_worker:/usr/celery_worker
+    env_file:
+      - .env
+
+  mysql:
+    container_name: mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "-u", "${MYSQL_ROOT_USER}", "-p${MYSQL_ROOT_PASSWORD}", "ping", "-h", "localhost" ]
+      interval: 3s
+      timeout: 1s
+      retries: 5
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    volumes:
+      - ${PROJECT_FILE_PATH}/mysql:/var/lib/mysql
+    env_file:
+      - .env
+
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 3s
+      timeout: 1s
+      retries: 5
+
+
