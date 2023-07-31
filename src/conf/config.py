@@ -17,7 +17,7 @@ import yaml
 def read_yaml():
     current_path = os.path.dirname(os.path.realpath(__file__))
     yaml_dir_path = os.path.dirname(current_path)
-    env = os.environ.get('ORDER_LINES')
+    env = os.environ.get('ORDERLINES')
     yaml_file = 'product_config.yaml' if env == 'product' else 'develop_config.yaml'
     yaml_path = os.path.join(yaml_dir_path, yaml_file)
     with open(yaml_path, mode='r', encoding='utf-8') as f:
@@ -69,7 +69,7 @@ class FlaskConfig:
 
 class LoggerConfig:
     _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('logger')
-    linux_logger_path = _ctx.get('linux_logger_path')
+    logger_path = _ctx.get('logger_path')
     FMT = _ctx.get('FMT')
     DATE_FMT = _ctx.get('DATE_FMT')
 

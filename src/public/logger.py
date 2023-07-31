@@ -19,10 +19,10 @@ from conf.config import LoggerConfig
 
 if platform.system().lower() == 'windows':
     appdata_path = os.getenv('APPDATA')
-    PATH = os.path.join(appdata_path, 'order_lines_logs')
+    PATH = os.path.join(appdata_path, 'orderlines_logs')
 
 elif platform.system().lower() == 'linux':
-    PATH = os.path.join(LoggerConfig.linux_logger_path, 'order_lines_logs')
+    PATH = os.path.join(LoggerConfig.logger_path, 'orderlines_logs')
 
 FMT = LoggerConfig.FMT
 DATE_FMT = LoggerConfig.DATE_FMT

@@ -30,7 +30,6 @@ from public.api_utils.jwt_utils import encrypt_password
 
 class SystemUser(Base):
     __tablename__ = 'system_user'
-    __table_args__ = {'extend_existing': True}
 
     username = db.Column(db.String(64), unique=True, comment='user name')
     email = db.Column(db.String(128), unique=True, nullable=True, comment='user email')
@@ -57,7 +56,7 @@ class SystemUser(Base):
 
 class SystemGroup(Base):
     __tablename__ = 'system_group'
-    __table_args__ = {'extend_existing': True}
+
     group_name = db.Column(db.String(128), unique=True, comment='group name')
     desc = db.Column(db.String(255), comment='group desc')
     owner_id = db.Column(db.Integer, comment='owner id')
@@ -66,14 +65,14 @@ class SystemGroup(Base):
 
 class SystemUserGroupRelation(Base):
     __tablename__ = 'system_user_group_relation'
-    __table_args__ = {'extend_existing': True}
+
     group_id = db.Column(db.Integer, comment='group id')
     user_id = db.Column(db.Integer, comment='userid')
 
 
 class SystemPermission(Base):
     __tablename__ = 'system_permission'
-    __table_args__ = {'extend_existing': True}
+
     name = db.Column(db.String(128), comment='permission name')
     menu = db.Column(db.Boolean, default=False, comment='is menu, True: menu,False:api')
     method = db.Column(db.Enum('GET', 'POST', 'PUT', 'DELETE'), comment='method')
@@ -85,35 +84,35 @@ class SystemPermission(Base):
 
 class SystemGroupPermissionRelation(Base):
     __table_name__ = 'system_group_permission_relation'
-    __table_args__ = {'extend_existing': True}
+
     group_id = db.Column(db.Integer, comment='group id')
     permission_id = db.Column(db.Integer, comment='permission id')
 
 
 class SystemRole(Base):
     __tablename__ = 'system_role'
-    __table_args__ = {'extend_existing': True}
+
     role_name = db.Column(db.String(128), comment='role name')
     desc = db.Column(db.String(255), comment='role desc')
 
 
 class SystemUserRoleRelation(Base):
     __tablename__ = 'system_user_role_relation'
-    __table_args__ = {'extend_existing': True}
+
     user_id = db.Column(db.Integer, comment='userid')
     role_id = db.Column(db.Integer, comment='role id')
 
 
 class SystemRolePermissionRelation(Base):
     __tablename__ = 'system_role_permission_relation'
-    __table_args__ = {'extend_existing': True}
+
     role_id = db.Column(db.Integer, comment='role id')
     permission_id = db.Column(db.Integer, comment='permission id')
 
 
 class SystemDepartment(Base):
     __tablename__ = 'system_department'
-    __table_args__ = {'extend_existing': True}
+
     department_name = db.Column(db.String(128), comment='dept name')
     pid = db.Column(db.Integer, comment='dept parent id')
     desc = db.Column(db.String(255), comment='dept desc')

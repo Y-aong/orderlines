@@ -341,6 +341,6 @@ celery -A celery_worker.celery beat -l info
 
 - 启动flask flask_main.py
 - 创建流程 http://127.0.0.1:5000/build/process POST 参数在 data/common_node.json
-- 启动流程 `http://127.0.0.1:5000/order_lines_start` POST `{"process_id":"1001"}`
+- 启动流程 `http://127.0.0.1:5000/orderlines_start` POST `{"process_id":"1001"}`
 
 ### 具体详细文档后续陆续更新

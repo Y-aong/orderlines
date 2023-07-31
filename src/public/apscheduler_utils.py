@@ -31,8 +31,8 @@ class ApschedulerUtils:
             'cron': self.cron_key,
             'date': self.date_key
         }
-        from tasks.orderlines_run import order_lines_run
-        self.target_func = order_lines_run
+        from tasks.orderlines_run import orderlines_run
+        self.target_func = orderlines_run
 
     def check_param(self, param, trigger):
         data = dict()

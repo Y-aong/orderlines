@@ -1,6 +1,6 @@
 # 配置文件
 
-order_lines:
+orderlines:
   # 标准库文件位置
   standard_library_location:
     - "orderlines.libraries"
@@ -47,7 +47,7 @@ celery:
   result_backend: "redis://127.0.0.1:6379/1"
 
 logger:
-  linux_logger_path: "/order_lines_logs"
+  logger_path: "/orderlines_logs"
   FMT: "%(asctime)s %(levelname)s %(message)s"
   DATE_FMT: "%Y-%m-%d %H:%M:%S"
 
