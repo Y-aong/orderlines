@@ -1,21 +1,23 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
+
 """
 # File       : running_check.py
-# Time       ：2023/1/16 20:27
-# Author     ：Y-aong
-# version    ：python 3.7
+# Time       ：2023/8/1 10:28
+# Author     ：YangYong
+# version    ：python 3.10
 # Description：
     运行时检查模块是否存在
     Check whether the module exists at run time
 """
+
 import importlib
 import inspect
 from conf.config import OrderLinesConfig as Config
 from orderlines.libraries import STANDARD_LIBS
 
 
-def dynamic_import(module_name: str, class_name):
+def dynamic_import(module_name: str, class_name: str) -> dict:
     """
     动态导入组件库，这里类名必须要和模块名一致
     Import component libraries dynamically, where the class name must match the module name

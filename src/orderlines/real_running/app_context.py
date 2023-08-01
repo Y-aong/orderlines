@@ -50,7 +50,13 @@ class AppContext(object):
                 return task_node
         return default
 
-    def get_task_node_item(self, process_instance_id: str, task_id: str, item_name: str, default=None):
+    def get_task_node_item(
+            self,
+            process_instance_id: str,
+            task_id: str,
+            item_name: str,
+            default=None
+    ):
         task_node = self.get_task_node(process_instance_id, task_id)
         return default if not task_node else task_node.get(item_name)
 

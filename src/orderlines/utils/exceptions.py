@@ -33,3 +33,11 @@ class VariableException(Exception):
 
 class OrderLinesRunningException(Exception):
     pass
+
+
+class OrderlinesHasNoStart(Exception):
+    pass
+
+
+class OrderlinesHasNoTaskType(Exception):
+    pass

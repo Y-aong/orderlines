@@ -66,7 +66,7 @@ class ProcessControlHandler(AbstractHandler):
                 task_id = ProcessControl().process_control(task_kwargs)
                 return {'task_id': task_id, 'status': StatusEnum.green.value}
             except Exception as e:
-                logger.error(f'The process control gateway is abnormal.error info:{e},'
+                logger.error(f'The process control gateway failure.error info:{e},'
                              f'\ntraceback:{traceback.format_exc()}')
                 return {
                     'status': StatusEnum.red.value,
@@ -87,7 +87,7 @@ class GroupHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                logger.error(f'The task group fails to run.error info:{e},\n{traceback.format_exc()}')
+                logger.error(f'The task group failure.error info:{e},\n{traceback.format_exc()}')
                 return {
                     'status': StatusEnum.red.value,
                     'error_info': json.dumps({'error info': e, 'traceback': traceback.format_exc()})
@@ -108,7 +108,17 @@ class ParallelHandler(AbstractHandler):
                 result.setdefault('status', StatusEnum.green.value)
                 return result
             except Exception as e:
-                logger.error(f'The parallel gateway fails to run.error info:{e},\ntraceback:{traceback.format_exc()}')
+                logger.error(f'The parallel gateway failure.error info:{e},\ntraceback:{traceback.format_exc()}')
                 return {'status': StatusEnum.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
+
+
+TASK_HANDLER = {
+    'start': DefaultHandler(),
+    'end': DefaultHandler(),
+    'common': CommonHandler(),
+    'process_control': ProcessControlHandler(),
+    'parallel': ParallelHandler(),
+    'group': GroupHandler(),
+}
