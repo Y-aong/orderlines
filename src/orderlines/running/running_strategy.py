@@ -18,7 +18,7 @@ from orderlines.running.module_check import CheckModule
 from orderlines.running.task_build import build_task
 from orderlines.utils.utils import get_method_param_annotation
 from public.logger import logger
-from orderlines.utils.process_action_enum import StatusEnum as Status
+from orderlines.utils.process_action_enum import TaskStatus
 
 
 class BaseStrategy:
@@ -78,21 +78,21 @@ class RunningStrategy:
         task_strategy = task_config.get('task_strategy', 'raise').upper()
         callback_func = task_config.get('callback_func', OrderLinesConfig.callback_func)
 
-        if isinstance(error_or_result, dict) and error_or_result.get('status') == Status.green.value:
+        if isinstance(error_or_result, dict) and error_or_result.get('status') == TaskStatus.green.value:
             flag = await self.trigger.parse()
-            return flag, error_or_result, Status.green.value
+            return flag, error_or_result, TaskStatus.green.value
         else:
             # Call the callback function
             strategy = BaseStrategy(self.process_name, current_node)
             status = error_or_result.get('status')
             strategy.handle(notice_type, status, callback_func, error_or_result)
         if task_strategy == 'RAISE':
-            return False, error_or_result, Status.red.value
-        elif task_strategy == Status.pink.value:
+            return False, error_or_result, TaskStatus.red.value
+        elif task_strategy == TaskStatus.pink.value:
             await self.trigger.parse()
-            error_or_result['status'] = Status.pink.value
-            return True, error_or_result, Status.pink.value
-        elif task_strategy == Status.orange.value:
+            error_or_result['status'] = TaskStatus.pink.value
+            return True, error_or_result, TaskStatus.pink.value
+        elif task_strategy == TaskStatus.orange.value:
             return await self.retry_strategy(error_or_result)
 
     async def retry_strategy(self, error_or_result):
@@ -107,14 +107,14 @@ class RunningStrategy:
                     task = asyncio.create_task(
                         build_task(self.process_node, self.current_task_id, self.process_info))
                     await task
-                if task.result().get('status') == Status.green.value:
+                if task.result().get('status') == TaskStatus.green.value:
                     flag = await self.trigger.parse()
-                    return flag, task.result(), Status.green.value
+                    return flag, task.result(), TaskStatus.green.value
                 else:
                     time += 1
             except Exception as e:
                 _error_info = f'The number of retries exceeded the maximum:{time}. Error message::{e}'
                 logger.info(_error_info)
                 time += 1
-        error_or_result['status'] = Status.red.value
-        return False, error_or_result, Status.red.value
+        error_or_result['status'] = TaskStatus.red.value
+        return False, error_or_result, TaskStatus.red.value

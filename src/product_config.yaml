@@ -16,7 +16,9 @@ orderlines:
   task_timeout: 120
   # 默认流程的超时时间
   process_timeout: 120
-  version: '1.0.0.1'
+  version: "1.0.0.1"
+  notice_type: "FAILURE"
+  task_strategy: "RAISE"
 
 flask:
   SQLALCHEMY_TRACK_MODIFICATIONS: True

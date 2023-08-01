@@ -16,7 +16,7 @@ from orderlines.real_running.app_context import AppContext
 from orderlines.real_running.base_runner import BaseRunner
 from orderlines.real_running.running_check import CheckModule
 from orderlines.utils.exceptions import OrderlinesHasNoTaskType
-from orderlines.utils.process_action_enum import StatusEnum
+from orderlines.utils.process_action_enum import TaskStatus
 from orderlines.utils.utils import get_method_param_annotation
 
 
@@ -85,5 +85,5 @@ class TaskBuild(BaseRunner):
             task_result = handler.handle(module, method_name, task_kwargs)
 
         assert isinstance(task_result, dict), 'The task return value must be a dictionary'
-        task_result.setdefault('status', StatusEnum.green.value)
+        task_result.setdefault('status', TaskStatus.green.value)
         return task_result

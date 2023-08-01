@@ -14,12 +14,14 @@ from typing import List
 
 from conf.config import OrderLinesConfig
 from orderlines.real_running.app_context import AppContext
+from public.logger import logger
 
 
 class BaseRunner(ABC):
     def __init__(self, process_instance_id: str, context: AppContext):
         self.process_instance_id = process_instance_id
         self.context = context
+        self.logger = logger
 
     @property
     def process_info(self) -> dict:
@@ -56,6 +58,10 @@ class BaseRunner(ABC):
     def task_config(self, task_id: str) -> dict:
         default_task_config = {
             'timeout': OrderLinesConfig.task_timeout,
-            'task_strategy': OrderLinesConfig.task_strategy
+            'task_strategy': OrderLinesConfig.task_strategy,
+            'retry_time': OrderLinesConfig.retry_time,
+            'notice_type': OrderLinesConfig.notice_type,
+            'callback_func': OrderLinesConfig.callback_func,
+            'callback_module': OrderLinesConfig.callback_module,
         }
         return self.context.get_task_node_item(self.process_instance_id, task_id, 'task_config', default_task_config)

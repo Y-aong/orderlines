@@ -36,6 +36,7 @@ class OrderLinesConfig:
     process_timeout = _ctx.get('process_timeout')
     version = _ctx.get('version')
     task_strategy = _ctx.get('task_strategy')
+    notice_type = _ctx.get('notice_type')
 
 
 class EmailConfig:
