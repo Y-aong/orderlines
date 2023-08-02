@@ -15,7 +15,7 @@ from public.base_model import Base, db
 class IntervalPlan(Base):
     __tablename__ = 'schedule_interval_plan'
 
-    job_id = db.Column(db.String(255), comment='task id')
+    job_id = db.Column(db.String(255), unique=True, comment='task id')
     weeks = db.Column(db.Integer, comment='Interval time type-week')
     days = db.Column(db.Integer, comment='Interval time type-days')
     hours = db.Column(db.Integer, comment='Interval time type-hours')
@@ -29,7 +29,7 @@ class IntervalPlan(Base):
 class DatePlan(Base):
     __tablename__ = 'schedule_date_plan'
 
-    job_id = db.Column(db.String(255), comment='task id')
+    job_id = db.Column(db.String(255), unique=True, comment='task id')
     run_date = db.Column(db.DateTime, comment='Planned run time')
     timezone = db.Column(db.String(64), default="Asia/Shanghai", comment='timezone')
 
@@ -37,7 +37,7 @@ class DatePlan(Base):
 class CrontabPlan(Base):
     __tablename__ = 'schedule_crontab_plan'
 
-    job_id = db.Column(db.String(255), comment='task id')
+    job_id = db.Column(db.String(255), unique=True, comment='task id')
     year = db.Column(db.String(32), comment='A four-figure year')
     month = db.Column(db.String(32), comment='Indicates that the value range is 1-12 month')
     day = db.Column(db.String(32), comment='Indicates that the value range is 1-31 day')

@@ -16,7 +16,7 @@ from apis.orderlines.schema.process_schema import ProcessRunningSchema
 from orderlines.operators.task import TaskInstanceOperator
 from public.base_model import get_session
 from public.logger import logger
-from orderlines.utils.process_action_enum import StatusEnum
+from orderlines.utils.process_action_enum import TaskStatus
 from orderlines.variable.variable_handler import VariableHandler
 
 
@@ -31,9 +31,9 @@ class ListenRunning:
         self.session = get_session()
         self.variable_handler = None
         self.error_strategy = {
-            'failure': StatusEnum.red.value,
-            'retry': StatusEnum.yellow.value,
-            'skip': StatusEnum.pink.value
+            'failure': TaskStatus.red.value,
+            'retry': TaskStatus.yellow.value,
+            'skip': TaskStatus.pink.value
         }
 
     @property
@@ -97,18 +97,18 @@ class ListenRunning:
         :return:任务id
         """
         assert self.variable_handler, "variable_handler must is not None"
-        if task_status == StatusEnum.green.value:
+        if task_status == TaskStatus.green.value:
             # 解析返回值
             result = self.variable_handler.handle_node_return(current_node.get('result'), result_or_error)
             logger.info(f'running task_id::{task_instance.task_id}, run result{result}')
-            table_id = task_instance.update(task_instance_id, StatusEnum.green.value, result=result)
+            table_id = task_instance.update(task_instance_id, TaskStatus.green.value, result=result)
             return table_id
-        elif task_status in [StatusEnum.red.value, StatusEnum.pink.value, StatusEnum.orange.value]:
+        elif task_status in [TaskStatus.red.value, TaskStatus.pink.value, TaskStatus.orange.value]:
             error = result_or_error.get('error_info')
             table_id = task_instance.update(task_instance_id, task_status, error_info=error, result=result_or_error)
             return table_id
-        elif task_status == StatusEnum.yellow.value:
-            table_id = task_instance.update(task_instance_id, StatusEnum.yellow.value, error_info=result_or_error)
+        elif task_status == TaskStatus.yellow.value:
+            table_id = task_instance.update(task_instance_id, TaskStatus.yellow.value, error_info=result_or_error)
             return table_id
         else:
             raise ValueError(f'Invalid task status:{task_status}')

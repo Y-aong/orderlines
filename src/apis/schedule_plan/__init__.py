@@ -10,9 +10,9 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from apis.schedule_plan.views.schedule_plan_view import ScheduleTaskView
+from apis.schedule_plan.views.schedule_plan_view import SchedulePlanView
 
-schedule_plan_blue = Blueprint("schedule_task", __name__, url_prefix="")
+schedule_plan_blue = Blueprint("schedule_plan", __name__, url_prefix="")
 schedule_task_api = Api(schedule_plan_blue)
 
-schedule_task_api.add_resource(ScheduleTaskView, ScheduleTaskView.url)
+schedule_task_api.add_resource(SchedulePlanView, SchedulePlanView.url)

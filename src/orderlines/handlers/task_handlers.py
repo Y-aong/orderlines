@@ -18,7 +18,7 @@ from orderlines.handlers.base_handler import AbstractHandler
 from orderlines.libraries.Group import Group, GroupParam
 from orderlines.libraries.Parallel import Parallel, ParallelParam
 from orderlines.libraries.ProcessControl import ProcessControl
-from orderlines.utils.process_action_enum import StatusEnum
+from orderlines.utils.process_action_enum import TaskStatus
 from orderlines.utils.utils import get_method_param_annotation
 from public.logger import logger
 
@@ -46,12 +46,12 @@ class CommonHandler(AbstractHandler):
                 task_kwargs = self.handle_on_receive(task_kwargs, module, method_name)
                 func = getattr(module(), method_name)
                 result: dict = func(task_kwargs)
-                result.setdefault('status', StatusEnum.green.value)
+                result.setdefault('status', TaskStatus.green.value)
                 return self.handle_on_success(result, module, method_name)
             except Exception as e:
                 error = self.handle_on_failure(e, module, method_name)
                 return {
-                    'status': StatusEnum.red.value,
+                    'status': TaskStatus.red.value,
                     'error_info': json.dumps({'error info': error, 'traceback': traceback.format_exc()})
                 }
         else:
@@ -64,12 +64,12 @@ class ProcessControlHandler(AbstractHandler):
         if hasattr(module(), method_name):
             try:
                 task_id = ProcessControl().process_control(task_kwargs)
-                return {'task_id': task_id, 'status': StatusEnum.green.value}
+                return {'task_id': task_id, 'status': TaskStatus.green.value}
             except Exception as e:
                 logger.error(f'The process control gateway failure.error info:{e},'
                              f'\ntraceback:{traceback.format_exc()}')
                 return {
-                    'status': StatusEnum.red.value,
+                    'status': TaskStatus.red.value,
                     'error_info': json.dumps({'error info': e, 'traceback': traceback.format_exc()})
                 }
         else:
@@ -84,12 +84,12 @@ class GroupHandler(AbstractHandler):
             process_node = task_kwargs.process_node
             try:
                 result = Group(process_info, process_node).task_group(task_kwargs)
-                result.setdefault('status', StatusEnum.green.value)
+                result.setdefault('status', TaskStatus.green.value)
                 return result
             except Exception as e:
                 logger.error(f'The task group failure.error info:{e},\n{traceback.format_exc()}')
                 return {
-                    'status': StatusEnum.red.value,
+                    'status': TaskStatus.red.value,
                     'error_info': json.dumps({'error info': e, 'traceback': traceback.format_exc()})
                 }
         else:
@@ -105,11 +105,11 @@ class ParallelHandler(AbstractHandler):
             try:
                 parallel = Parallel(process_info, process_node)
                 result = parallel.parallel_task(task_kwargs)
-                result.setdefault('status', StatusEnum.green.value)
+                result.setdefault('status', TaskStatus.green.value)
                 return result
             except Exception as e:
                 logger.error(f'The parallel gateway failure.error info:{e},\ntraceback:{traceback.format_exc()}')
-                return {'status': StatusEnum.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
+                return {'status': TaskStatus.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
         else:
             return super().handle(module, method_name, task_kwargs)
 

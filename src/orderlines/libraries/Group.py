@@ -50,7 +50,7 @@ from orderlines.running.listen_running import ListenRunning
 from orderlines.utils.base_orderlines_type import GroupParam
 
 from orderlines.utils.exceptions import OrderLineStopException
-from orderlines.utils.process_action_enum import StatusEnum as Status
+from orderlines.utils.process_action_enum import TaskStatus
 from public.logger import logger
 from orderlines.utils.utils import get_current_node
 
@@ -92,9 +92,9 @@ class Group(BaseTask):
                 except OrderLineStopException as e:
                     logger.error(f'Task group stop:{traceback.format_exc(), e}')
                     error_info = traceback.format_exc()
-                    self.listen_running.update(node, task_instance, task_table_id, error_info, Status.yellow.value)
+                    self.listen_running.update(node, task_instance, task_table_id, error_info, TaskStatus.yellow.value)
                 except Exception as e:
                     logger.error(f'Task group failure:{traceback.format_exc(), e, traceback.format_exc()}')
                     error_info = traceback.format_exc()
-                    self.listen_running.update(node, task_instance, task_table_id, error_info, Status.red.value)
-        return {'status': Status.green.value, **group_result}
+                    self.listen_running.update(node, task_instance, task_table_id, error_info, TaskStatus.red.value)
+        return {'status': TaskStatus.green.value, **group_result}

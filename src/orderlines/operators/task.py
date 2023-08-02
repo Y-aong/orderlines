@@ -14,7 +14,7 @@ import datetime
 import uuid
 
 from apis.orderlines.schema.task_schema import TaskInstanceSchema
-from orderlines.utils.process_action_enum import StatusEnum
+from orderlines.utils.process_action_enum import TaskStatus
 from apis.orderlines.models import TaskInstance
 from public.base_model import get_session
 
@@ -41,7 +41,7 @@ class TaskInstanceOperator:
         task_instance_info['task_instance_id'] = self.task_instance_id
         task_instance_info['process_id'] = self.process_id
         task_instance_info['process_instance_id'] = self.process_instance_id
-        task_instance_info['task_status'] = StatusEnum.grey.value
+        task_instance_info['task_status'] = TaskStatus.grey.value
         task_instance_info = TaskInstanceSchema().load(task_instance_info)
         obj = TaskInstance(**task_instance_info)
         self.session.add(obj)
@@ -52,7 +52,7 @@ class TaskInstanceOperator:
         update_data = dict()
         update_data['end_time'] = datetime.datetime.now()
         update_data['process_instance_id'] = self.process_instance_id
-        if task_status == StatusEnum.green.value:
+        if task_status == TaskStatus.green.value:
             update_data['task_result'] = kwargs.get('result')
         else:
             update_data['task_result'] = {'status': task_status}

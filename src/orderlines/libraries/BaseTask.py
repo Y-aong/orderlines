@@ -11,14 +11,14 @@
 """
 from pydantic import BaseModel
 
-from orderlines.utils.process_action_enum import StatusEnum
+from orderlines.utils.process_action_enum import TaskStatus
 
 
 class BaseTask:
 
     def __init__(self):
-        self.success = StatusEnum.green.value
-        self.error = StatusEnum.red.value
+        self.success = TaskStatus.green.value
+        self.error = TaskStatus.red.value
 
     def on_success(self, result: dict, task_name: str):
         """

@@ -27,10 +27,6 @@ class ScheduleTask(Base):
     update_time = db.Column(db.DateTime, comment='process update time')
     creator = db.Column(db.String(30), comment='process creator')
     updater = db.Column(db.String(30), comment='process updater')
-    # relation
-    process_instance = db.relationship('ProcessInstance', backref='base_process')
-    task = db.relationship('Task', backref='base_process')
-    task_instance = db.relationship('TaskInstance', backref='base_process')
 
     # schedule relation
     trigger_type = db.Column(db.Enum('date, interval', 'crontab'), comment='schedule trigger type')

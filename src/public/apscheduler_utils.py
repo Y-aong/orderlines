@@ -19,6 +19,10 @@ from public.apscheduler_config import scheduler
 from public.base_model import get_session
 
 
+def demo(process_name: str, exe_type: str):
+    print(f'this is a test::{process_name}, {exe_type}')
+
+
 class ApschedulerUtils:
     def __init__(self):
         self.exe_type = 'schedule'
@@ -31,10 +35,9 @@ class ApschedulerUtils:
             'cron': self.cron_key,
             'date': self.date_key
         }
-        from tasks.orderlines_run import orderlines_run
-        self.target_func = orderlines_run
+        self.target_func = demo
 
-    def check_param(self, param, trigger):
+    def check_param(self, param: dict, trigger: str) -> dict:
         data = dict()
         schedule_key = self.schedule_keys.get(trigger)
         for key, val in param.items():
@@ -42,7 +45,31 @@ class ApschedulerUtils:
                 data.setdefault(key, val)
         return data
 
-    def add_task(self, trigger_type, job_name, patrol_task_id, task_name, **schedule_data):
+    def check_task(self, process_id: str) -> bool:
+        """检查定时任务是否存在, Check whether scheduled tasks exist"""
+        job = self.session.query(ApschedulerJobs).filter(ApschedulerJobs.id == process_id).first()
+        return False if not job else True
+
+    def get_schedule_task(self, process_id: str) -> dict:
+        if self.check_task(process_id):
+            schedule_info = scheduler.get_job(process_id)
+            print(f'schedule_info::{schedule_info}')
+            if schedule_info:
+                return {
+                    'next_run_time': schedule_info.next_run_time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'method_name': schedule_info.func.__name__,
+                    'name': schedule_info.name
+                }
+
+        return {}
+
+    def create_schedule_task(
+            self,
+            trigger_type: str,
+            process_id: str,
+            process_name: str,
+            **schedule_data
+    ):
         """创建定时任务入口"""
         if trigger_type == 'interval':
             schedule_data = self.check_param(schedule_data, trigger_type)
@@ -53,18 +80,24 @@ class ApschedulerUtils:
         else:
             raise ValueError(f'trigger::{trigger_type}Parameter error')
         scheduler.add_job(
-            id=job_name,
+            id=process_id,
             func=self.target_func,
-            args=(patrol_task_id, self.exe_type),
-            name=task_name,
+            args=(process_id, self.exe_type),
+            name=process_name,
             coalesce=True,
             replace_existing=True,
             trigger=trigger_type,
             **schedule_data
         )
 
-    def modify_task(self, trigger_type, job_id, args=None, **trigger_data):
-        self.check_task(job_id)
+    def update_schedule_task(
+            self,
+            trigger_type: str,
+            process_id: str,
+            **trigger_data
+    ):
+        """修改定时任务, update schedule task"""
+        self.check_task(process_id)
         if trigger_type == 'interval':
             trigger_data = self.check_param(trigger_data, trigger_type)
             trigger_instance = IntervalTrigger(**trigger_data)
@@ -76,31 +109,11 @@ class ApschedulerUtils:
             trigger_instance = DateTrigger(**trigger_data)
         else:
             raise ValueError(f'trigger::{trigger_type}参数异常')
-        if args:
-            scheduler.modify_job(job_id=job_id, trigger=trigger_instance, args=args)
-        else:
-            scheduler.modify_job(job_id=job_id, trigger=trigger_instance)
 
-    def check_task(self, job_name):
-        """检查定时任务是否存在, Check whether scheduled tasks exist"""
-        job = self.session.query(ApschedulerJobs).filter(ApschedulerJobs.id == job_name).first()
-        return False if not job else True
+        scheduler.modify_job(job_id=process_id, trigger=trigger_instance)
 
-    def delete_task(self, job_id):
+    def delete_schedule_task(self, process_id: str):
         """删除定时任务,Deleting a Scheduled Task"""
-        if self.check_task(job_id):
-            scheduler.remove_job(job_id)
-
-    def get_task(self, job_name):
-        if self.check_task(job_name):
-            schedule_info = scheduler.get_job(job_name)
-            if schedule_info:
-                return {
-                    'next_run_time': schedule_info.next_run_time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'func': schedule_info.func.__name__,
-                    'args': schedule_info.args,
-                    'kwargs': schedule_info.kwargs,
-                    'name': schedule_info.name
-                }
-            else:
-                return None
+        if self.check_task(process_id):
+            scheduler.remove_job(process_id)
+        raise ValueError(f'job id {process_id} not exist')

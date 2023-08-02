@@ -27,7 +27,7 @@ from werkzeug.local import Local
 from orderlines.operators.process import ProcessInstanceOperator
 from orderlines.libraries.ProcessControl import ProcessControl, ProcessControlParam
 
-from orderlines.utils.process_action_enum import StatusEnum, ProcessStatus
+from orderlines.utils.process_action_enum import TaskStatus, ProcessStatus
 
 
 class Trigger:
@@ -107,7 +107,7 @@ class Trigger:
         """
         _next_node_id = self.get_next_node_id()
         if not _next_node_id:
-            await self.update_process_info(StatusEnum.green.value)
+            await self.update_process_info(TaskStatus.green.value)
             return False
 
         if self.task_deque.empty():

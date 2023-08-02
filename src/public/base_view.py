@@ -67,14 +67,23 @@ class BaseView(Resource):
         else:
             return self.table_schema().dump(multi_data, many=True)
 
+    def check_form_data(self) -> bool:
+        for key, val in self.form_data.items():
+            if hasattr(self.table_orm, key):
+                return False
+        return True
+
     @handle_api_error
     def get(self):
         self.handle_filter()
-        if not self.form_data or self.form_data.get('pre_page'):
-            data = self._get_multi()
+
+        if self.check_form_data() or self.form_data.get('pre_page'):
+            self.response_data = self._get_multi()
         else:
-            data = self._get_single()
-        return generate_response(data, message='select success')
+            self.response_data = self._get_single()
+        self.handle_response_data()
+        self.response_callback()
+        return generate_response(self.response_data, message='select success')
 
     @handle_api_error
     def post(self):

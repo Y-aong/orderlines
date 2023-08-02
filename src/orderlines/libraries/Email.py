@@ -18,7 +18,7 @@ from conf.config import EmailConfig, OrderLinesConfig
 from orderlines.libraries.BaseTask import BaseTask
 from orderlines.utils.base_orderlines_type import EmailParam, EmailResult
 from public.logger import logger
-from orderlines.utils.process_action_enum import StatusEnum
+from orderlines.utils.process_action_enum import TaskStatus
 
 
 class Email(BaseTask):
@@ -32,16 +32,16 @@ class Email(BaseTask):
         self.sender = EmailConfig.sender
         self.receivers = EmailConfig.receivers
         self.error_status = {
-            str(StatusEnum.red.value): 'run failure',
-            str(StatusEnum.yellow.value): 'run stop',
-            str(StatusEnum.pink.value): 'failure skip',
-            str(StatusEnum.orange.value): 'failure retry',
+            str(TaskStatus.red.value): 'run failure',
+            str(TaskStatus.yellow.value): 'run stop',
+            str(TaskStatus.pink.value): 'failure skip',
+            str(TaskStatus.orange.value): 'failure retry',
         }
 
     def _build_msg(self, process_name: str, node_info: dict, error_or_result=None, status=None):
         """构建发送邮件消息。Build mail message"""
         task_name = node_info.get("task_name")
-        if status != StatusEnum.green.value:
+        if status != TaskStatus.green.value:
             content = f'error info:{error_or_result}'
             title = f'process{process_name},task{task_name}{self.error_status.get(status, status)}'
         else:
@@ -63,7 +63,7 @@ class Email(BaseTask):
         """
         if not EmailConfig.is_send:
             logger.info('The callback function was called successfully, and no mail was send')
-            return {'status': StatusEnum.green.value}
+            return {'status': TaskStatus.green.value}
         title, msg = self._build_msg(**email_info.model_dump())
         message = MIMEText(msg, 'plain', 'utf-8')
         message['Subject'] = title
@@ -76,7 +76,7 @@ class Email(BaseTask):
             smtp_obj.sendmail(self.sender, self.receivers, message.as_string())
             smtp_obj.quit()
             logger.info('email send success')
-            return {'status': StatusEnum.green.value}
+            return {'status': TaskStatus.green.value}
         except smtplib.SMTPException as e:
             logger.error(f'email send failure, error info:{e}')
-            return {'status': StatusEnum.red.value}
+            return {'status': TaskStatus.red.value}
