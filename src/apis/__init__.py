@@ -34,7 +34,7 @@ def _register_webhook(app):
 def _register_db(app: Flask):
     from public.base_model import db
     from apis.orderlines.models import (
-        ProcessInstance, Process, Task, TaskInstance, VariableModel, PluginInfo)
+        ProcessInstance, Process, Task, TaskInstance, VariableModel, PluginInfo, ScheduleTask, BaseConfig)
     from apis.schedule_plan.models import IntervalPlan, DatePlan, CrontabPlan, ApschedulerJobs
     from apis.system_oauth.models import (
         SystemUser, SystemRole, SystemPermission, SystemGroup, SystemDepartment, SystemUserRoleRelation,

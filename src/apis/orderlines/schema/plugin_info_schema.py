@@ -17,3 +17,4 @@ from apis.orderlines.models.plugin_info import PluginInfo
 class PluginInfoSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = PluginInfo
+        exclude = ['active']

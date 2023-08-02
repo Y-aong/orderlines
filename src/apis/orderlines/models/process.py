@@ -48,3 +48,4 @@ class ProcessInstance(Base):
     # relation
     task_instance = db.relationship('TaskInstance', backref='base_process_instance')
     process_id = db.Column(db.String(255), db.ForeignKey('base_process.process_id'), comment='process id')
+    run_type = db.Column(db.Enum('schedule', 'trigger'), default='trigger', comment='触发方式')
