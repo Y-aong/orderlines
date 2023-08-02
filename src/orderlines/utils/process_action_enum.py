@@ -18,9 +18,10 @@ class ProcessStatus(enum.Enum):
     yellow = 'STOP'
     grey = 'PENDING'
     blue = "RUNNING"
+    purple = "PAUSED"
 
 
-class StatusEnum(enum.Enum):
+class TaskStatus(enum.Enum):
     grey = 'PENDING'
     blue = 'RUNNING'
     red = 'FAILURE'

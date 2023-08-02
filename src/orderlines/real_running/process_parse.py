@@ -92,5 +92,4 @@ class ProcessParse(BaseParse):
             self.current_task_id = _next_task_id
             return True
         else:
-            # todo need to check process is paused
             return False

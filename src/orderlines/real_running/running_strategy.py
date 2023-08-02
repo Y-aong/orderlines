@@ -10,10 +10,15 @@
     任务运行策略
     task run strategy when task run error
 """
+import asyncio
+
+import async_timeout
 
 from orderlines.real_running.app_context import AppContext
 from orderlines.real_running.base_runner import BaseRunner
 from orderlines.real_running.process_parse import ProcessParse
+from orderlines.real_running.task_build import TaskBuild
+from orderlines.utils.process_action_enum import TaskStatus
 
 
 class RunningStrategy(BaseRunner):
@@ -22,14 +27,18 @@ class RunningStrategy(BaseRunner):
             process_instance_id: str,
             context: AppContext,
             current_task_id: str,
-            parse: ProcessParse,
-            timeout: int
+            process_parse: ProcessParse,
+            error_info: dict,
+            task_build: TaskBuild
+
     ):
         super(RunningStrategy, self).__init__(process_instance_id, context)
-        self.task_config = context.get_task_node_item(process_instance_id, current_task_id, 'task_config')
         self.current_task_id = current_task_id
-        self.parse = parse
-        self.timeout = timeout
+        self.process_parse = process_parse
+        self.error_info = error_info
+        self.task_build = task_build
+        self._task_config = self.task_config(self.current_task_id)
+        self.task_timeout = self._task_config.get('timeout')
         self.strategy_context = {
             'RAISE': self.retry_strategy,
             'SKIP': self.skip_strategy,
@@ -37,10 +46,33 @@ class RunningStrategy(BaseRunner):
         }
 
     def skip_strategy(self):
-        pass
+        flag = await self.process_parse.parse()
+        return flag, self.error_info, TaskStatus.green.value
 
     def raise_strategy(self):
-        pass
+        return False, self.error_info, TaskStatus.red.value
 
     def retry_strategy(self):
-        pass
+        retry_time = self._task_config.get('retry_time')
+        time = 1
+        while time < retry_time:
+            try:
+                self.logger.info(f'Start retry {time} times')
+                async with async_timeout.timeout(self.task_timeout):
+                    task = asyncio.create_task(self.task_build.build(self.current_task_id))
+                    await task
+                if task.result().get('status') == TaskStatus.green.value:
+                    flag = await self.process_parse.parse()
+                    return flag, task.result(), TaskStatus.green.value
+            except Exception as error:
+                _error_info = f'The number of retries exceeded the maximum:{time}. Error message::{error}'
+                self.error_info['error_info'] = _error_info
+                self.logger.info(_error_info)
+                time += 1
+
+        self.error_info['status'] = TaskStatus.red.value
+        return False, self.error_info, TaskStatus.red.value
+
+    def handle_strategy(self):
+        task_strategy = self._task_config.get('task_strategy').upper()
+        return self.strategy_context.get(task_strategy)()

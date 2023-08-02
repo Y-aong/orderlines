@@ -10,6 +10,7 @@
     运行时的数据库操作
     db operator on running
 """
+import json
 import uuid
 from datetime import datetime
 
@@ -18,7 +19,7 @@ from apis.orderlines.schema.process_schema import ProcessInstanceSchema
 from apis.orderlines.schema.task_schema import TaskInstanceSchema
 from orderlines.real_running.app_context import AppContext
 from orderlines.real_running.base_runner import BaseRunner
-from orderlines.utils.process_action_enum import ProcessStatus, StatusEnum
+from orderlines.utils.process_action_enum import ProcessStatus, TaskStatus
 from public.base_model import get_session
 
 
@@ -47,7 +48,7 @@ class RunningDBOperator(BaseRunner):
         if not dry:
             process_instance_info = {
                 'process_status': process_status,
-                'process_error': error_info
+                'process_error': json.dumps(error_info) if isinstance(error_info, dict) else error_info
             }
             if process_status in ['SUCCESS', 'FAILURE', 'STOP']:
                 process_instance_info['end_time'] = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
@@ -61,7 +62,8 @@ class RunningDBOperator(BaseRunner):
             task_instance_info = {
                 'process_id': self.process_id,
                 'process_instance_id': self.process_instance_id,
-                'task_instance_id': task_instance_id
+                'task_instance_id': task_instance_id,
+                'task_status': TaskStatus.green.value
             }
             for key, val in task_node.items():
                 if hasattr(TaskInstance, key):
@@ -75,7 +77,7 @@ class RunningDBOperator(BaseRunner):
     def task_instance_update(
             self,
             task_instance_id: str,
-            task_status: StatusEnum,
+            task_status: TaskStatus,
             result: dict = None,
             error_info: dict = None,
             dry=False
@@ -83,11 +85,19 @@ class RunningDBOperator(BaseRunner):
         if not dry:
             task_instance_info = {
                 'task_status': task_status,
-                'result': result,
-                'error_info': error_info
+                'result': json.dumps(result) if isinstance(result, dict) else result,
+                'error_info': json.dumps(error_info) if isinstance(error_info, dict) else error_info
             }
             if task_status not in ['PENDING', 'RUNNING']:
                 task_instance_info['end_time'] = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
             self.session.query(TaskInstance).filter(
                 TaskInstance.task_instance_id == task_instance_id).update(task_instance_info)
             self.session.commit()
+
+    def process_instance_is_stop_or_paused(self) -> bool:
+        obj = self.session.query(ProcessInstance).filter(
+            ProcessInstance.process_instance_id == self.process_instance_id
+        ).first()
+        instance = ProcessInstanceSchema().dump(obj)
+        instance_status = instance.get('status')
+        return instance_status == ProcessStatus.yellow.value, instance_status == ProcessStatus.purple.value
