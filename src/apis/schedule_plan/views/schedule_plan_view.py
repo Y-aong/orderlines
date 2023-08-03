@@ -59,20 +59,20 @@ class SchedulePlanView(BaseView):
         if request.method == 'GET':
             if isinstance(self.response_data, dict):
                 job_id = self.response_data.get('job_id')
-                schedule_plan = self.apscheduler_utils.get_schedule_task(job_id)
+                schedule_plan = self.apscheduler_utils.get_schedule_plan(job_id)
                 self.response_data['schedule_plan'] = schedule_plan
                 self.response_data['enable'] = True if schedule_plan else False
             elif isinstance(self.response_data, list):
                 for item in self.response_data:
                     job_id = item.get('job_id')
-                    schedule_plan = self.apscheduler_utils.get_schedule_task(job_id)
+                    schedule_plan = self.apscheduler_utils.get_schedule_plan(job_id)
                     item['schedule_plan'] = schedule_plan
                     item['enable'] = True if schedule_plan else False
 
     def response_callback(self):
         if request.method == 'POST':
             try:
-                self.apscheduler_utils.create_schedule_task(
+                self.apscheduler_utils.create_schedule_plan(
                     trigger_type=self.trigger,
                     process_id=self.process_id,
                     process_name=self.form_data.get('process_name'),
@@ -83,11 +83,11 @@ class SchedulePlanView(BaseView):
                 with db.auto_commit():
                     db.session.query(self.table_orm).filter(self.table_orm.id == self.table_id).delete()
         elif request.method == 'PUT':
-            self.apscheduler_utils.update_schedule_task(
+            self.apscheduler_utils.update_schedule_plan(
                 trigger_type=self.trigger,
                 process_id=self.process_id,
                 args=self.form_data.get('args'),
                 **self.form_data.get('schedule_plan')
             )
         elif request.method == 'DELETE':
-            self.apscheduler_utils.delete_schedule_task(self.process_id)
+            self.apscheduler_utils.delete_schedule_plan(self.process_id)
