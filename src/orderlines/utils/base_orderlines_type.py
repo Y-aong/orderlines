@@ -54,9 +54,9 @@ class BaseProcessNode(BaseModel):
 
 
 class BasePluginParam(BaseModel):
-    process_id: str = Field(description=get_desc_by_lang('process_id'))
-    task_id: str = Field(description=get_desc_by_lang('task_id'), title='task id')
-    result: Union[None, list, dict] = Field(description=get_desc_by_lang('result'))
+    # process_id: Union[str, None] = Field(description=get_desc_by_lang('process_id'))
+    # task_id: Union[str, None] = Field(description=get_desc_by_lang('task_id'), title='task id')
+    # result: Union[None, list, dict] = Field(description=get_desc_by_lang('result'))
     task_config: Union[None, dict] = Field(
         default=dict(), description=get_desc_by_lang('task_config'))
 

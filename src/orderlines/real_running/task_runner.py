@@ -43,18 +43,19 @@ class TaskRunner(threading.Thread):
         self.stop = False  # 是否停止
         self.paused = False  # 是否暂停
         self.is_run = True  # 根据状态判断
-
         self.logger = logger
+        self.current_task_id = self.task_stock.top
 
-    @property
     def current_node(self):
         return self.context.get_task_node(self.process_instance_id, self.current_task_id)
 
-    @property
-    def current_task_id(self):
-        return self.task_stock.top
-
     def callback(self, task_status: str, result_or_error: dict):
+        """
+        on task run error callback func method
+        @param task_status: task run status
+        @param result_or_error: result or error
+        @return:
+        """
         task_config = self.process_parse.task_config(self.current_task_id)
         notice_type = task_config.get('notice_type')
         callback_func = task_config.get('callback_func')
@@ -68,45 +69,53 @@ class TaskRunner(threading.Thread):
             flag, annotation = get_method_param_annotation(method)
             callback_param = {
                 'process_name': self.process_name,
-                'node_info': self.current_node,
+                'node_info': self.current_node(),
                 'error_info': result_or_error,
                 'status': task_status
             }
-            self.logger.info(f'callback func:{callback_func}, callback param::{callback_param}')
+            self.logger.info(f'callback func is {callback_func}, callback param is {callback_param}')
             callback_func_param = annotation(**callback_param)
             method(callback_func_param)
 
     def run(self) -> None:
         asyncio.run(self.task_run())
 
-    async def task_run(self):
-
+    async def task_run(self) -> None:
+        """
+        real task run
+        @return:
+        """
+        # 初始化
         self.running_db_operator.process_instance_update(process_status=ProcessStatus.blue.value)
 
         while self.is_run and not self.stop:
+            task_instance_id = self.running_db_operator.task_instance_insert(self.current_node(), self.dry)
 
-            task_instance_id = self.running_db_operator.task_instance_insert(self.current_node, self.dry)
             try:
                 task_status, result_or_error = await self.on_running(task_instance_id)
             except OrderLineStopException as error:
                 task_status, result_or_error = await self.on_stop(error, task_instance_id)
             except Exception as error:
                 task_status, result_or_error = await self.on_failure(error, task_instance_id)
+            if task_status != TaskStatus.green.value:
+                self.callback(task_status, result_or_error)
 
-            self.callback(task_status, result_or_error)
             self.stop, self.paused = self.running_db_operator.process_instance_is_stop_or_paused()
             if self.stop:
                 self.logger.info(f'process name {self.process_name} is stop')
                 break
             if not self.is_run:
                 self.logger.info(f'process name {self.process_name} run complete')
+                break
 
             sleep_time = 10 if self.paused else 0.01
 
             if not self.paused:
                 # if process not paused get next
                 self.is_run = self.process_parse.parse()
-
+                self.current_task_id = self.task_stock.top
+            self.logger.info(f'current task id {self.current_task_id}, task result {result_or_error}\n '
+                             f'is run::{self.is_run}, stop::{self.stop}, paused::{self.paused}')
             await asyncio.sleep(sleep_time)
 
     async def on_running(self, task_instance_id: str) -> str:
@@ -116,7 +125,7 @@ class TaskRunner(threading.Thread):
         @param task_instance_id: 任务实例id
         @return:
         """
-        task_config = self.context.get_task_node_item(self.process_instance_id, self.current_task_id, 'task_config')
+        task_config = self.process_parse.task_config(self.current_task_id)
         task_timeout = task_config.get('timeout')
         async with async_timeout.timeout(task_timeout):
             task = asyncio.create_task(self.task_build.build(self.current_task_id))
@@ -153,6 +162,12 @@ class TaskRunner(threading.Thread):
         return ProcessStatus.yellow.value, str(error)
 
     async def on_failure(self, error: Any, task_instance_id: str):
+        """
+        on task failure
+        @param error: task error info
+        @param task_instance_id: task instance id
+        @return:
+        """
         if isinstance(error, asyncio.TimeoutError):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}
             self.logger.info(f'current_task_id::{self.current_task_id}, run timeout::{error_info}')
@@ -168,7 +183,7 @@ class TaskRunner(threading.Thread):
             error_info=error_info,
             task_build=self.task_build
         )
-        self.is_run, result_or_error, task_status = running_strategy.handle_strategy()
+        self.is_run, result_or_error, task_status = await running_strategy.handle_strategy()
 
         self.running_db_operator.task_instance_update(
             task_instance_id,

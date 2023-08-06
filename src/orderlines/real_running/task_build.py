@@ -34,7 +34,7 @@ class TaskBuild(BaseRunner):
             'task_module',
             'method_name'
         )
-        task_kwargs: dict = self.context.get_task_node_item(self.process_instance_id, task_id, 'method_kwargs')
+        task_kwargs: dict = self.context.get_task_node_item(self.process_instance_id, task_id, 'method_kwargs', {})
         task_config: dict = self.task_config(task_id)
         task_kwargs.setdefault('task_config', task_config)
         return task_kwargs, task_build_param

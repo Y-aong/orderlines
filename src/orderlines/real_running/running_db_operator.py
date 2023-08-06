@@ -48,7 +48,7 @@ class RunningDBOperator(BaseRunner):
         if not dry:
             process_instance_info = {
                 'process_status': process_status,
-                'process_error': json.dumps(error_info) if isinstance(error_info, dict) else error_info
+                'process_error_info': json.dumps(error_info) if isinstance(error_info, dict) else error_info
             }
             if process_status in ['SUCCESS', 'FAILURE', 'STOP']:
                 process_instance_info['end_time'] = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
@@ -69,7 +69,7 @@ class RunningDBOperator(BaseRunner):
                 if hasattr(TaskInstance, key):
                     task_instance_info.setdefault(key, val)
             task_instance_info = TaskInstanceSchema().load(task_instance_info)
-            obj = TaskInstance(task_instance_info)
+            obj = TaskInstance(**task_instance_info)
             self.session.add(obj)
             self.session.commit()
             return task_instance_id
@@ -94,10 +94,11 @@ class RunningDBOperator(BaseRunner):
                 TaskInstance.task_instance_id == task_instance_id).update(task_instance_info)
             self.session.commit()
 
-    def process_instance_is_stop_or_paused(self) -> bool:
+    def process_instance_is_stop_or_paused(self, dry=False) -> bool:
+        if dry:
+            return False, False
         obj = self.session.query(ProcessInstance).filter(
-            ProcessInstance.process_instance_id == self.process_instance_id
-        ).first()
+            ProcessInstance.process_instance_id == self.process_instance_id).first()
         instance = ProcessInstanceSchema().dump(obj)
         instance_status = instance.get('status')
         return instance_status == ProcessStatus.yellow.value, instance_status == ProcessStatus.purple.value

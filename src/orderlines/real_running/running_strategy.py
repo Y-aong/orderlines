@@ -30,7 +30,6 @@ class RunningStrategy(BaseRunner):
             process_parse: ProcessParse,
             error_info: dict,
             task_build: TaskBuild
-
     ):
         super(RunningStrategy, self).__init__(process_instance_id, context)
         self.current_task_id = current_task_id
@@ -45,14 +44,14 @@ class RunningStrategy(BaseRunner):
             'RETRY': self.retry_strategy
         }
 
-    def skip_strategy(self):
-        flag = await self.process_parse.parse()
+    async def skip_strategy(self):
+        flag = self.process_parse.parse()
         return flag, self.error_info, TaskStatus.green.value
 
-    def raise_strategy(self):
+    async def raise_strategy(self):
         return False, self.error_info, TaskStatus.red.value
 
-    def retry_strategy(self):
+    async def retry_strategy(self):
         retry_time = self._task_config.get('retry_time')
         time = 1
         while time < retry_time:
@@ -73,6 +72,6 @@ class RunningStrategy(BaseRunner):
         self.error_info['status'] = TaskStatus.red.value
         return False, self.error_info, TaskStatus.red.value
 
-    def handle_strategy(self):
+    async def handle_strategy(self):
         task_strategy = self._task_config.get('task_strategy').upper()
         return self.strategy_context.get(task_strategy)()

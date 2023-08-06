@@ -52,7 +52,7 @@ class CommonHandler(AbstractHandler):
                 error = self.handle_on_failure(e, module, method_name)
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': json.dumps({'error info': error, 'traceback': traceback.format_exc()})
+                    'error_info': json.dumps({'error info': str(error), 'traceback': traceback.format_exc()})
                 }
         else:
             return super().handle(module, method_name, task_kwargs)

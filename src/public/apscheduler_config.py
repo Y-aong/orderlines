@@ -29,7 +29,9 @@ job_defaults = {
     'max_instances': 3
 }
 
-scheduler = BackgroundScheduler(jobstores=job_stores,
-                                executors=executors,
-                                job_defaults=job_defaults,
-                                timezone='Asia/Shanghai')
+scheduler = BackgroundScheduler(
+    jobstores=job_stores,
+    executors=executors,
+    job_defaults=job_defaults,
+    timezone='Asia/Shanghai'
+)

@@ -16,10 +16,11 @@ from flask import Config
 from apis.orderlines.models import Process
 from apis.orderlines.schema.process_schema import ProcessRunningSchema
 from orderlines.real_running.app_context import AppContext
-from orderlines.running.listen_running import ListenRunning
-from orderlines.running.runner import TaskRunner
+from orderlines.real_running.task_runner import TaskRunner
+
 from orderlines.utils.process_build_adapter import ProcessBuildAdapter
 from public.base_model import get_session
+from public.logger import logger
 
 
 class OrderLines:
@@ -29,10 +30,7 @@ class OrderLines:
         self.session = get_session()
         self.process_build = ProcessBuildAdapter()
         self.context = AppContext()
-
-    @property
-    def process_instance_id(self):
-        return str(uuid.uuid1().hex)
+        self.logger = logger
 
     def start_by_process_id(self, process_id: Union[int, str], dry):
         if isinstance(process_id, str):
@@ -40,9 +38,9 @@ class OrderLines:
         elif isinstance(process_id, int):
             obj = self.session.query(Process).filter(Process.id == process_id).first()
         else:
-            raise ValueError(f'process id {process_id} type is not legal. process is only support int or str')
+            raise ValueError(f'process id {process_id} type is not support. process id is only support int or str')
         process_info = ProcessRunningSchema().dump(obj)
-        print(f'process_info::{process_info}')
+        self.logger.info(f'process_info is {process_info}')
         task_nodes = process_info.pop('task')
         self._start(process_info, task_nodes, dry)
 
@@ -60,21 +58,21 @@ class OrderLines:
         self.start_by_process_id(process_id, dry)
 
     def _start(self, process_info: dict, task_nodes: List[dict], dry):
-        process_info['process_instance_id'] = self.process_instance_id
+        process_instance_id = str(uuid.uuid1().hex)
+        process_info['process_instance_id'] = process_instance_id
         process_instance_info = {'process_info': process_info, 'task_nodes': task_nodes}
-        self.context.setdefault(self.process_instance_id, process_instance_info)
-        t = TaskRunner(process_info,
-                       task_nodes,
-                       ListenRunning(self.process_instance_id, process_info.get('process_id')),
-                       dry)
+        self.context.setdefault(process_instance_id, process_instance_info)
+        t = TaskRunner(process_instance_id, self.context, dry)
         t.start()
 
-    def start(self,
-              process_id: Union[None, int, str] = None,
-              file_path: str = None,
-              process_info: dict = None,
-              task_nodes: List[dict] = None,
-              dry=True):
+    def start(
+            self,
+            process_id: Union[None, int, str] = None,
+            file_path: str = None,
+            process_info: dict = None,
+            task_nodes: List[dict] = None,
+            dry: bool = False
+    ) -> None:
         """
         启动流程
         start process
@@ -108,9 +106,6 @@ class OrderLines:
         pass
 
     def continue_all(self):
-        pass
-
-    def logger(self):
         pass
 
     def make_config(self):

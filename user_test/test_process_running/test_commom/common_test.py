@@ -73,4 +73,4 @@ process_info = {
 }
 
 if __name__ == "__main__":
-    OrderLines().start(process_info=process_info, task_nodes=data)
+    OrderLines()._start(process_info=process_info, task_nodes=data, dry=True)

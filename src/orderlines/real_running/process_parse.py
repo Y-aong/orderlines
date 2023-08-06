@@ -73,8 +73,9 @@ class BaseParse(BaseRunner):
 
 class ProcessParse(BaseParse):
     def __init__(self, process_instance_id: str, context: AppContext):
-        super(BaseParse, self).__init__(process_instance_id, context)
+        super(ProcessParse, self).__init__(process_instance_id, context)
         self.stock = LocalStack()
+        self.stock.push(self.current_task_id)
 
     def parse(self):
         """
@@ -85,11 +86,9 @@ class ProcessParse(BaseParse):
         if not _next_task_id:
             # set process instance success, this is process is complete
             self.running_db_operator.process_instance_update(ProcessStatus.green.value)
-        if not self.stock.top:
-            # 当栈为空代表着这个任务已经运行成功
+            return False
+        else:
             # When the stock is empty, the task has run successfully
             self.stock.push(_next_task_id)
             self.current_task_id = _next_task_id
             return True
-        else:
-            return False
