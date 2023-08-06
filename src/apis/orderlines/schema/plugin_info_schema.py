@@ -9,12 +9,12 @@
     插件序列化类
     Plug-in serialization class
 """
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.orderlines.models.plugin_info import PluginInfo
+from public.base_schema import BaseSchema
 
 
-class PluginInfoSchema(SQLAlchemyAutoSchema):
+class PluginInfoSchema(BaseSchema):
     class Meta:
         model = PluginInfo
         exclude = ['active']

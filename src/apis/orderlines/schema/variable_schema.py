@@ -10,11 +10,10 @@
     Variable serialization class
 """
 
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-
 from apis.orderlines.models.variable import VariableModel
+from public.base_schema import BaseSchema
 
 
-class VariableSchema(SQLAlchemyAutoSchema):
+class VariableSchema(BaseSchema):
     class Meta:
         model = VariableModel

@@ -11,12 +11,13 @@
 """
 
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+from marshmallow_sqlalchemy import auto_field
 
 from apis.orderlines.models import Task, TaskInstance
+from public.base_schema import BaseSchema
 
 
-class TaskInstanceSchema(SQLAlchemyAutoSchema):
+class TaskInstanceSchema(BaseSchema):
     task_id = auto_field()
     process_id = auto_field()
     process_instance_id = auto_field()
@@ -28,7 +29,7 @@ class TaskInstanceSchema(SQLAlchemyAutoSchema):
         exclude = ['active']
 
 
-class TaskSchema(SQLAlchemyAutoSchema):
+class TaskSchema(BaseSchema):
     insert_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     update_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     process_id = auto_field()

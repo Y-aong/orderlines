@@ -41,16 +41,16 @@ class ApschedulerUtils:
                 data.setdefault(key, val)
         return data
 
-    def check_plan(self, process_id: str) -> bool:
+    def check_plan(self, job_id: str) -> bool:
         """检查定时任务是否存在, Check whether scheduled tasks exist"""
-        job = self.session.query(ApschedulerJobs).filter(ApschedulerJobs.id == process_id).first()
+        job = self.session.query(ApschedulerJobs).filter(ApschedulerJobs.id == job_id).first()
         return False if not job else True
 
-    def get_schedule_plan(self, process_id: str) -> dict:
+    def get_schedule_plan(self, job_id: str) -> dict:
         schedule_plan = dict()
-        if self.check_plan(process_id):
+        if self.check_plan(job_id):
 
-            schedule_info = scheduler.get_job(process_id)
+            schedule_info = scheduler.get_job(job_id)
             print(f'schedule_info::{schedule_info}')
             if schedule_info:
                 schedule_plan.setdefault('next_run_time', schedule_info.next_run_time.strftime('%Y-%m-%d %H:%M:%S'))
@@ -61,7 +61,7 @@ class ApschedulerUtils:
     def create_schedule_plan(
             self,
             trigger_type: str,
-            process_id: str,
+            job_id: str,
             process_name: str,
             **schedule_data
     ):
@@ -76,9 +76,9 @@ class ApschedulerUtils:
         else:
             raise ValueError(f'trigger::{trigger_type}Parameter error')
         scheduler.add_job(
-            id=process_id,
+            id=job_id,
             func=self.target_func,
-            args=(process_id, self.exe_type),
+            args=(job_id, self.exe_type),
             name=process_name,
             coalesce=True,
             replace_existing=True,
@@ -89,23 +89,24 @@ class ApschedulerUtils:
     def update_schedule_plan(
             self,
             trigger_type: str,
-            process_id: str,
+            job_id: str,
             **schedule_data
     ):
         """修改定时任务, update schedule task"""
-        if self.check_plan(process_id):
+        if self.check_plan(job_id):
             schedule_data.setdefault('timezone', 'Asia/Shanghai')
-            schedule_plan = self.get_schedule_plan(process_id)
-            self.delete_schedule_plan(process_id)
+            schedule_plan = self.get_schedule_plan(job_id)
+            self.delete_schedule_plan(job_id)
             self.create_schedule_plan(
                 trigger_type=trigger_type,
-                process_id=process_id,
+                job_id=job_id,
                 process_name=schedule_plan.get('name'),
                 **schedule_data
             )
 
-    def delete_schedule_plan(self, process_id: str):
+    def delete_schedule_plan(self, job_id: str):
         """删除定时任务,Deleting a Scheduled Task"""
-        if self.check_plan(process_id):
-            scheduler.remove_job(process_id)
-        raise ValueError(f'job id {process_id} not exist')
+        if self.check_plan(job_id):
+            scheduler.remove_job(job_id)
+        else:
+            raise ValueError(f'job id {job_id} not exist')

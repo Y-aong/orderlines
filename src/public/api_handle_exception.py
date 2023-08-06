@@ -12,6 +12,7 @@
 
 import traceback
 
+from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
 from public.base_response import generate_abort
@@ -27,6 +28,9 @@ def handle_api_error(func):
             logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
             return generate_abort(data=f'db parameter repetition::{e}', code=400)
         except ValueError as e:
+            logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
+            return generate_abort(data=f'Client parameters are abnormal.{e}', code=400)
+        except ValidationError as e:
             logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
             return generate_abort(data=f'Client parameters are abnormal.{e}', code=400)
         except Exception as e:

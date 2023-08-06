@@ -16,6 +16,7 @@ from apis.orderlines.views.orderlines_start_view import OrderLinesStartView
 from apis.orderlines.views.plugin_info_view import PluginInfoView
 from apis.orderlines.views.process_instance_view import ProcessInstanceReportView, ProcessInstanceExcelReportView, \
     ProcessInstanceHtmlReportView
+from apis.orderlines.views.schedule_task_view import ScheduleTaskView
 
 order_line_blue = Blueprint("order_line", __name__, url_prefix="")
 order_line_api = Api(order_line_blue)
@@ -30,3 +31,4 @@ order_line_api.add_resource(PluginInfoView, PluginInfoView.url)
 order_line_api.add_resource(ProcessInstanceReportView, ProcessInstanceReportView.url)
 order_line_api.add_resource(ProcessInstanceExcelReportView, ProcessInstanceExcelReportView.url)
 order_line_api.add_resource(ProcessInstanceHtmlReportView, ProcessInstanceHtmlReportView.url)
+order_line_api.add_resource(ScheduleTaskView, ScheduleTaskView.url)

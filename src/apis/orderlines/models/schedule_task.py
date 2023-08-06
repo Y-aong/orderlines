@@ -17,7 +17,7 @@ from public.base_model import Base, db
 
 class ScheduleTask(Base):
     __tablename__ = 'base_schedule_task'
-
+    schedule_task_name = db.Column(db.String(128), unique=True, comment='schedule task name')
     process_id = db.Column(db.String(255), unique=True, comment='process id')
     process_name = db.Column(db.String(30), unique=True, comment='process name')
     process_params = db.Column(db.JSON, comment='process params')
@@ -29,9 +29,8 @@ class ScheduleTask(Base):
     updater = db.Column(db.String(30), comment='process updater')
 
     # schedule relation
-    trigger_type = db.Column(db.Enum('date, interval', 'crontab'), comment='schedule trigger type')
-    schedule_plan_param = db.Column(db.JSON, comment='定时计划参数')
+    trigger = db.Column(db.Enum('date', 'interval', 'crontab'), comment='schedule trigger type')
+    schedule_plan = db.Column(db.JSON, comment='schedule plan param')
     schedule_plan_id = db.Column(db.Integer, comment='schedule plan id')
     invalid_start_time = db.Column(db.DateTime, comment='invalid start time')
     invalid_end_time = db.Column(db.DateTime, comment='invalid end time')
-    job_id = db.Column(db.String(255), comment='job id')

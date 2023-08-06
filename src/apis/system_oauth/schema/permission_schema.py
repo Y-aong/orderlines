@@ -9,12 +9,12 @@
     权限序列化类
     Permission serialized class
 """
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.system_oauth.models import SystemPermission
+from public.base_schema import BaseSchema
 
 
-class SystemPermissionSchema(SQLAlchemyAutoSchema):
+class SystemPermissionSchema(BaseSchema):
     class Meta:
         model = SystemPermission
         exclude = ['active']

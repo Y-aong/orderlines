@@ -37,32 +37,33 @@ class SchedulePlanView(BaseView):
             'interval': IntervalPlanSchema
         }
         self.table_orm = self.table_orms.get(self.trigger)
+        self.job_id = self.get_job_id()
         self.table_schema = self.table_schemas.get(self.trigger)
         self.apscheduler_utils = ApschedulerUtils()
 
-    @property
-    def process_id(self):
-        process_id = self.form_data.get('process_id')
-
-        if not process_id:
+    def get_job_id(self):
+        job_id = self.form_data.get('job_id')
+        if not job_id:
             obj = db.session.query(self.table_orm).filter(self.table_orm.id == self.table_id).first()
-            process_id = obj.job_id
-        return process_id
+            job_id = obj.job_id
+        return job_id
 
     def handle_request_params(self):
         if request.method in ['POST', 'PUT']:
             if self.form_data.get('schedule_plan'):
                 self.form_data.update(self.form_data.get('schedule_plan'))
-            self.form_data['job_id'] = self.process_id
+            self.form_data['job_id'] = self.job_id
+            if self.form_data.get('id') is None:
+                self.form_data.pop('id')
 
     def handle_response_data(self):
         if request.method == 'GET':
-            if isinstance(self.response_data, dict):
+            if self.response_data and isinstance(self.response_data, dict):
                 job_id = self.response_data.get('job_id')
                 schedule_plan = self.apscheduler_utils.get_schedule_plan(job_id)
                 self.response_data['schedule_plan'] = schedule_plan
                 self.response_data['enable'] = True if schedule_plan else False
-            elif isinstance(self.response_data, list):
+            elif self.response_data and isinstance(self.response_data, list):
                 for item in self.response_data:
                     job_id = item.get('job_id')
                     schedule_plan = self.apscheduler_utils.get_schedule_plan(job_id)
@@ -74,7 +75,7 @@ class SchedulePlanView(BaseView):
             try:
                 self.apscheduler_utils.create_schedule_plan(
                     trigger_type=self.trigger,
-                    process_id=self.process_id,
+                    job_id=self.job_id,
                     process_name=self.form_data.get('process_name'),
                     **self.form_data.get('schedule_plan')
                 )
@@ -85,9 +86,9 @@ class SchedulePlanView(BaseView):
         elif request.method == 'PUT':
             self.apscheduler_utils.update_schedule_plan(
                 trigger_type=self.trigger,
-                process_id=self.process_id,
+                job_id=self.job_id,
                 args=self.form_data.get('args'),
                 **self.form_data.get('schedule_plan')
             )
         elif request.method == 'DELETE':
-            self.apscheduler_utils.delete_schedule_plan(self.process_id)
+            self.apscheduler_utils.delete_schedule_plan(self.job_id)

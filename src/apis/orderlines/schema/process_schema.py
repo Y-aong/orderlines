@@ -12,13 +12,14 @@
 import json
 
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+from marshmallow_sqlalchemy import auto_field
 
 from apis.orderlines.models.process import Process, ProcessInstance
 from apis.orderlines.schema.task_schema import TaskInstanceSchema, TaskSchema
+from public.base_schema import BaseSchema
 
 
-class ProcessInstanceSchema(SQLAlchemyAutoSchema):
+class ProcessInstanceSchema(BaseSchema):
     process_id = auto_field()
     task_instance = fields.Nested(TaskInstanceSchema, many=True, dump_only=True)
     start_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
@@ -29,7 +30,7 @@ class ProcessInstanceSchema(SQLAlchemyAutoSchema):
         exclude = ['active']
 
 
-class ProcessSchema(SQLAlchemyAutoSchema):
+class ProcessSchema(BaseSchema):
     process_instance = fields.Nested(ProcessInstanceSchema, many=True, dump_only=True)
     task = fields.Nested(TaskSchema, many=True, dump_only=True)
     insert_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
@@ -40,7 +41,7 @@ class ProcessSchema(SQLAlchemyAutoSchema):
         exclude = ['active']
 
 
-class ProcessRunningSchema(SQLAlchemyAutoSchema):
+class ProcessRunningSchema(BaseSchema):
     task = fields.Nested(TaskSchema, many=True, dump_only=True)
 
     class Meta:
@@ -48,7 +49,7 @@ class ProcessRunningSchema(SQLAlchemyAutoSchema):
         exclude = ['active', 'id', 'update_time', 'insert_time']
 
 
-class ProcessInstanceExportSchema(SQLAlchemyAutoSchema):
+class ProcessInstanceExportSchema(BaseSchema):
     process_id = fields.String()
     process_name = fields.String()
     process_params = fields.Function(serialize=lambda obj: json.loads(obj.process_params))

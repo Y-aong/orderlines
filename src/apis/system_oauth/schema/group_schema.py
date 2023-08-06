@@ -10,13 +10,13 @@
     Group serialized class
 """
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.system_oauth.models import SystemGroup, SystemGroupPermissionRelation, SystemPermission, \
     SystemUserGroupRelation, SystemUser
 from apis.system_oauth.schema.permission_schema import SystemPermissionSchema
 from apis.system_oauth.schema.user_schema import SystemUserGroupRelationSchema, SystemUserSchema
 from public.base_model import get_session
+from public.base_schema import BaseSchema
 
 
 def get_permission_by_group(group_id):
@@ -51,7 +51,7 @@ def get_user_by_group(group_id):
     return users
 
 
-class SystemGroupSchema(SQLAlchemyAutoSchema):
+class SystemGroupSchema(BaseSchema):
     permissions = fields.Function(serialize=lambda obj: get_permission_by_group(obj.id))
     users = fields.Function(serialize=lambda obj: get_user_by_group(obj.id))
 
@@ -60,7 +60,7 @@ class SystemGroupSchema(SQLAlchemyAutoSchema):
         exclude = ['active']
 
 
-class SystemGroupPermissionRelationSchema(SQLAlchemyAutoSchema):
+class SystemGroupPermissionRelationSchema(BaseSchema):
     class Meta:
         model = SystemGroupPermissionRelation
         exclude = ['active']
