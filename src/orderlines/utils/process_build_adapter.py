@@ -43,20 +43,26 @@ class BaseTarget(ABC):
     def build_by_dict(self, process_info: dict, task_nodes: List[dict]):
         pass
 
-    def build(self, process_info: dict, task_nodes: List[dict]):
+    def build(self, process_info: dict, task_nodes: List[dict]) -> int:
         """
         创建流程和任务
         create process and task
         @param process_info:
         @param task_nodes:
-        @return:
+        @return:process table id
         """
         process_table_id, process_id = self._build_process(process_info)
         self._build_task(task_nodes, process_id)
         return process_table_id
 
-    def _build_process(self, process_info: dict):
-        """创建流程，create process"""
+    def _build_process(self, process_info: dict) -> tuple:
+        """
+        创建流程，create process
+        @param process_info:
+        @return:
+            table_id: process table id
+            process_id: process id
+        """
         data = dict()
         for key, val in process_info.items():
             if hasattr(self.process_orm, key):
@@ -98,7 +104,7 @@ class Adaptee:
             raise ValueError(f'process name {process_info.get("process_name")} already exist')
         return process_info
 
-    def check_task_nodes(self, task_nodes):
+    def check_task_nodes(self, task_nodes: List[dict]):
         for task_node in task_nodes:
             task_name = task_node.get('task_name')
             if task_node.get('task_type') not in self.task_types:
@@ -114,7 +120,7 @@ class Adaptee:
         task_nodes = self.check_task_nodes(content.get('task_nodes'))
         return process_info, task_nodes
 
-    def adapter_yaml(self, file_path):
+    def adapter_yaml(self, file_path: str):
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
         content = yaml.load(content, Loader=yaml.SafeLoader)
@@ -136,7 +142,7 @@ class ProcessBuildAdapter(BaseTarget):
         process_info, task_nodes = self.adaptee.adapter_json(file_path)
         return self.build(process_info, task_nodes)
 
-    def build_by_yaml(self, file_path):
+    def build_by_yaml(self, file_path: str):
         process_info, task_nodes = self.adaptee.adapter_yaml(file_path)
         return self.build(process_info, task_nodes)
 

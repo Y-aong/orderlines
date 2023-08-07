@@ -9,7 +9,7 @@
     变量运算, 目前支持int四则运算，和str拼接
     Variable operation, currently support int four operations, and str concatenation
 """
-from typing import List
+from typing import List, Any
 from copy import deepcopy
 from orderlines.operators.variable import VariableModelOperator
 from public.logger import logger
@@ -28,7 +28,7 @@ class VariableHandler:
         self.process_instance_id = process_info.get('process_instance_id')
         self.process_name = process_info.get('process_name')
 
-    def handle_param_with_variable(self, params_value):
+    def handle_param_with_variable(self, params_value: Any) -> Any:
         """
         获取流程中的带有变量的参数
         Gets parameters with variables in the process
@@ -57,7 +57,7 @@ class VariableHandler:
                         temp['target'] = target_value
         return conditions
 
-    def handle_process_control_params(self, node_params: dict):
+    def handle_process_control_params(self, node_params: dict) -> dict:
         """
         对于流程控制节点进行单独判断
         Process control nodes are judged individually
@@ -87,7 +87,7 @@ class VariableHandler:
 
         return node_params
 
-    def handle_common_node(self, node_params):
+    def handle_common_node(self, node_params: dict) -> dict:
         for params_key, params_value in node_params.items():
             if isinstance(params_value, str) and '${' in params_value and '}' in params_value:
                 # 参数中存在变量,处理
@@ -95,7 +95,7 @@ class VariableHandler:
                 node_params[params_key] = variable_value
         return node_params
 
-    def handle_node_params(self, node_params: dict, task_type):
+    def handle_node_params(self, node_params: dict, task_type: str) -> dict:
         """
         解析流程中的参数
         Parse the parameters in the process
@@ -112,7 +112,7 @@ class VariableHandler:
         else:
             return self.handle_common_node(node_params)
 
-    def handle_node_return(self, node_results: List[dict], task_result: dict):
+    def handle_node_return(self, node_results: List[dict], task_result: dict) -> dict:
         """
         处理任务返回值的
         Process task return value
@@ -132,7 +132,7 @@ class VariableHandler:
                     task_result[node_variable_key] = real_variable_value
         return task_result
 
-    def _update_variable_value(self, task_variable_value, node_result, node_variable_value):
+    def _update_variable_value(self, task_variable_value, node_result, node_variable_value) -> Any:
         """
         更新变量值. update variable_value
         :param task_variable_value:真正的数据值,Real data values

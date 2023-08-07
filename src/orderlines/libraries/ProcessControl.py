@@ -43,9 +43,11 @@ class ProcessControl(BaseTask):
         """
         task_status = process_control_type.expression.get('success')
         if task_status:
-            task_id = self._control_by_status(process_control_type.conditions,
-                                              process_control_type.expression,
-                                              process_control_type.process_info)
+            task_id = self._control_by_status(
+                process_control_type.conditions,
+                process_control_type.expression,
+                process_control_type.process_info
+            )
         else:
             task_id = self._control_by_condition(process_control_type.conditions, process_control_type.expression)
         return task_id
@@ -54,7 +56,7 @@ class ProcessControl(BaseTask):
         return self.modules.get(node.get('module_name'))
 
     @staticmethod
-    def _get_task_status(task_id, process_instance_id):
+    def _get_task_status(task_id: str, process_instance_id: str) -> str:
         from public.base_model import get_session
         from apis.orderlines.models import TaskInstance
         session = get_session()
@@ -66,7 +68,7 @@ class ProcessControl(BaseTask):
         # pending and running are not possible here because we're running here
         return task_status if task_status in ['success', 'failure'] else 'failure'
 
-    def _control_by_status(self, conditions, expression, process_info) -> int:
+    def _control_by_status(self, conditions, expression, process_info) -> str:
         """
         根据任务状态进行判断
         Determine the task status
@@ -93,7 +95,7 @@ class ProcessControl(BaseTask):
         self._get_module(expression.get(task_status))
         return expression.get(task_status).get('task_id')
 
-    def _control_by_condition(self, conditions: list, expression: dict) -> int:
+    def _control_by_condition(self, conditions: list, expression: dict) -> str:
         """
         根据任务的返回值进行判断
         Make a judgment based on the return value of the task

@@ -71,7 +71,12 @@ class ParallelUtils:
         self.nodes = nodes
         self.result = list()
 
-    def solution(self, task_id, parallel_task_ids: list, group_ids: list):
+    def solution(
+            self,
+            task_id: str,
+            parallel_task_ids: List[str],
+            group_ids: List[str]
+    ) -> None:
         """
         并行网关中参数，这里的task_id为普通任务节点的task_id
         Parameter of parallel gateway, where task_id is the task_id of a common task node

@@ -43,7 +43,7 @@ class CheckModule:
         self.task_module_locations = Config.std_lib_location
         self.class_name = STANDARD_LIBS
 
-    def get_module(self):
+    def get_module(self) -> dict:
         for task_module_location in self.task_module_locations:
             modules = dynamic_import(task_module_location, self.class_name)
             self.modules.update(modules)

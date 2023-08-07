@@ -35,7 +35,7 @@ class Match:
             variable_name = self._variable_name.replace('${', '').replace('}', '')
         return self.check_variable_name(variable_name)
 
-    def get_variable_name(self):
+    def get_variable_name(self) -> str:
         """
         从带有四则运行的变量中获取到变量名称
         Gets the variable name from the variable with four runs
@@ -54,7 +54,7 @@ class Match:
             match = self._variable_name
         return match.replace('${', '').replace('}', '')
 
-    def check_variable_name(self, variable_name):
+    def check_variable_name(self, variable_name: str) -> str:
         for temp in variable_name:
             if not temp.isalpha() and temp != '_':
                 raise VariableException(f'{self.variable_name}Incorrect setting, variables can only be letters and _')

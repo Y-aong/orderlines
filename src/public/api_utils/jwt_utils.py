@@ -20,13 +20,13 @@ from conf.config import FlaskConfig
 from public.api_exceptions.api_exceptions import JWTVerifyException
 
 
-def encrypt_password(value):
+def encrypt_password(value: str) -> str:
     hash_lib = hashlib.md5()
     hash_lib.update(value.encode(encoding='utf8'))
     return hash_lib.hexdigest()
 
 
-def generate_token(payload: dict, expiry: int, secret=None):
+def generate_token(payload: dict, expiry: int, secret=None) -> str:
     _payload = {"exp": datetime.datetime.now() + datetime.timedelta(seconds=expiry)}
     _payload.update(payload)
     if not secret:
@@ -47,6 +47,6 @@ def verify_token(token, secret=None):
     return payload
 
 
-def refresh_token(token, secret=None):
+def refresh_token(token: str, secret=None):
     payload = verify_token(token, secret)
     return generate_token(payload, expiry=FlaskConfig.EXPIRY)

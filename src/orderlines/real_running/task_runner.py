@@ -49,7 +49,7 @@ class TaskRunner(threading.Thread):
     def current_node(self):
         return self.context.get_task_node(self.process_instance_id, self.current_task_id)
 
-    def callback(self, task_status: str, result_or_error: dict):
+    def callback(self, task_status: str, result_or_error: dict) -> None:
         """
         on task run error callback func method
         @param task_status: task run status
@@ -85,7 +85,6 @@ class TaskRunner(threading.Thread):
         real task run
         @return:
         """
-        # 初始化
         self.running_db_operator.process_instance_update(process_status=ProcessStatus.blue.value)
 
         while self.is_run and not self.stop:
@@ -118,12 +117,14 @@ class TaskRunner(threading.Thread):
                              f'is run::{self.is_run}, stop::{self.stop}, paused::{self.paused}')
             await asyncio.sleep(sleep_time)
 
-    async def on_running(self, task_instance_id: str) -> str:
+    async def on_running(self, task_instance_id: str) -> tuple:
         """
         任务运行时
-        Task runtime
+        on task runtime
         @param task_instance_id: 任务实例id
         @return:
+            task_status: 任务状态
+            result_or_error: 异常信息or任务结果
         """
         task_config = self.process_parse.task_config(self.current_task_id)
         task_timeout = task_config.get('timeout')
@@ -145,6 +146,14 @@ class TaskRunner(threading.Thread):
         return result_or_error.get('status'), result_or_error
 
     async def on_stop(self, error: Any, task_instance_id: str):
+        """
+        on task stop
+        @param error: error info
+        @param task_instance_id: task instance id
+        @return:
+            task_status: 任务状态
+            error_info: 异常信息
+        """
         self.logger.info(f'current_task_id:{self.current_task_id} run stop.error: {traceback.format_exc()}')
         self.running_db_operator.task_instance_update(
             task_instance_id,
@@ -161,12 +170,14 @@ class TaskRunner(threading.Thread):
 
         return ProcessStatus.yellow.value, str(error)
 
-    async def on_failure(self, error: Any, task_instance_id: str):
+    async def on_failure(self, error: Any, task_instance_id: str) -> tuple:
         """
         on task failure
         @param error: task error info
         @param task_instance_id: task instance id
         @return:
+            task_status: 任务状态
+            error_info: 异常信息
         """
         if isinstance(error, asyncio.TimeoutError):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}

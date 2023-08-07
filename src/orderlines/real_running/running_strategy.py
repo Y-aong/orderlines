@@ -61,7 +61,7 @@ class RunningStrategy(BaseRunner):
                     task = asyncio.create_task(self.task_build.build(self.current_task_id))
                     await task
                 if task.result().get('status') == TaskStatus.green.value:
-                    flag = await self.process_parse.parse()
+                    flag = self.process_parse.parse()
                     return flag, task.result(), TaskStatus.green.value
             except Exception as error:
                 _error_info = f'The number of retries exceeded the maximum:{time}. Error message::{error}'
@@ -72,6 +72,10 @@ class RunningStrategy(BaseRunner):
         self.error_info['status'] = TaskStatus.red.value
         return False, self.error_info, TaskStatus.red.value
 
-    async def handle_strategy(self):
+    async def handle_strategy(self) -> tuple:
+        """
+        处理异常的策略，Policy for handling exceptions
+        @return:is_run:bool, error_info:dict, task_status:str
+        """
         task_strategy = self._task_config.get('task_strategy').upper()
         return self.strategy_context.get(task_strategy)()

@@ -77,7 +77,7 @@ class ProcessParse(BaseParse):
         self.stock = LocalStack()
         self.stock.push(self.current_task_id)
 
-    def parse(self):
+    def parse(self) -> bool:
         """
         采用LocalStack进行存放数据
         @return:

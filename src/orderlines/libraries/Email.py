@@ -38,7 +38,13 @@ class Email(BaseTask):
             str(TaskStatus.orange.value): 'failure retry',
         }
 
-    def _build_msg(self, process_name: str, node_info: dict, error_or_result=None, status=None):
+    def _build_msg(
+            self,
+            process_name: str,
+            node_info: dict,
+            error_or_result=None,
+            status=None
+    ) -> tuple:
         """构建发送邮件消息。Build mail message"""
         task_name = node_info.get("task_name")
         if status != TaskStatus.green.value:

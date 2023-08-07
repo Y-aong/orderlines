@@ -25,8 +25,13 @@ class TaskBuild(BaseRunner):
         super(TaskBuild, self).__init__(process_instance_id, context)
         self.module_check = CheckModule()
 
-    async def get_task_build_param(self, task_id):
-        """获取创建任务所需要的函数, Gets the functions needed to create the task"""
+    async def get_task_build_param(self, task_id) -> tuple:
+        """
+        获取创建任务所需要的函数, Gets the functions needed to create the task
+        @return:
+            task_kwargs: this is task kwargs
+            task_build_param: build variable param
+        """
 
         task_build_param = self.context.get_task_node_items(
             self.process_instance_id,

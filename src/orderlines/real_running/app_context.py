@@ -8,6 +8,7 @@
 # Description：
     orderlines app context
 """
+from typing import List, Any
 
 
 class AppContext(object):
@@ -24,7 +25,7 @@ class AppContext(object):
         process_instance_info = self.get(process_instance_id, {})
         return process_instance_info.get('process_info', default)
 
-    def get_process_item(self, process_instance_id: str, item_name: str, default=None):
+    def get_process_item(self, process_instance_id: str, item_name: str, default=None) -> dict:
         process_info = self.get_process_info(process_instance_id)
         return process_info.get(item_name) if process_info else default
 
@@ -37,7 +38,7 @@ class AppContext(object):
                 process_items.setdefault(item_name, item)
         return process_items
 
-    def get_task_nodes(self, process_instance_id):
+    def get_task_nodes(self, process_instance_id) -> List[dict]:
         process_instance_info = self.__dict__.get(process_instance_id, {})
         return process_instance_info.get('task_nodes', {})
 
@@ -56,12 +57,12 @@ class AppContext(object):
             task_id: str,
             item_name: str,
             default=None
-    ):
+    ) -> Any:
         task_node = self.get_task_node(process_instance_id, task_id)
         item = task_node.get(item_name)
         return item if item else default
 
-    def get_task_node_items(self, process_instance_id: str, task_id: str, *args):
+    def get_task_node_items(self, process_instance_id: str, task_id: str, *args) -> dict:
         task_node = self.get_task_node(process_instance_id, task_id)
         node_items = dict()
         for item_name in args:

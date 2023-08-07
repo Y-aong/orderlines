@@ -19,7 +19,7 @@ class Handler(ABC):
     def set_next(self, handler):
         pass
 
-    def handle(self, module, method_name: str, task_kwargs: dict) -> dict:
+    def handle(self, module: Any, method_name: str, task_kwargs: dict) -> dict:
         pass
 
 
@@ -42,7 +42,7 @@ class AbstractHandler(Handler):
         return param
 
     @staticmethod
-    def handle_on_success(result: Any, module, method_name: str):
+    def handle_on_success(result: Any, module: Any, method_name: str):
         if hasattr(module, 'on_success'):
             success_result = getattr(module(), 'on_success')(result, method_name)
             return success_result if success_result else result
@@ -50,7 +50,7 @@ class AbstractHandler(Handler):
         return result
 
     @staticmethod
-    def handle_on_failure(error: str, module, method_name: str):
+    def handle_on_failure(error: str, module: Any, method_name: str):
         if hasattr(module, 'on_failure'):
             failure_error = getattr(module(), 'on_failure')(error, method_name)
             return failure_error if failure_error else error
@@ -62,7 +62,7 @@ class AbstractHandler(Handler):
         return handler
 
     @abstractmethod
-    def handle(self, module, method_name: str, task_kwargs: BaseModel) -> dict:
+    def handle(self, module: Any, method_name: str, task_kwargs: BaseModel) -> dict:
         if self._next_handler:
             return self._next_handler.handle(module, method_name, task_kwargs)
         return {}

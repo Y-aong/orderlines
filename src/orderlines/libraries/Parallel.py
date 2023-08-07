@@ -30,6 +30,7 @@ Parallel gateway
     4.2: Search: for all the task ids in the parallel task, let the framework find the task group itself,
         but the task must have pre_id and next_id
 """
+from typing import List
 
 import gevent
 
@@ -51,14 +52,14 @@ class Parallel(BaseTask):
         self.process_node = process_node
         self.parallel_helper = ParallelUtils(self.process_node)
 
-    def _check_is_group(self, parallel_task_id) -> bool:
+    def _check_is_group(self, parallel_task_id: List[str]) -> bool:
         for task_id in parallel_task_id:
             current_node = get_current_node(task_id, self.process_node)
             if current_node.get('task_type') == 'group':
                 return True
         return False
 
-    def _get_group(self, parallel_task_id: list):
+    def _get_group(self, parallel_task_id: List[str]) -> List[str]:
         """
         并行任务的第二种运行方式，是让框架自己帮你寻找任务组
         The second way to run parallel tasks is to let the framework find task groups for you
@@ -71,7 +72,7 @@ class Parallel(BaseTask):
         else:
             return self.parallel_helper.get_group_id(parallel_task_id)
 
-    def _build_group_task(self, group_id: list, parallel_type: ParallelParam):
+    def _build_group_task(self, group_id: list, parallel_type: ParallelParam) -> dict:
         """
         获取的任务组
         The task group is obtained
@@ -112,7 +113,12 @@ class Parallel(BaseTask):
         else:
             return self._parallel_by_gevent(parallel_task_ids, task_config, parallel_type)
 
-    def _parallel_by_gevent(self, parallel_task_ids, task_config, parallel_type):
+    def _parallel_by_gevent(
+            self,
+            parallel_task_ids: list,
+            task_config: dict,
+            parallel_type: str
+    ) -> dict:
         """
         使用gevent协程并行
         Use gevent to realize parallel
@@ -126,7 +132,12 @@ class Parallel(BaseTask):
         gevent.joinall(jobs, timeout=timeout)
         return {parallel_task_ids[index]: job.value for index, job in enumerate(jobs)}
 
-    def _parallel_by_process(self, parallel_task_ids, task_config: dict, parallel_type):
+    def _parallel_by_process(
+            self,
+            parallel_task_ids: List[str],
+            task_config: dict,
+            parallel_type: str
+    ) -> dict:
         """
         使用进程的方式并行，这主要适用计算密集型
         Use a process approach to parallelism, which is mainly suitable for computation intensive

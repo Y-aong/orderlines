@@ -9,20 +9,21 @@
 """
 import inspect
 import json
+from typing import List, Any
 
 
-def get_current_node(task_id, process_node):
+def get_current_node(task_id: str, task_nodes: List[dict]) -> dict:
     """
     根据任务id获取当前运行的任务
     Obtain the currently running task based on the task id
     """
-    for node in process_node:
+    for node in task_nodes:
         if node.get('task_id') == task_id:
             return node
     raise AttributeError(f'use task id {task_id} The task node cannot be found')
 
 
-def get_variable_value(variable_value, variable_type):
+def get_variable_value(variable_value: Any, variable_type: str) -> Any:
     """按类型获取变量值. get variable value by type"""
     if not variable_value:
         return None
@@ -42,7 +43,7 @@ def get_variable_value(variable_value, variable_type):
         return None
 
 
-def get_method_param_annotation(method):
+def get_method_param_annotation(method) -> tuple:
     """
     获取方法的参数类型注解
     Gets the parameter type annotation for the method

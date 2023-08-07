@@ -17,3 +17,4 @@ from public.base_schema import BaseSchema
 class VariableSchema(BaseSchema):
     class Meta:
         model = VariableModel
+        exclude = ['active']

@@ -18,7 +18,7 @@ imports = (
 beat_schedule = {
     'test every 10 seconds': {
         'task': 'orderlines_run',
-        'schedule': timedelta(seconds=10),  # 每10秒執行一次
+        'schedule': timedelta(seconds=10),
     }
 }
 

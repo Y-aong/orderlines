@@ -13,10 +13,11 @@
 from apis.schedule_plan.models.schedule_plan_models import ApschedulerJobs
 from public.apscheduler_config import scheduler
 from public.base_model import get_session
+from public.logger import logger
 
 
 def demo(process_name: str, exe_type: str):
-    print(f'this is a test::{process_name}, {exe_type}')
+    logger.info(f'this is a test::{process_name}, {exe_type}')
 
 
 class ApschedulerUtils:
@@ -51,7 +52,6 @@ class ApschedulerUtils:
         if self.check_plan(job_id):
 
             schedule_info = scheduler.get_job(job_id)
-            print(f'schedule_info::{schedule_info}')
             if schedule_info:
                 schedule_plan.setdefault('next_run_time', schedule_info.next_run_time.strftime('%Y-%m-%d %H:%M:%S'))
                 schedule_plan.setdefault('method_name', schedule_info.func.__name__)
@@ -64,7 +64,7 @@ class ApschedulerUtils:
             job_id: str,
             process_name: str,
             **schedule_data
-    ):
+    ) -> None:
         """创建定时任务入口"""
         schedule_data.setdefault('timezone', 'Asia/Shanghai')
         if trigger_type == 'interval':
@@ -91,7 +91,7 @@ class ApschedulerUtils:
             trigger_type: str,
             job_id: str,
             **schedule_data
-    ):
+    ) -> None:
         """修改定时任务, update schedule task"""
         if self.check_plan(job_id):
             schedule_data.setdefault('timezone', 'Asia/Shanghai')
@@ -104,7 +104,7 @@ class ApschedulerUtils:
                 **schedule_data
             )
 
-    def delete_schedule_plan(self, job_id: str):
+    def delete_schedule_plan(self, job_id: str) -> None:
         """删除定时任务,Deleting a Scheduled Task"""
         if self.check_plan(job_id):
             scheduler.remove_job(job_id)

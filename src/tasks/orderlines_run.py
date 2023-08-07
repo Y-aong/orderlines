@@ -78,4 +78,4 @@ def orderlines_run():
         "creator": "blue",
         "updater": None,
     }
-    OrderLines(process_info=process_info, process_node=data).start()
+    OrderLines().start(process_info=process_info, task_nodes=data)
