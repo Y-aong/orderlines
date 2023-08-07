@@ -23,23 +23,23 @@ Task group
 4, concurrent nodes can only run task groups, even if a node is also a task group
 5. The group_ids of the task group is a list of all the subtasks in the current task
 {
-        "task_id": 1012,
-        "task_name": "add",
-        "method_name": "test_add",
-        "task_type": "group",
-        "method_kwargs": {
-            "a": 2,
-            "b": '786'
-        },
-        "prev_id": 1011,
-        "group_ids": [1014, 1015],
-        "next_id": 1016,
-        "task_config": {
-            "task_strategy": 'raise'
-        },
-        "task_module": "Group",
-        "desc": None
-    }
+    "task_id": 1012,
+    "task_name": "add",
+    "method_name": "test_add",
+    "task_type": "group",
+    "method_kwargs": {
+        "a": 2,
+        "b": '786'
+    },
+    "prev_id": 1011,
+    "group_ids": [1014, 1015],
+    "next_id": 1016,
+    "task_config": {
+        "task_strategy": 'raise'
+    },
+    "task_module": "Group",
+    "desc": None
+}
 """
 import traceback
 from typing import List

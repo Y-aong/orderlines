@@ -67,7 +67,7 @@ class BaseParse(BaseRunner):
         raise OrderlinesHasNoStart('orderlines process has no start node')
 
     @abstractmethod
-    def parse(self):
+    def parse(self) -> bool:
         pass
 
 

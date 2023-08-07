@@ -41,6 +41,11 @@ class SchedulePlanView(BaseView):
         self.table_schema = self.table_schemas.get(self.trigger)
         self.apscheduler_utils = ApschedulerUtils()
 
+    def get_origin_data(self):
+        if request.method in ['DELETE', 'PUT']:
+            obj = db.session.query(self.table_orm).filter(self.table_orm).first()
+            return self.table_schema().dump(obj)
+
     def get_job_id(self):
         job_id = self.form_data.get('job_id')
         if not job_id:
@@ -84,11 +89,22 @@ class SchedulePlanView(BaseView):
                 with db.auto_commit():
                     db.session.query(self.table_orm).filter(self.table_orm.id == self.table_id).delete()
         elif request.method == 'PUT':
-            self.apscheduler_utils.update_schedule_plan(
-                trigger_type=self.trigger,
-                job_id=self.job_id,
-                args=self.form_data.get('args'),
-                **self.form_data.get('schedule_plan')
-            )
+            origin_data = self.get_origin_data()
+            try:
+                self.apscheduler_utils.update_schedule_plan(
+                    trigger_type=self.trigger,
+                    job_id=self.job_id,
+                    args=self.form_data.get('args'),
+                    **self.form_data.get('schedule_plan')
+                )
+            except Exception as e:
+                logger.error(f'update schedule plan error {e}')
+                with db.auto_commit():
+                    db.session.query(self.table_orm).filter(self.table_orm).update(origin_data)
         elif request.method == 'DELETE':
-            self.apscheduler_utils.delete_schedule_plan(self.job_id)
+            try:
+                self.apscheduler_utils.delete_schedule_plan(self.job_id)
+            except Exception as e:
+                logger.error(f'update schedule delete error {e}')
+                with db.auto_commit():
+                    db.session.query(self.table_orm).filter(self.table_orm).update({'active': True})

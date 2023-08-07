@@ -28,7 +28,7 @@ class RunningDBOperator(BaseRunner):
         super(RunningDBOperator, self).__init__(process_instance_id, context)
         self.session = get_session()
 
-    def process_instance_insert(self, process_info: dict, dry=False)->None:
+    def process_instance_insert(self, process_info: dict, dry=False) -> None:
         if not dry:
             process_instance_info = dict()
             for key, val in process_info.items():

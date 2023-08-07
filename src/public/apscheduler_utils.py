@@ -17,7 +17,7 @@ from public.logger import logger
 
 
 def demo(process_name: str, exe_type: str):
-    logger.info(f'this is a test::{process_name}, {exe_type}')
+    logger.info(f'this is a test {process_name}, {exe_type}')
 
 
 class ApschedulerUtils:

@@ -22,7 +22,6 @@ from public.logger import logger
 
 class WebHook:
     def __init__(self, app=None):
-
         if app is not None:
             self.init_app(app)
         self.black_list = []
@@ -66,7 +65,6 @@ class WebHook:
 
     def authentication(self):
         """权限认证, Permission authentication"""
-
         self.check_black_list()
         if not self.check_white_list():
             authorization = request.headers.get('Authorization')

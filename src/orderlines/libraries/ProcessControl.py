@@ -73,18 +73,19 @@ class ProcessControl(BaseTask):
         根据任务状态进行判断
         Determine the task status
         :param conditions:task_id如1001
-        :param expression:{
-                            'success': {
-                                'task_id':'2',
-                                'method_name': 'add',
-                                'method_kwargs': {"x": 10,"y": 2},
-                                'module': 'TestAdd'},
-                            'failure': {
-                                'task_id':'1',
-                                'method_name': 'subtraction',
-                                'method_kwargs': {"x": 10,"y": 2},
-                                'module': 'TestSubtraction'}
-                            }
+        :param expression:
+        {
+        'success': {
+            'task_id':'2',
+            'method_name': 'add',
+            'method_kwargs': {"x": 10,"y": 2},
+            'module': 'TestAdd'},
+        'failure': {
+            'task_id':'1',
+            'method_name': 'subtraction',
+            'method_kwargs': {"x": 10,"y": 2},
+            'module': 'TestSubtraction'}
+        }
         :return: task_id
         """
         process_instance_id = process_info.get('process_instance_id')
@@ -99,7 +100,8 @@ class ProcessControl(BaseTask):
         """
         根据任务的返回值进行判断
         Make a judgment based on the return value of the task
-        :param conditions:list [
+        :param conditions:list
+        [
             {
                 'A': [{'condition': 1, 'target': 1, 'sign': '='},
                     {'condition': 1, 'target': 3, 'sign': '>'}]
@@ -109,25 +111,25 @@ class ProcessControl(BaseTask):
                     {'condition': 3, 'target': 3, 'sign': '='}]
             },
             {'C': [{'condition': 2, 'target': 3, 'sign': '<'}]}
-            ]
-
-        :param expression:{
-                            'A': {
-                                'task_id':'1',
-                                'method_name': 'add',
-                                'method_kwargs': {"x": 10, "y": 2},
-                                'module': 'TestAdd'},
-                           'B': {
-                                'task_id':'2',
-                                'method_name': 'subtraction',
-                                'method_kwargs': {"x": 10, "y": 2},
-                                'module': 'TestSubtraction'},
-                            'C': {
-                                'task_id':'3',
-                                'method_name': 'subtraction',
-                                'method_kwargs': {"x": 10, "y": 2},
-                                'module': 'TestSubtraction'}
-                            }
+        ]
+        :param expression:dict
+        {
+        'A': {
+            'task_id':'1',
+            'method_name': 'add',
+            'method_kwargs': {"x": 10, "y": 2},
+            'module': 'TestAdd'},
+        'B': {
+            'task_id':'2',
+            'method_name': 'subtraction',
+            'method_kwargs': {"x": 10, "y": 2},
+            'module': 'TestSubtraction'},
+        'C': {
+            'task_id':'3',
+            'method_name': 'subtraction',
+            'method_kwargs': {"x": 10, "y": 2},
+            'module': 'TestSubtraction'}
+        }
         :return: task_id
         """
         for temps in conditions:

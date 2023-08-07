@@ -154,7 +154,7 @@ class TaskRunner(threading.Thread):
             task_status: 任务状态
             error_info: 异常信息
         """
-        self.logger.info(f'current_task_id:{self.current_task_id} run stop.error: {traceback.format_exc()}')
+        self.logger.info(f'current_task_id:{self.current_task_id} run stop.error:{traceback.format_exc()}')
         self.running_db_operator.task_instance_update(
             task_instance_id,
             task_status=TaskStatus.yellow.value,
@@ -181,10 +181,10 @@ class TaskRunner(threading.Thread):
         """
         if isinstance(error, asyncio.TimeoutError):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}
-            self.logger.info(f'current_task_id::{self.current_task_id}, run timeout::{error_info}')
+            self.logger.info(f'current_task_id:{self.current_task_id}, run timeout:{error_info}')
         else:
             error_info = {'error_info': error}
-            logger.info(f'current_task_id::{self.current_task_id}, run timeout::{error_info}')
+            logger.info(f'current_task_id:{self.current_task_id}, run timeout:{error_info}')
 
         running_strategy = RunningStrategy(
             process_instance_id=self.process_instance_id,
