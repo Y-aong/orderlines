@@ -10,13 +10,12 @@
     Serialize classes schedule plan
 """
 from marshmallow import fields
-
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.schedule_plan.models.schedule_plan_models import IntervalPlan, DatePlan, CrontabPlan, ApschedulerJobs
-from public.base_schema import BaseSchema
 
 
-class IntervalPlanSchema(BaseSchema):
+class IntervalPlanSchema(SQLAlchemyAutoSchema):
     start_date = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     end_date = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
 
@@ -25,7 +24,7 @@ class IntervalPlanSchema(BaseSchema):
         exclude = ['active']
 
 
-class DatePlanSchema(BaseSchema):
+class DatePlanSchema(SQLAlchemyAutoSchema):
     run_date = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
@@ -33,7 +32,7 @@ class DatePlanSchema(BaseSchema):
         exclude = ['active']
 
 
-class CrontabPlanSchema(BaseSchema):
+class CrontabPlanSchema(SQLAlchemyAutoSchema):
     start_date = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     end_date = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
 
@@ -42,6 +41,6 @@ class CrontabPlanSchema(BaseSchema):
         exclude = ['active']
 
 
-class ApschedulerJobsSchema(BaseSchema):
+class ApschedulerJobsSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = ApschedulerJobs

@@ -32,6 +32,21 @@ class OrderLines:
         self.context = AppContext()
         self.logger = logger
 
+    def clear_db(self):
+        from apis.orderlines.models import Process, ProcessInstance, Task, TaskInstance
+
+        self.session.query(TaskInstance).delete()
+        self.session.commit()
+
+        self.session.query(Task).delete()
+        self.session.commit()
+
+        self.session.query(ProcessInstance).delete()
+        self.session.commit()
+
+        self.session.query(Process).delete()
+        self.session.commit()
+
     def start_by_process_id(self, process_id: Union[int, str], dry):
         if isinstance(process_id, str):
             obj = self.session.query(Process).filter(Process.process_id == process_id).first()
@@ -40,7 +55,6 @@ class OrderLines:
         else:
             raise ValueError(f'process id {process_id} type is not support. process id is only support int or str')
         process_info = ProcessRunningSchema().dump(obj)
-        self.logger.info(f'process_info is {process_info}')
         task_nodes = process_info.pop('task')
         self._start(process_info, task_nodes, dry)
 

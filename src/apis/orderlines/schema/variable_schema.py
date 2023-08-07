@@ -9,12 +9,12 @@
     变量模型序列化类
     Variable serialization class
 """
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.orderlines.models.variable import VariableModel
-from public.base_schema import BaseSchema
 
 
-class VariableSchema(BaseSchema):
+class VariableSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = VariableModel
         exclude = ['active']

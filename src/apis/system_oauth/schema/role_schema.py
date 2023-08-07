@@ -10,13 +10,13 @@
     Role serialized class
 """
 from marshmallow import fields
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.system_oauth.models import SystemRole, SystemRolePermissionRelation, SystemPermission, SystemUser, \
     SystemUserRoleRelation
 from apis.system_oauth.schema.permission_schema import SystemPermissionSchema
 from apis.system_oauth.schema.user_schema import SystemUserSchema
 from public.base_model import get_session
-from public.base_schema import BaseSchema
 
 
 def get_permission_by_role(role_id):
@@ -51,7 +51,7 @@ def get_user_by_role(role_id):
     return users
 
 
-class SystemRoleSchema(BaseSchema):
+class SystemRoleSchema(SQLAlchemyAutoSchema):
     permissions = fields.Function(serialize=lambda obj: get_permission_by_role(obj.id))
     users = fields.Function(serialize=lambda obj: get_user_by_role(obj.id))
 
@@ -60,13 +60,13 @@ class SystemRoleSchema(BaseSchema):
         exclude = ['active']
 
 
-class SystemRolePermissionRelationSchema(BaseSchema):
+class SystemRolePermissionRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemRolePermissionRelation
         exclude = ['active']
 
 
-class SystemUserRoleRelationSchema(BaseSchema):
+class SystemUserRoleRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemUserRoleRelation
         exclude = ['active']

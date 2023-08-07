@@ -18,6 +18,7 @@ from orderlines.real_running.app_context import AppContext
 from orderlines.real_running.base_runner import BaseRunner
 from orderlines.real_running.process_parse import ProcessParse
 from orderlines.real_running.task_build import TaskBuild
+from orderlines.utils.exceptions import OrderLineRunningException
 from orderlines.utils.process_action_enum import TaskStatus
 
 
@@ -39,7 +40,7 @@ class RunningStrategy(BaseRunner):
         self._task_config = self.task_config(self.current_task_id)
         self.task_timeout = self._task_config.get('timeout')
         self.strategy_context = {
-            'RAISE': self.retry_strategy,
+            'RAISE': self.raise_strategy,
             'SKIP': self.skip_strategy,
             'RETRY': self.retry_strategy
         }
@@ -60,9 +61,12 @@ class RunningStrategy(BaseRunner):
                 async with async_timeout.timeout(self.task_timeout):
                     task = asyncio.create_task(self.task_build.build(self.current_task_id))
                     await task
-                if task.result().get('status') == TaskStatus.green.value:
-                    flag = self.process_parse.parse()
-                    return flag, task.result(), TaskStatus.green.value
+                    task_result = task.result()
+                    if task_result.get('status') == TaskStatus.green.value:
+                        flag = self.process_parse.parse()
+                        return flag, task_result, TaskStatus.green.value
+                    else:
+                        raise OrderLineRunningException(f'task retry run error {task_result.get("error_info")}')
             except Exception as error:
                 _error_info = f'The number of retries exceeded the maximum:{time}. Error message::{error}'
                 self.error_info['error_info'] = _error_info
@@ -78,4 +82,5 @@ class RunningStrategy(BaseRunner):
         @return:is_run:bool, error_info:dict, task_status:str
         """
         task_strategy = self._task_config.get('task_strategy').upper()
-        return self.strategy_context.get(task_strategy)()
+        self.logger.info(f'current task id {self.current_task_id} task_strategy is {task_strategy}')
+        return await asyncio.create_task(self.strategy_context.get(task_strategy)())

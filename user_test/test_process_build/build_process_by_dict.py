@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：通过dict构建流程
 """
-from order_lines.utils.process_build_adapter import ProcessBuildAdapter
+from orderlines.utils.process_build_adapter import ProcessBuildAdapter
 
 
 def build_process_by_dict():
@@ -74,4 +74,4 @@ def build_process_by_dict():
         "updater": None,
     }
     process_build = ProcessBuildAdapter()
-    process_build.read_dict(process_info, task_nodes)
+    process_build.build_by_dict(process_info, task_nodes)

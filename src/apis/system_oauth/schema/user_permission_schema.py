@@ -10,11 +10,10 @@
     User permission serialized class
 """
 from marshmallow import fields
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
-from public.base_schema import BaseSchema
 
-
-class SystemUserPermissionSchema(BaseSchema):
+class SystemUserPermissionSchema(SQLAlchemyAutoSchema):
     method = fields.String()
     path = fields.String()
     name = fields.String()

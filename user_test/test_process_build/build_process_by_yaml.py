@@ -7,16 +7,12 @@
 # version    ：python 3.7
 # Description：根据yaml文件构建流程
 """
-import json
-
-import yaml
-
-from order_lines.utils.process_build_adapter import ProcessBuildAdapter
+from orderlines.utils.process_build_adapter import ProcessBuildAdapter
 
 
 def build_process_by_yaml():
     json_path = './data/process.yaml'
-    process_info, task_nodes = ProcessBuildAdapter().read_yaml(json_path)
+    process_info, task_nodes = ProcessBuildAdapter().build_by_yaml(json_path)
     print(process_info)
 
 

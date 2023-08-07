@@ -54,7 +54,7 @@ class RunningDBOperator(BaseRunner):
                 process_instance_info['end_time'] = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
                 self.session.query(ProcessInstance).filter(
                     ProcessInstance.process_instance_id == self.process_instance_id).update(process_instance_info)
-            self.session.commit()
+                self.session.commit()
 
     def task_instance_insert(self, task_node: dict, dry=False) -> str:
         if not dry:
@@ -83,10 +83,11 @@ class RunningDBOperator(BaseRunner):
             dry=False
     ) -> None:
         if not dry:
+            print(f'error_info::{error_info}')
             task_instance_info = {
                 'task_status': task_status,
-                'result': json.dumps(result) if isinstance(result, dict) else result,
-                'error_info': json.dumps(error_info) if isinstance(error_info, dict) else error_info
+                'task_result': json.dumps(result) if isinstance(result, dict) else result,
+                'task_error_info': json.dumps(error_info) if isinstance(error_info, dict) else error_info
             }
             if task_status not in ['PENDING', 'RUNNING']:
                 task_instance_info['end_time'] = datetime.now().strftime('%Y-%m-%d %H-%M-%S')

@@ -45,6 +45,8 @@ class TaskRunner(threading.Thread):
         self.is_run = True  # 根据状态判断
         self.logger = logger
         self.current_task_id = self.task_stock.top
+        self.process_info = self.context.get_process_info(self.process_instance_id)
+        self.running_db_operator.process_instance_insert(self.process_info, self.dry)
 
     def current_node(self):
         return self.context.get_task_node(self.process_instance_id, self.current_task_id)
@@ -73,7 +75,7 @@ class TaskRunner(threading.Thread):
                 'error_info': result_or_error,
                 'status': task_status
             }
-            self.logger.info(f'callback func is {callback_func}, callback param is {callback_param}')
+            self.logger.info(f'callback func is {callback_func}')
             callback_func_param = annotation(**callback_param)
             method(callback_func_param)
 
@@ -89,13 +91,13 @@ class TaskRunner(threading.Thread):
 
         while self.is_run and not self.stop:
             task_instance_id = self.running_db_operator.task_instance_insert(self.current_node(), self.dry)
-
             try:
                 task_status, result_or_error = await self.on_running(task_instance_id)
             except OrderLineStopException as error:
                 task_status, result_or_error = await self.on_stop(error, task_instance_id)
             except Exception as error:
                 task_status, result_or_error = await self.on_failure(error, task_instance_id)
+
             if task_status != TaskStatus.green.value:
                 self.callback(task_status, result_or_error)
 
@@ -183,7 +185,7 @@ class TaskRunner(threading.Thread):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}
             self.logger.info(f'current_task_id:{self.current_task_id}, run timeout:{error_info}')
         else:
-            error_info = {'error_info': error}
+            error_info = {'error_info': str(error)}
             logger.info(f'current_task_id:{self.current_task_id}, run timeout:{error_info}')
 
         running_strategy = RunningStrategy(
@@ -206,7 +208,7 @@ class TaskRunner(threading.Thread):
         if task_status == TaskStatus.red.value:
             self.running_db_operator.process_instance_update(
                 process_status=ProcessStatus.red.value,
-                error_info=error,
+                error_info=str(error),
                 dry=self.dry
             )
         return task_status, error_info

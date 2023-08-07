@@ -56,12 +56,17 @@ class BaseRunner(ABC):
         return self.context.get_task_node_item(self.process_instance_id, task_id, 'method_kwargs', {})
 
     def task_config(self, task_id: str) -> dict:
-        default_task_config = {
-            'timeout': OrderLinesConfig.task_timeout,
-            'task_strategy': OrderLinesConfig.task_strategy,
-            'retry_time': OrderLinesConfig.retry_time,
-            'notice_type': OrderLinesConfig.notice_type,
-            'callback_func': OrderLinesConfig.callback_func,
-            'callback_module': OrderLinesConfig.callback_module,
-        }
-        return self.context.get_task_node_item(self.process_instance_id, task_id, 'task_config', default_task_config)
+        default_task_config = dict()
+        task_config: dict = self.context.get_task_node_item(
+            process_instance_id=self.process_instance_id,
+            task_id=task_id,
+            item_name='task_config',
+            default=default_task_config
+        )
+        task_config.setdefault('timeout', OrderLinesConfig.task_timeout)
+        task_config.setdefault('task_strategy', OrderLinesConfig.task_strategy)
+        task_config.setdefault('retry_time', OrderLinesConfig.retry_time)
+        task_config.setdefault('notice_type', OrderLinesConfig.notice_type)
+        task_config.setdefault('callback_func', OrderLinesConfig.callback_func)
+        task_config.setdefault('callback_module', OrderLinesConfig.callback_module)
+        return task_config

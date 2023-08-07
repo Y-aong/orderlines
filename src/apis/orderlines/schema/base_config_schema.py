@@ -10,12 +10,12 @@
     配置类序列化类
     base config schema
 """
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.orderlines.models.base_config import BaseConfig
-from public.base_schema import BaseSchema
 
 
-class BaseConfigSchema(BaseSchema):
+class BaseConfigSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = BaseConfig
         exclude = ['active']

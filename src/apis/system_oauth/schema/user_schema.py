@@ -11,14 +11,13 @@
 """
 
 from marshmallow import fields
-from marshmallow_sqlalchemy import auto_field
+from marshmallow_sqlalchemy import auto_field, SQLAlchemyAutoSchema
 
 from apis.system_oauth.models import SystemUser, SystemUserGroupRelation
 from public.api_utils.jwt_utils import encrypt_password
-from public.base_schema import BaseSchema
 
 
-class SystemUserSchema(BaseSchema):
+class SystemUserSchema(SQLAlchemyAutoSchema):
     password = fields.Function(
         deserialize=lambda value: encrypt_password(value),
         dump_only=True
@@ -31,7 +30,7 @@ class SystemUserSchema(BaseSchema):
         exclude = ['active']
 
 
-class SystemUserGroupRelationSchema(BaseSchema):
+class SystemUserGroupRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemUserGroupRelation
         exclude = ['active']
