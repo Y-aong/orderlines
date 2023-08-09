@@ -17,15 +17,14 @@ from datetime import datetime
 from apis.orderlines.models import ProcessInstance, TaskInstance
 from apis.orderlines.schema.process_schema import ProcessInstanceSchema
 from apis.orderlines.schema.task_schema import TaskInstanceSchema
-from orderlines.real_running.app_context import AppContext
-from orderlines.real_running.base_runner import BaseRunner
 from orderlines.utils.process_action_enum import ProcessStatus, TaskStatus
 from public.base_model import get_session
 
 
-class RunningDBOperator(BaseRunner):
-    def __init__(self, process_instance_id: str, context: AppContext):
-        super(RunningDBOperator, self).__init__(process_instance_id, context)
+class RunningDBOperator:
+    def __init__(self, process_instance_id: str, process_id: str):
+        self.process_instance_id = process_instance_id
+        self.process_id = process_id
         self.session = get_session()
 
     def process_instance_insert(self, process_info: dict, dry=False) -> None:
@@ -83,7 +82,6 @@ class RunningDBOperator(BaseRunner):
             dry=False
     ) -> None:
         if not dry:
-            print(f'error_info::{error_info}')
             task_instance_info = {
                 'task_status': task_status,
                 'task_result': json.dumps(result) if isinstance(result, dict) else result,

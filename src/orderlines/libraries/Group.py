@@ -46,10 +46,9 @@ from typing import List
 
 from conf.config import OrderLinesConfig
 from orderlines.libraries.BaseTask import BaseTask
-from orderlines.running.listen_running import ListenRunning
-from orderlines.utils.base_orderlines_type import GroupParam
-
-from orderlines.utils.exceptions import OrderLineStopException
+from orderlines.real_running.running_db_operator import RunningDBOperator
+from orderlines.utils.base_orderlines_type import GroupParam, BaseProcessInfo
+from orderlines.utils.exceptions import OrderLineStopException, OrderLineRunningException
 from orderlines.utils.process_action_enum import TaskStatus
 from public.logger import logger
 from orderlines.utils.utils import get_current_node
@@ -58,10 +57,12 @@ from orderlines.utils.utils import get_current_node
 class Group(BaseTask):
     version = OrderLinesConfig.version
 
-    def __init__(self, process_info, process_node: List[dict]):
+    def __init__(self, process_info: BaseProcessInfo, task_nodes: List[dict]):
         super(Group, self).__init__()
-        self.process_node = process_node
-        self.listen_running = ListenRunning(process_info)
+        self.task_nodes = task_nodes
+        self.process_instance_id = process_info.process_instance_id
+        self.process_id = process_info.process_id
+        self.run_db_operator = RunningDBOperator(self.process_instance_id, self.process_id)
 
     def task_group(self, group_type: GroupParam) -> dict:
         """
@@ -72,7 +73,7 @@ class Group(BaseTask):
         group_result = dict()
         from orderlines.handlers.task_handlers import CommonHandler
         for task_id in group_type.group_ids:
-            node = get_current_node(task_id, self.process_node)
+            node = get_current_node(task_id, self.task_nodes)
             task_type = node.get('task_type')
             assert task_type == 'common', 'The subtasks in a task group must be of the normal task type'
             if node.get('task_id') == task_id:
@@ -80,21 +81,26 @@ class Group(BaseTask):
                 task_module = node.get('task_module')
                 method_name = node.get('method_name')
                 task_kwargs = node.get('method_kwargs')
-                task_instance, task_table_id = self.listen_running.insert(node)
+                task_instance_id = self.run_db_operator.task_instance_insert(node)
 
                 try:
                     from orderlines.running.task_build import sync_task
                     task_result = sync_task(_handler, task_module, method_name, task_kwargs)
                     logger.info(f'Task group result:{task_result}， task_id::{task_id}')
                     task_status = task_result.get('status')
-                    self.listen_running.update(node, task_instance, task_table_id, task_result, task_status)
+                    if task_status == TaskStatus.red.value:
+                        raise OrderLineRunningException(task_result.get('error_info'))
+                    self.run_db_operator.task_instance_update(task_instance_id, task_status, task_result)
                     group_result[str(task_id)] = task_result
                 except OrderLineStopException as e:
                     logger.error(f'Task group stop:{traceback.format_exc(), e}')
                     error_info = traceback.format_exc()
-                    self.listen_running.update(node, task_instance, task_table_id, error_info, TaskStatus.yellow.value)
+                    self.run_db_operator.task_instance_update(task_instance_id, TaskStatus.yellow.value, error_info)
+                    raise OrderLineStopException(f'group task run stop {e}')
                 except Exception as e:
                     logger.error(f'Task group failure:{traceback.format_exc(), e, traceback.format_exc()}')
                     error_info = traceback.format_exc()
-                    self.listen_running.update(node, task_instance, task_table_id, error_info, TaskStatus.red.value)
+                    self.run_db_operator.task_instance_update(task_instance_id, TaskStatus.red.value, error_info)
+                    raise OrderLineStopException(f'group task run error {e}')
+
         return {'status': TaskStatus.green.value, **group_result}

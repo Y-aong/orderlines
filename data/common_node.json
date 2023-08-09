@@ -5,7 +5,7 @@
         "creator": "blue",
         "updater": null
     },
-    "process_node": [
+    "task_nodes": [
         {
             "task_id": "1001",
             "task_name": "开始节点",

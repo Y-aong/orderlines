@@ -27,15 +27,15 @@ handler_context = {
 }
 
 
-async def build_task(process_node: List[dict], task_id: str, process_info):
+async def build_task(task_nodes: List[dict], task_id: str, process_info):
     """
     从process_list中获取任务参数，组装为异步任务
     :param task_id:
-    :param process_node:
+    :param task_nodes:
     :param process_info:
     :return:
     """
-    for node in process_node:
+    for node in task_nodes:
         task_type = node.get('task_type')
         if node.get('task_id') == task_id:
             _handler = handler_context.get(task_type)
@@ -46,7 +46,7 @@ async def build_task(process_node: List[dict], task_id: str, process_info):
             task_kwargs = task_kwargs if task_kwargs else {}
             task_kwargs.setdefault('task_config', task_config)
             if task_type in ['group', 'parallel', 'process_control']:
-                task_kwargs['process_node'] = process_node
+                task_kwargs['task_nodes'] = task_nodes
                 task_kwargs['process_info'] = process_info
 
             return await async_task(_handler, task_module, method_name, task_kwargs)

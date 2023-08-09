@@ -41,6 +41,7 @@ class BaseProcessConfig(BaseModel):
 
 class BaseProcessInfo(BaseModel):
     process_id: str = Field(description=get_desc_by_lang('process_id'))
+    process_instance_id: str = Field(description=get_desc_by_lang('process_instance_id'))
     process_name: str = Field(description=get_desc_by_lang('process_name'))
     creator: Union[str, None] = Field(description=get_desc_by_lang('creator'))
     updater: Union[str, None] = Field(description=get_desc_by_lang('updater'))
@@ -62,9 +63,9 @@ class BasePluginParam(BaseModel):
 
 
 class GateWayParam(BasePluginParam):
-    process_name: str = Field(description=get_desc_by_lang('process_name'))
+    # process_name: str = Field(description=get_desc_by_lang('process_name'))
     process_info: BaseProcessInfo = Field(description=get_desc_by_lang('process_info'))
-    process_node: list = Field(description=get_desc_by_lang('process_node'))
+    task_nodes: list = Field(description=get_desc_by_lang('task_nodes'))
 
 
 class EmailParam(BaseModel):

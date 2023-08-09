@@ -27,7 +27,8 @@ class ZH:
     result = '任务结果'
     task_config = '任务配置'
     process_info = '流程信息'
-    process_node = '流程节点信息'
+    process_instance_id = '流程实例id'
+    task_nodes = '流程节点信息'
 
 
 class EN:
@@ -45,7 +46,9 @@ class EN:
     result = 'task result'
     task_config = 'task config'
     process_info = 'process info'
-    process_node = 'process nodes info'
+    task_nodes = 'process nodes info'
+    process_instance_id = 'process instance id'
+
 
 
 languages = {

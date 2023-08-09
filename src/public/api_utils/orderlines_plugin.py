@@ -24,7 +24,7 @@ class OrderlinesPlugHelper:
     def __init__(self):
         self.session = get_session()
         self.base_params = ['process_id', 'process_name', 'process_info',
-                            'process_node', 'task_id', 'task_config', 'result']
+                            'task_nodes', 'task_id', 'task_config', 'result']
         self.exclude_method = ['on_receive', 'on_success', 'on_failure']
 
     def init_plugin(self):

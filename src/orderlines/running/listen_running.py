@@ -75,11 +75,13 @@ class ListenRunning:
         current_task_id = current_node.get('task_id')
         task_name = current_node.get('task_name')
         task_kwargs: dict = current_node.get('method_kwargs')
-        task_kwargs = self.parser_param_variable(current_task_id,
-                                                 task_name,
-                                                 task_kwargs,
-                                                 current_node.get('task_type'),
-                                                 current_node.get('result'))
+        task_kwargs = self.parser_param_variable(
+            current_task_id=current_task_id,
+            task_name=task_name,
+            task_kwargs=task_kwargs,
+            task_type=current_node.get('task_type'),
+            result=current_node.get('result')
+        )
         current_node['method_kwargs'] = task_kwargs
         task_instance = TaskInstanceOperator(current_node, self.process_info)
         task_table_id = task_instance.insert()

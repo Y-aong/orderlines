@@ -36,7 +36,8 @@ class BaseParse(BaseRunner):
         super(BaseParse, self).__init__(process_instance_id, context)
         # 初始化，开始当前执行id为start node id
         self.current_task_id = self.start_node_id()
-        self.running_db_operator = RunningDBOperator(process_instance_id, context)
+        process_id = self.context.get_process_item(self.process_instance_id, 'process_id')
+        self.running_db_operator = RunningDBOperator(process_instance_id, process_id)
 
     def get_next_node_id(self) -> str:
         """

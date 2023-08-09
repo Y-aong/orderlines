@@ -9,9 +9,7 @@
     特定任务节点的处理
     Processing of specific task nodes
 """
-import json
 import traceback
-from typing import Any
 
 from pydantic import BaseModel
 
@@ -53,7 +51,7 @@ class CommonHandler(AbstractHandler):
                 error = self.handle_on_failure(e, module, method_name)
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': json.dumps({'error info': str(error), 'traceback': traceback.format_exc()})
+                    'error_info': f'error info {error} traceback {traceback.format_exc()}'
                 }
         else:
             return super().handle(module, method_name, task_kwargs)
@@ -67,11 +65,9 @@ class ProcessControlHandler(AbstractHandler):
                 task_id = ProcessControl().process_control(task_kwargs)
                 return {'task_id': task_id, 'status': TaskStatus.green.value}
             except Exception as e:
-                logger.error(f'The process control gateway failure.error info:{e},'
-                             f'\ntraceback:{traceback.format_exc()}')
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': json.dumps({'error info': e, 'traceback': traceback.format_exc()})
+                    'error_info': f'error info {e} traceback {traceback.format_exc()}'
                 }
         else:
             return super().handle(module, method_name, task_kwargs)
@@ -82,16 +78,15 @@ class GroupHandler(AbstractHandler):
 
         if hasattr(module, method_name):
             process_info = task_kwargs.process_info
-            process_node = task_kwargs.process_node
+            task_nodes = task_kwargs.task_nodes
             try:
-                result = Group(process_info, process_node).task_group(task_kwargs)
+                result = Group(process_info, task_nodes).task_group(task_kwargs)
                 result.setdefault('status', TaskStatus.green.value)
                 return result
             except Exception as e:
-                logger.error(f'The task group failure.error info:{e},\n{traceback.format_exc()}')
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': json.dumps({'error info': e, 'traceback': traceback.format_exc()})
+                    'error_info': f'error info {e} traceback {traceback.format_exc()}'
                 }
         else:
             return super().handle(module, method_name, task_kwargs)
@@ -102,15 +97,18 @@ class ParallelHandler(AbstractHandler):
 
         if hasattr(module, method_name):
             process_info = task_kwargs.process_info
-            process_node = task_kwargs.process_node
+            task_nodes = task_kwargs.task_nodes
             try:
-                parallel = Parallel(process_info, process_node)
+                parallel = Parallel(process_info, task_nodes)
                 result = parallel.parallel_task(task_kwargs)
                 result.setdefault('status', TaskStatus.green.value)
                 return result
             except Exception as e:
-                logger.error(f'The parallel gateway failure.error info:{e},\ntraceback:{traceback.format_exc()}')
-                return {'status': TaskStatus.red.value, 'error_info': f'traceback:{traceback.format_exc()}'}
+                return {
+                    'status': TaskStatus.red.value,
+                    'error_info': f'error info {e} traceback {traceback.format_exc()}'
+
+                }
         else:
             return super().handle(module, method_name, task_kwargs)
 
