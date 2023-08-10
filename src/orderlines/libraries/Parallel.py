@@ -46,15 +46,15 @@ from orderlines.utils.utils import get_current_node
 class Parallel(BaseTask):
     version = OrderLinesConfig.version
 
-    def __init__(self, process_info, process_node):
+    def __init__(self, process_info, task_nodes):
         super(Parallel, self).__init__()
         self.process_info = process_info
-        self.process_node = process_node
-        self.parallel_helper = ParallelUtils(self.process_node)
+        self.task_nodes = task_nodes
+        self.parallel_helper = ParallelUtils(self.task_nodes)
 
     def _check_is_group(self, parallel_task_id: List[str]) -> bool:
         for task_id in parallel_task_id:
-            current_node = get_current_node(task_id, self.process_node)
+            current_node = get_current_node(task_id, self.task_nodes)
             if current_node.get('task_type') == 'group':
                 return True
         return False
@@ -79,17 +79,19 @@ class Parallel(BaseTask):
         :param group_id:task group id
         :return:
         """
-        for node in self.process_node:
+        for node in self.task_nodes:
             if node.get('task_id') == group_id:
                 group_ids = node.get('method_kwargs').get('group_ids')
                 from orderlines.libraries.Group import Group
-                group = Group(self.process_info, self.process_node)
-                current_node = get_current_node(parallel_type.task_id, parallel_type.process_node)
+                group = Group(self.process_info, self.task_nodes)
+                print(f"task_nodes::{parallel_type.task_nodes}")
+                print(f"task_id::{parallel_type.task_id}")
+                current_node = get_current_node(parallel_type.task_id, parallel_type.task_nodes)
                 param = {
                     'group_ids': group_ids,
                     'process_name': parallel_type.process_name,
                     'process_info': parallel_type.process_info,
-                    'process_node': parallel_type.process_node,
+                    'task_nodes': parallel_type.task_nodes,
                     'process_id': parallel_type.process_id,
                     'task_id': parallel_type.task_id,
                     'result': current_node.get('result'),

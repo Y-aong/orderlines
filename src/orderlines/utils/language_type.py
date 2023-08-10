@@ -50,7 +50,6 @@ class EN:
     process_instance_id = 'process instance id'
 
 
-
 languages = {
     'zh': ZH,
     'en': EN

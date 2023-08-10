@@ -84,7 +84,8 @@ class GroupParam(GateWayParam):
 
 
 class ParallelParam(GateWayParam):
-    parallel_task_ids: List[str] = Field(get_desc_by_lang('parallel_task_ids'))
+    parallel_task_ids: List[str] = Field(description=get_desc_by_lang('parallel_task_ids'))
+    task_id: str = Field(description=get_desc_by_lang('task_id'))
 
 
 class BaseConditionItem(BaseModel):
