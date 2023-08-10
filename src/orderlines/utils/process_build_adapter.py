@@ -80,6 +80,8 @@ class BaseTarget(ABC):
         for key, val in node.items():
             if hasattr(self.task_orm, key):
                 data.setdefault(key, val)
+            if key == 'prev_id' and isinstance(val, list):
+                data['prev_id'] = json.dumps(val)
 
         task_node = self.task_schema().load(data)
         obj = self.task_orm(**task_node)

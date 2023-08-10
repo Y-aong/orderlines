@@ -51,12 +51,11 @@ class BaseProcessInfo(BaseModel):
 
 class BaseProcessNode(BaseModel):
     process_info: BaseProcessInfo = Field(description=get_desc_by_lang('process_info'))
-    process_node: List[BaseNode] = Field(description=get_desc_by_lang('process_node'))
+    task_nodes: List[BaseNode] = Field(description=get_desc_by_lang('task_nodes'))
 
 
 class BasePluginParam(BaseModel):
     # process_id: Union[str, None] = Field(description=get_desc_by_lang('process_id'))
-    # task_id: Union[str, None] = Field(description=get_desc_by_lang('task_id'), title='task id')
     # result: Union[None, list, dict] = Field(description=get_desc_by_lang('result'))
     task_config: Union[None, dict] = Field(
         default=dict(), description=get_desc_by_lang('task_config'))
@@ -66,6 +65,7 @@ class GateWayParam(BasePluginParam):
     # process_name: str = Field(description=get_desc_by_lang('process_name'))
     process_info: BaseProcessInfo = Field(description=get_desc_by_lang('process_info'))
     task_nodes: list = Field(description=get_desc_by_lang('task_nodes'))
+    task_id: Union[str, None] = Field(description=get_desc_by_lang('task_id'), title='task id')
 
 
 class EmailParam(BaseModel):
@@ -85,7 +85,7 @@ class GroupParam(GateWayParam):
 
 class ParallelParam(GateWayParam):
     parallel_task_ids: List[str] = Field(description=get_desc_by_lang('parallel_task_ids'))
-    task_id: str = Field(description=get_desc_by_lang('task_id'))
+    # task_id: str = Field(description=get_desc_by_lang('task_id'))
 
 
 class BaseConditionItem(BaseModel):

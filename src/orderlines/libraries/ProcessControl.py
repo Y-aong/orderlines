@@ -183,3 +183,37 @@ class ProcessControl(BaseTask):
         if not type(self.condition) == type(other):
             return False
         return self.condition < other
+
+
+# task_config = {
+#     'timeout': 120,
+#     'task_strategy': 'RAISE',
+#     'retry_time': 3,
+#     'notice_type': 'FAILURE',
+#     'callback_func': 'send_msg',
+#     'callback_module': 'Email'
+# }
+# conditions = [
+#     {'A': [{'sign': '=', 'target': '${add_value}', 'condition': 1}, {'sign': '>', 'target': 3, 'condition': 1}]},
+#     {'B': [{'sign': '<', 'target': '${add_value}', 'condition': 2}, {'sign': '=', 'target': 3, 'condition': 3}]}
+# ]
+# expression = {'A': {'task_id': '1014'}, 'B': {'task_id': '1015'}}
+# process_info = {
+#     'process_config': None,
+#     'creator': 'blue',
+#     'process_id': '1007',
+#     'desc': None,
+#     'process_params': None,
+#     'process_name': 'test_process_return',
+#     'updater': None,
+#     'process_instance_id': 'ff54c4fb378e11eebef7001a7dda7111'
+# }
+# data = {
+#     'task_config': task_config,
+#     'conditions': conditions,
+#     'expression': expression,
+#     'process_info': process_info,
+# }
+# ProcessControl().process_control(
+#     ProcessControlParam(**data)
+# )

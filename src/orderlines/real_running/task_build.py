@@ -61,19 +61,22 @@ class TaskBuild(BaseRunner):
             task_kwargs['task_nodes'] = self.context.get_task_nodes(self.process_instance_id)
             task_kwargs['process_info'] = self.context.get_process_info(self.process_instance_id)
 
-        return self._build_task(task_handler, task_kwargs=task_kwargs, **task_build_param)
+        return self._build_task(task_handler, task_id=task_id, task_kwargs=task_kwargs, **task_build_param)
 
     def _build_task(
             self,
             handler: AbstractHandler,
+            task_id: str,
             task_module: str,
             method_name: str,
             task_kwargs: dict,
+
     ) -> dict:
         """
         构建任务，并运行
         build task and run
         @param handler: task handler
+        @param task_id: current task id
         @param task_module: task module
         @param method_name: method name
         @param task_kwargs: method run need params
@@ -85,6 +88,7 @@ class TaskBuild(BaseRunner):
         if task_module in ['Group', 'Parallel', 'ProcessControl']:
             flag, annotation = get_method_param_annotation(getattr(module, method_name))
             assert flag, 'task group and parallel params must be a pydantic param'
+            task_kwargs.setdefault('task_id', task_id)
             task_result = handler.handle(module, method_name, annotation(**task_kwargs))
         else:
             task_result = handler.handle(module, method_name, task_kwargs)

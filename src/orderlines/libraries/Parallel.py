@@ -84,18 +84,16 @@ class Parallel(BaseTask):
                 group_ids = node.get('method_kwargs').get('group_ids')
                 from orderlines.libraries.Group import Group
                 group = Group(self.process_info, self.task_nodes)
-                print(f"task_nodes::{parallel_type.task_nodes}")
-                print(f"task_id::{parallel_type.task_id}")
                 current_node = get_current_node(parallel_type.task_id, parallel_type.task_nodes)
                 param = {
                     'group_ids': group_ids,
-                    'process_name': parallel_type.process_name,
+                    'process_name': parallel_type.process_info.process_name,
                     'process_info': parallel_type.process_info,
                     'task_nodes': parallel_type.task_nodes,
-                    'process_id': parallel_type.process_id,
+                    'process_id': parallel_type.process_info.process_id,
                     'task_id': parallel_type.task_id,
                     'result': current_node.get('result'),
-                    '__task_config__': current_node.get('task_config'),
+                    'task_config': current_node.get('task_config'),
                 }
                 group_param = GroupParam(**param)
                 return group.task_group(group_param)

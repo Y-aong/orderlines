@@ -9,6 +9,7 @@
     任务模型序列化类
     Task model serialization class
 """
+import json
 
 from marshmallow import fields
 from marshmallow_sqlalchemy import auto_field, SQLAlchemyAutoSchema

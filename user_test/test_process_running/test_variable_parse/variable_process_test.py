@@ -9,7 +9,7 @@
 """
 from orderlines.app import OrderLines
 
-node_data = [
+data = [
     {
         "task_id": "1001",
         "task_name": "start",
@@ -87,4 +87,6 @@ process_info = {
 }
 
 if __name__ == '__main__':
-    OrderLines(process_info, node_data).start()
+    orderlines = OrderLines()
+    orderlines.clear_db()
+    orderlines.start(process_info=process_info, task_nodes=data)

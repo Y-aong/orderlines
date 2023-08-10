@@ -22,7 +22,7 @@ from abc import abstractmethod
 
 from werkzeug.local import LocalStack
 
-from orderlines.libraries.ProcessControl import ProcessControl
+
 from orderlines.real_running.app_context import AppContext
 from orderlines.real_running.base_runner import BaseRunner
 from orderlines.real_running.running_db_operator import RunningDBOperator
@@ -50,6 +50,7 @@ class BaseParse(BaseRunner):
                 if node.get('task_type') == 'process_control':
                     process_control_kw: dict = node.get('method_kwargs')
                     process_control_param = ProcessControlParam(**process_control_kw)
+                    from orderlines.libraries.ProcessControl import ProcessControl
                     return ProcessControl().process_control(process_control_param)
                 return node.get('next_id')
         return None
