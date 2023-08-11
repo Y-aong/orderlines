@@ -1,0 +1,145 @@
+<html lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>report</title>
+
+    <style>
+
+        h1 {
+            text-align: center;
+            margin: 50px;
+            color: brown;
+        }
+
+        h2 {
+            margin-left: 5px;
+        }
+
+        p {
+            margin-left: 30px;
+            margin-top: 8px;
+            font-weight: bold;
+            display: inline-block;
+            width: 18%;
+        }
+
+        .main {
+            width: 90%;
+            margin: 50px auto;
+            background: #fafafa;
+        }
+
+        table {
+            width: 95%;
+            margin-top: 20px;
+            border: 1px solid #000000;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #000000;
+            text-align: center;
+            line-height:25px;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body class="main">
+<div>
+    <h1>orderlines 流程运行报告</h1>
+    <h2>流程运行信息</h2>
+    <p>流程id：1001</p>
+    <p>流程名称：test_common</p>
+    <p>开始时间：2023-07-27T22:30:20 </p>
+    <p>结束时间：2023-07-27T14:30:23 </p>
+    <br>
+    <p>流程配置：None </p>
+    <p>流程参数：None </p>
+    <p>运行者：blue</p>
+    <p>运行者id：None</p>
+    <br>
+    <p>流程状态：SUCCESS</p>
+    <p>流程异常：None</p>
+
+    <p style="margin-bottom: 50px">流程描述：</p>
+
+    <h2>任务节点信息</h2>
+    <table>
+        <tr>
+            <th style="width: 5%">任务id</th>
+            <th style="width: 5%">任务名称</th>
+            <th style="width: 5%">函数名称</th>
+            <th style="width: 15%">任务参数</th>
+            <th style="width: 10%">任务结果</th>
+            <th style="width: 5%">任务状态</th>
+            <th style="width: 5%">任务异常</th>
+            <th style="width: 5%">模块名称</th>
+            <th style="width: 5%">模块版本</th>
+            <th style="width: 5%">任务描述</th>
+        </tr>
+
+        
+        <tr>
+            <td>1001</td>
+            <td>开始节点</td>
+            <td>start</td>
+            <td>{'task_id': '1001', 'process_id': '1001', 'process_name': 'test_common', 'result': None}</td>
+            <td>{"status": "SUCCESS"}</td>
+            <td>SUCCESS</td>
+            <td>None</td>
+            <td>BuiltIn</td>
+            <td></td>
+            <td>None</td>
+        </tr>
+        
+        <tr>
+            <td>1002</td>
+            <td>加法</td>
+            <td>test_add</td>
+            <td>{'a': 1, 'b': 2, 'task_id': '1002', 'process_id': '1001', 'process_name': 'test_common', 'result': None}</td>
+            <td>{"add_value": 108, "status": "SUCCESS"}</td>
+            <td>SUCCESS</td>
+            <td>None</td>
+            <td>Test</td>
+            <td></td>
+            <td>None</td>
+        </tr>
+        
+        <tr>
+            <td>1003</td>
+            <td>减法</td>
+            <td>test_subtraction</td>
+            <td>{'a': 10, 'b': 12, 'task_id': '1003', 'process_id': '1001', 'process_name': 'test_common', 'result': None}</td>
+            <td>{"subtraction_value": -1, "status": "SUCCESS"}</td>
+            <td>SUCCESS</td>
+            <td>None</td>
+            <td>Test</td>
+            <td></td>
+            <td>None</td>
+        </tr>
+        
+        <tr>
+            <td>1004</td>
+            <td>结束节点</td>
+            <td>end</td>
+            <td>{'task_id': '1004', 'process_id': '1001', 'process_name': 'test_common', 'result': None}</td>
+            <td>{"status": "SUCCESS"}</td>
+            <td>SUCCESS</td>
+            <td>None</td>
+            <td>BuiltIn</td>
+            <td></td>
+            <td>None</td>
+        </tr>
+        
+    </table>
+
+</div>
+
+
+</body>
+</html>
