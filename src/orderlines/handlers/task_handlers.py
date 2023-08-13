@@ -17,9 +17,8 @@ from orderlines.handlers.base_handler import AbstractHandler
 from orderlines.libraries.Group import Group, GroupParam
 from orderlines.libraries.Parallel import Parallel, ParallelParam
 from orderlines.libraries.ProcessControl import ProcessControl
-from orderlines.utils.process_action_enum import TaskStatus
+from orderlines.utils.orderlines_enum import TaskStatus
 from orderlines.utils.utils import get_method_param_annotation
-from public.logger import logger
 
 
 class DefaultHandler(AbstractHandler):

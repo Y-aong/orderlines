@@ -17,7 +17,7 @@ from datetime import datetime
 from apis.orderlines.models import ProcessInstance, TaskInstance
 from apis.orderlines.schema.process_schema import ProcessInstanceSchema
 from apis.orderlines.schema.task_schema import TaskInstanceSchema
-from orderlines.utils.process_action_enum import ProcessStatus, TaskStatus
+from orderlines.utils.orderlines_enum import ProcessStatus, TaskStatus
 from public.base_model import get_session
 
 

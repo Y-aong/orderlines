@@ -28,7 +28,7 @@ from orderlines.real_running.base_runner import BaseRunner
 from orderlines.real_running.running_db_operator import RunningDBOperator
 from orderlines.utils.base_orderlines_type import ProcessControlParam
 from orderlines.utils.exceptions import OrderlinesHasNoStart
-from orderlines.utils.process_action_enum import ProcessStatus
+from orderlines.utils.orderlines_enum import ProcessStatus
 
 
 class BaseParse(BaseRunner):
@@ -49,6 +49,7 @@ class BaseParse(BaseRunner):
             if node.get('task_id') == self.current_task_id:
                 if node.get('task_type') == 'process_control':
                     process_control_kw: dict = node.get('method_kwargs')
+                    process_control_kw.setdefault('process_info', self.process_info)
                     process_control_param = ProcessControlParam(**process_control_kw)
                     from orderlines.libraries.ProcessControl import ProcessControl
                     return ProcessControl().process_control(process_control_param)

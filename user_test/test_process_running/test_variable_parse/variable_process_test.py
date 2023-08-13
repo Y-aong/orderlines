@@ -35,13 +35,11 @@ data = [
         "next_id": "1003",
         "task_config": None,
         "task_module": "Test",
-        "result": [
+        "result_config":
             {
-                "add_value": "${add_value}+1",
-                "variable_type": "int",
-                "variable_desc": "add函数的返回值"
-            }
-        ],
+                "result_key": "add_value",
+                "variable_key": "${add_result}",
+            },
         "desc": None
     },
     {
@@ -50,19 +48,15 @@ data = [
         "method_name": "test_subtraction",
         "task_type": "common",
         "method_kwargs": {
-            "a": "${add_value}",
+            "a": "${add_result}",
             "b": 123123
         },
         "prev_id": "1002",
         "next_id": "1004",
         "task_config": None,
         "task_module": "Test",
-        "result": [
-            {
-                "subtraction_value": "${return_value}",
-                "variable_type": "int",
-                "variable_desc": "subtraction函数的返回值"
-            }
+        "result_config": [
+
         ],
         "desc": None
     },
@@ -85,8 +79,15 @@ process_info = {
     "process_name": "test_variable1",
     "creator": "blue",
 }
+variable = [
+    {
+        "variable_key": "add_result",
+        "variable_type": "int",
+        "variable_desc": "add函数的返回值"
+    }
+]
 
 if __name__ == '__main__':
     orderlines = OrderLines()
     orderlines.clear_db()
-    orderlines.start(process_info=process_info, task_nodes=data)
+    orderlines.start(process_info=process_info, task_nodes=data, variable=variable)

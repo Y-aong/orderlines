@@ -49,7 +49,7 @@ from orderlines.libraries.BaseTask import BaseTask
 from orderlines.real_running.running_db_operator import RunningDBOperator
 from orderlines.utils.base_orderlines_type import GroupParam, BaseProcessInfo
 from orderlines.utils.exceptions import OrderLineStopException, OrderLineRunningException
-from orderlines.utils.process_action_enum import TaskStatus
+from orderlines.utils.orderlines_enum import TaskStatus
 from public.logger import logger
 from orderlines.utils.utils import get_current_node
 
@@ -71,21 +71,17 @@ class Group(BaseTask):
         :return:
         """
         group_result = dict()
-        from orderlines.handlers.task_handlers import CommonHandler
         for task_id in group_type.group_ids:
             node = get_current_node(task_id, self.task_nodes)
             task_type = node.get('task_type')
             assert task_type == 'common', 'The subtasks in a task group must be of the normal task type'
             if node.get('task_id') == task_id:
-                _handler = CommonHandler()
-                task_module = node.get('task_module')
-                method_name = node.get('method_name')
-                task_kwargs = node.get('method_kwargs')
                 task_instance_id = self.run_db_operator.task_instance_insert(node)
-
+                print(f"group node {node}")
                 try:
-                    from orderlines.running.task_build import sync_task
-                    task_result = sync_task(_handler, task_module, method_name, task_kwargs)
+                    from orderlines.real_running.task_build import TaskBuild
+                    task_build = TaskBuild(self.process_instance_id, node)
+                    task_result = task_build.build_task(task_id, group_type.process_info, group_type.task_nodes)
                     logger.info(f'Task group result:{task_result}， task_id::{task_id}')
                     task_status = task_result.get('status')
                     if task_status == TaskStatus.red.value:

@@ -15,7 +15,7 @@ from typing import List
 
 import yaml
 
-from apis.orderlines.models import Process, Task
+from apis.orderlines.models import Process, Task, Variable
 from apis.orderlines.schema.process_schema import ProcessSchema
 from apis.orderlines.schema.task_schema import TaskSchema
 from public.base_model import get_session
@@ -40,19 +40,23 @@ class BaseTarget(ABC):
         pass
 
     @abstractmethod
-    def build_by_dict(self, process_info: dict, task_nodes: List[dict]):
+    def build_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict]):
         pass
 
-    def build(self, process_info: dict, task_nodes: List[dict]) -> int:
+    def build(self, process_info: dict, task_nodes: List[dict], variable: List[dict]) -> int:
         """
         创建流程和任务
         create process and task
         @param process_info:
         @param task_nodes:
+        @param variable:
         @return:process table id
         """
         process_table_id, process_id = self._build_process(process_info)
+        process_name = process_info.get('process_name')
         self._build_task(task_nodes, process_id)
+        if variable:
+            self._build_variable(process_id, process_name, variable)
         return process_table_id
 
     def _build_process(self, process_info: dict) -> tuple:
@@ -93,6 +97,35 @@ class BaseTarget(ABC):
         for node in task_nodes:
             self._build_task_node(node, process_id)
 
+    def _build_process_variable(self, variable_info: dict):
+        temp = dict()
+        for key, val in variable_info.items():
+            if hasattr(Variable, key):
+                temp.setdefault(key, val)
+        obj = self.session.query(Variable).filter(
+            Variable.process_id == temp.get('process_id'),
+            Variable.variable_key == temp.get('variable_key')
+        ).first()
+        if obj:
+            print(f'temp::{temp}')
+            self.session.query(Variable).filter(
+                Variable.process_id == temp.get('process_id'),
+                Variable.variable_key == temp.get('variable_key')
+            ).update(temp)
+            logger.info('变量修改成功')
+        else:
+            obj = Variable(**temp)
+            self.session.add(obj)
+            logger.info(f'变量创建成功')
+        self.session.commit()
+
+    def _build_variable(self, process_id: str, process_name: str, variables: List[dict]):
+        """创建流程变量"""
+        for variable in variables:
+            variable.setdefault('process_id', process_id)
+            variable.setdefault('process_name', process_name)
+            self._build_process_variable(variable)
+
 
 class Adaptee:
 
@@ -120,7 +153,8 @@ class Adaptee:
             content = json.load(f)
         process_info = self.check_process_info(content.get('process_info'))
         task_nodes = self.check_task_nodes(content.get('task_nodes'))
-        return process_info, task_nodes
+        variable = self.check_task_nodes(content.get('variable'))
+        return process_info, task_nodes, variable
 
     def adapter_yaml(self, file_path: str):
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -128,7 +162,8 @@ class Adaptee:
         content = yaml.load(content, Loader=yaml.SafeLoader)
         process_info = self.check_process_info(content.get('process_info'))
         task_nodes = self.check_task_nodes(content.get('task_nodes'))
-        return process_info, task_nodes
+        variable = self.check_task_nodes(content.get('variable'))
+        return process_info, task_nodes, variable
 
     def adapter_dict(self, process_info: dict, task_nodes: List[dict]):
         return self.check_process_info(process_info), self.check_task_nodes(task_nodes)
@@ -141,13 +176,13 @@ class ProcessBuildAdapter(BaseTarget):
         self.adaptee = Adaptee()
 
     def build_by_json(self, file_path: str):
-        process_info, task_nodes = self.adaptee.adapter_json(file_path)
-        return self.build(process_info, task_nodes)
+        process_info, task_nodes, variable = self.adaptee.adapter_json(file_path)
+        return self.build(process_info, task_nodes, variable)
 
     def build_by_yaml(self, file_path: str):
-        process_info, task_nodes = self.adaptee.adapter_yaml(file_path)
-        return self.build(process_info, task_nodes)
+        process_info, task_nodes, variable = self.adaptee.adapter_yaml(file_path)
+        return self.build(process_info, task_nodes, variable)
 
-    def build_by_dict(self, process_info: dict, task_nodes: List[dict]):
+    def build_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict] = None):
         process_info, task_nodes = self.adaptee.adapter_dict(process_info, task_nodes)
-        return self.build(process_info, task_nodes)
+        return self.build(process_info, task_nodes, variable)

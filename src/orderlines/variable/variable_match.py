@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : match.py
+# File       : variable_match.py
 # Time       ：2023/2/22 21:58
 # Author     ：Y-aong
 # version    ：python 3.7
@@ -10,7 +10,7 @@
 from orderlines.utils.exceptions import VariableException
 
 
-class Match:
+class VariableMatch:
     def __init__(self, _variable_name: str):
         """
         这里变量有两种，变量指的是在流程里配置的${value},${add_value}+1

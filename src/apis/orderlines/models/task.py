@@ -33,6 +33,7 @@ class Task(Base):
     task_module = db.Column(db.String(50), comment='task module')
     module_version = db.Column(db.String(64), default='1.0.0.1', comment='module version')
     task_config = db.Column(db.JSON, comment='task config')
+    result_config = db.Column(db.JSON, comment='result config')
     desc = db.Column(db.String(255), comment='task desc')
     # relation
     process_id = db.Column(db.String(255), db.ForeignKey('base_process.process_id'), comment='process id')
@@ -57,6 +58,7 @@ class TaskInstance(Base):
     runner_id = db.Column(db.String(40), comment='task runner id')
     task_result = db.Column(db.JSON, comment='task return')
     task_error_info = db.Column(db.JSON, comment='task run error info')
+    result_config = db.Column(db.JSON(255), comment='result config')
     task_desc = db.Column(db.String(255), comment='task desc')
     # relation
     process_id = db.Column(db.String(255), db.ForeignKey('base_process.process_id'), comment='process id')

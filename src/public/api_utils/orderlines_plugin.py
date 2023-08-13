@@ -15,7 +15,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from apis.orderlines.models.plugin_info import PluginInfo
-from orderlines.running.module_check import CheckModule
+from orderlines.real_running.running_check import CheckModule
 from public.base_model import get_session
 
 

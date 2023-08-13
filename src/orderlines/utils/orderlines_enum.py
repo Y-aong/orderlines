@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : process_action_enum.py
+# File       : orderlines_enum.py
 # Time       ：2023/1/11 21:20
 # Author     ：Y-aong
 # version    ：python 3.7
@@ -29,3 +29,13 @@ class TaskStatus(enum.Enum):
     pink = 'SKIP'
     yellow = 'STOP'
     orange = 'RETRY'
+
+
+class TaskType(enum.Enum):
+    common = 'common'
+    process_control = 'process_control'
+    group = 'group'
+    parallel = 'parallel'
+    remote = 'remote'
+    start = 'start'
+    end = 'end'

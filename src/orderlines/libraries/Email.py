@@ -18,7 +18,7 @@ from conf.config import EmailConfig, OrderLinesConfig
 from orderlines.libraries.BaseTask import BaseTask
 from orderlines.utils.base_orderlines_type import EmailParam, EmailResult
 from public.logger import logger
-from orderlines.utils.process_action_enum import TaskStatus
+from orderlines.utils.orderlines_enum import TaskStatus
 
 
 class Email(BaseTask):

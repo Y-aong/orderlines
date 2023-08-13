@@ -29,6 +29,10 @@ class ZH:
     process_info = '流程信息'
     process_instance_id = '流程实例id'
     task_nodes = '流程节点信息'
+    variable_name = '变量名称'
+    variable_value = '变量值字符串'
+    variable_type = '变量值类型'
+    variable_desc = '变量的描述信息'
 
 
 class EN:
@@ -48,6 +52,10 @@ class EN:
     process_info = 'process info'
     task_nodes = 'process nodes info'
     process_instance_id = 'process instance id'
+    variable_name = 'variable name'
+    variable_value = 'variable value'
+    variable_type = 'variable type'
+    variable_desc = 'variable desc info'
 
 
 languages = {

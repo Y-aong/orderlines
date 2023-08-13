@@ -7,14 +7,17 @@
 # version    ：python 3.7
 # Description：变量处理
 """
-from orderlines.variable.match import Match
+from typing import Any
+
+from orderlines.variable.variable_match import VariableMatch
 
 
 class VariableOperator:
-    def __init__(self, variable_key, real_variable_value, variable_type):
+    def __init__(self, variable_config_value: str, real_variable_value: Any, variable_type: str):
         """
         变量运算. Variable operation
-        :param variable_key:  "result": [
+        :param variable_config_value: 在任务节点的配置中variable_value的key
+        "result": [
             {
                 "variable_key": variable_value,
                 "variable_type": "int",
@@ -27,10 +30,10 @@ class VariableOperator:
         :param variable_type: 对应数据库中变量的类型,Indicates the type of a variable in the database
         """
 
-        self.variable_key = variable_key
+        self.variable_config_value = variable_config_value
         self.real_variable_value = real_variable_value
         self.variable_type = variable_type
-        self.variable_name = Match(self.variable_key).get_variable_name()
+        self.variable_name = VariableMatch(self.variable_config_value).get_variable_name()
 
     def variable_operator(self):
         """
@@ -43,25 +46,25 @@ class VariableOperator:
 
     def _variable_handler(self, match):
         """变量处理方法"""
-        if self.variable_type == 'str' and '+' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
-            v1, v2 = self.variable_key.split('+')
-            return f"{v1, v2}"
-        elif self.variable_type == 'int' and '+' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
-            v1, v2 = self.variable_key.split('+')
+        if self.variable_type == 'str' and '+' in self.variable_config_value:
+            self.variable_config_value = self.variable_config_value.replace(match, str(self.real_variable_value))
+            v1, v2 = self.variable_config_value.split('+')
+            return f"{v1}{v2}"
+        elif self.variable_type == 'int' and '+' in self.variable_config_value:
+            self.variable_config_value = self.variable_config_value.replace(match, str(self.real_variable_value))
+            v1, v2 = self.variable_config_value.split('+')
             return int(v1) + int(v2)
-        elif self.variable_type == 'float' and '-' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
-            v1, v2 = self.variable_key.split('-')
-            return float(v1) - float(v2)
-        elif self.variable_type == 'int' and '*' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
-            v1, v2 = self.variable_key.split('*')
-            return float(v1) * float(v2)
-        elif self.variable_type == 'int' and '/' in self.variable_key:
-            self.variable_key = self.variable_key.replace(match, str(self.real_variable_value))
-            v1, v2 = self.variable_key.split('/')
-            return float(v1) / float(v2)
+        elif self.variable_type == 'int' and '-' in self.variable_config_value:
+            self.variable_config_value = self.variable_config_value.replace(match, str(self.real_variable_value))
+            v1, v2 = self.variable_config_value.split('-')
+            return int(v1) - int(v2)
+        elif self.variable_type == 'int' and '*' in self.variable_config_value:
+            self.variable_config_value = self.variable_config_value.replace(match, str(self.real_variable_value))
+            v1, v2 = self.variable_config_value.split('*')
+            return int(v1) * int(v2)
+        elif self.variable_type == 'int' and '/' in self.variable_config_value:
+            self.variable_config_value = self.variable_config_value.replace(match, str(self.real_variable_value))
+            v1, v2 = self.variable_config_value.split('/')
+            return int(v1) / int(v2)
         else:
             return self.real_variable_value

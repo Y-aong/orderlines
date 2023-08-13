@@ -21,7 +21,7 @@ Mode 2: Judging the running state of the process, success - Task A, failure - Ta
 
 from conf.config import OrderLinesConfig
 from orderlines.libraries.BaseTask import BaseTask
-from orderlines.running.module_check import CheckModule
+from orderlines.real_running.running_check import CheckModule
 from orderlines.utils.base_orderlines_type import ProcessControlParam, ProcessControlResult
 
 
@@ -143,7 +143,7 @@ class ProcessControl(BaseTask):
                 self._get_module(expression.get(condition_name))
                 return expression.get(condition_name).get('task_id')
 
-        raise AttributeError('can not find condition')
+        raise AttributeError('can not find condition.')
 
     def _parse_condition(self, condition_data: ProcessControlParam) -> bool:
         """解析条件"""

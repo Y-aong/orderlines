@@ -37,13 +37,10 @@ data = [
             "task_strategy": 'skip'
         },
         "task_module": "Test",
-        "result": [
-            {
-                "add_value": "${add_value}",
-                "variable_type": "int",
-                "variable_desc": "add函数的返回值"
-            }
-        ],
+        "result_config": {
+            "result_key": "add_value",
+            "variable_key": "${add_result}",
+        },
         "desc": None
     },
 
@@ -55,11 +52,11 @@ data = [
         "method_kwargs": {
             "conditions": [
                 {
-                    'A': [{'condition': 1, 'target': "${add_value}", 'sign': '='},
+                    'A': [{'condition': 1, 'target': "${add_result}", 'sign': '='},
                           {'condition': 1, 'target': 3, 'sign': '>'}]
                 },
                 {
-                    'B': [{'condition': 2, 'target': "${add_value}", 'sign': '<'},
+                    'B': [{'condition': 2, 'target': "${add_result}", 'sign': '<'},
                           {'condition': 3, 'target': 3, 'sign': '='}]
                 }
             ],
@@ -123,7 +120,16 @@ process_info = {
     "process_name": "test_process_return",
     "creator": "blue",
 }
+
+variable = [
+    {
+        "variable_key": "add_result",
+        "variable_type": "int",
+        "variable_desc": "add函数的返回值"
+    }
+]
+
 if __name__ == '__main__':
     orderlines = OrderLines()
     orderlines.clear_db()
-    orderlines.start(process_info=process_info, task_nodes=data)
+    orderlines.start(process_info=process_info, task_nodes=data, variable=variable)

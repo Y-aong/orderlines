@@ -46,13 +46,10 @@ data = [
             "a": 10,
             "b": 12
         },
-        "result": [
-            {
-                "subtraction_value": "${subtraction_value}+1",
-                "variable_type": "int",
-                "variable_desc": "subtraction函数的返回值"
-            }
-        ],
+        "result_config": {
+            "result_key": "subtraction_value",
+            "variable_key": "${add_result}",
+        },
         "task_config": None,
         "task_module": "Test",
         "desc": None
@@ -63,18 +60,15 @@ data = [
         "method_name": "test_subtraction",
         "task_type": "common",
         "method_kwargs": {
-            "a": "${subtraction_value}",
+            "a": "${add_result}",
             "b": 12
         },
         "prev_id": "1002",
         "next_id": "1005",
-        "result": [
-            {
-                "subtraction_value": "${return_value}",
-                "variable_type": "int",
-                "variable_desc": "subtraction函数的返回值"
-            }
-        ],
+        "result_config": {
+            "result_key": "subtraction_value",
+            "variable_key": "${subtraction_result}",
+        },
         "task_config": None,
         "task_module": "Test",
         "desc": None
@@ -98,8 +92,20 @@ process_info = {
     "creator": "blue",
     "updater": None,
 }
+variable = [
+    {
+        "variable_key": "subtraction_result",
+        "variable_type": "int",
+        "variable_desc": "减法的返回值"
+    },
+    {
+        "variable_key": "add_result",
+        "variable_type": "int",
+        "variable_desc": "加法的返回值"
+    }
+]
 
 if __name__ == '__main__':
     orderlines = OrderLines()
     orderlines.clear_db()
-    orderlines.start(process_info=process_info, task_nodes=data)
+    orderlines.start(process_info=process_info, task_nodes=data, variable=variable)

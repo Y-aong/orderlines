@@ -11,7 +11,7 @@
 """
 from pydantic import BaseModel
 
-from orderlines.utils.process_action_enum import TaskStatus
+from orderlines.utils.orderlines_enum import TaskStatus
 
 
 class BaseTask:

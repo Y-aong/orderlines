@@ -23,7 +23,7 @@ from orderlines.real_running.running_check import CheckModule
 from orderlines.real_running.running_strategy import RunningStrategy
 from orderlines.real_running.task_build import TaskBuild
 from orderlines.utils.exceptions import OrderLineRunningException, OrderLineStopException
-from orderlines.utils.process_action_enum import TaskStatus, ProcessStatus
+from orderlines.utils.orderlines_enum import TaskStatus, ProcessStatus
 from orderlines.utils.utils import get_method_param_annotation
 from public.logger import logger
 
@@ -37,7 +37,6 @@ class TaskRunner(threading.Thread):
         self.dry = dry
         self.process_name = self.context.get_process_item(process_instance_id, 'process_name')
         self.process_parse = ProcessParse(process_instance_id, context)
-        self.task_build = TaskBuild(process_instance_id, context)
         self.task_stock = self.process_parse.stock
         self.running_db_operator = self.process_parse.running_db_operator
         self.stop = False  # 是否停止
@@ -46,10 +45,16 @@ class TaskRunner(threading.Thread):
         self.logger = logger
         self.current_task_id = self.task_stock.top
         self.process_info = self.context.get_process_info(self.process_instance_id)
+        self.task_nodes = self.context.get_task_nodes(self.process_instance_id)
         self.running_db_operator.process_instance_insert(self.process_info, self.dry)
 
     def current_node(self):
-        return self.context.get_task_node(self.process_instance_id, self.current_task_id)
+        task_kwargs: dict = self.process_parse.task_kwargs(self.current_task_id)
+        task_config = self.process_parse.task_config(self.current_task_id)
+        current_task_node = self.context.get_task_node(self.process_instance_id, self.current_task_id)
+        current_task_node['task_kwargs'] = task_kwargs
+        current_task_node['task_config'] = task_config
+        return current_task_node
 
     def callback(self, task_status: str, result_or_error: dict) -> None:
         """
@@ -92,6 +97,7 @@ class TaskRunner(threading.Thread):
         while self.is_run and not self.stop:
             task_instance_id = self.running_db_operator.task_instance_insert(self.current_node(), self.dry)
             try:
+                # 解析变量，parse variable
                 task_status, result_or_error = await self.on_running(task_instance_id)
             except OrderLineStopException as error:
                 task_status, result_or_error = await self.on_stop(error, task_instance_id)
@@ -114,9 +120,8 @@ class TaskRunner(threading.Thread):
             if not self.paused:
                 # if process not paused get next
                 self.is_run = self.process_parse.parse()
-                self.current_task_id = self.task_stock.top
-            self.logger.info(f'current task id {self.current_task_id}, task result {result_or_error}\n '
-                             f'is run::{self.is_run}, stop::{self.stop}, paused::{self.paused}')
+            self.logger.info(f'current task id {self.current_task_id}, task result {result_or_error}')
+            self.current_task_id = self.task_stock.top
             await asyncio.sleep(sleep_time)
 
     async def on_running(self, task_instance_id: str) -> tuple:
@@ -131,7 +136,10 @@ class TaskRunner(threading.Thread):
         task_config = self.process_parse.task_config(self.current_task_id)
         task_timeout = task_config.get('timeout')
         async with async_timeout.timeout(task_timeout):
-            task = asyncio.create_task(self.task_build.build(self.current_task_id))
+            task_build = TaskBuild(self.process_instance_id, self.current_node())
+            task = asyncio.create_task(
+                task_build.build(self.current_task_id, self.process_info, self.task_nodes)
+            )
             await task
             # maybe this is result or error, you can judge by status
             result_or_error: dict = task.result()
@@ -185,16 +193,16 @@ class TaskRunner(threading.Thread):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}
             self.logger.error(f'current_task_id:{self.current_task_id}, run timeout \n{error_info}')
         else:
-            error_info = {'error_info': str(error)}
+            error_info = {'error_info': f'{error, traceback.format_exc()}'}
             self.logger.error(f'current_task_id:{self.current_task_id}, run error \n{error_info}')
-
+        task_build = TaskBuild(self.process_instance_id, self.current_node())
         running_strategy = RunningStrategy(
             process_instance_id=self.process_instance_id,
             context=self.context,
             current_task_id=self.current_task_id,
             process_parse=self.process_parse,
             error_info=error_info,
-            task_build=self.task_build
+            task_build=task_build
         )
         self.is_run, result_or_error, task_status = await running_strategy.handle_strategy()
 

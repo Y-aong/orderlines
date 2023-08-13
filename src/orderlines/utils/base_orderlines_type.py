@@ -141,3 +141,18 @@ class ProcessControlParam(BasePluginParam):
 
 class ProcessControlResult(BaseModel):
     task_id: str = Field(description=get_desc_by_lang('task_id'))
+
+
+class TaskResultConfigType(BaseModel):
+    """
+    {
+        "variable_name": "add_value",
+        "variable_value": "${add_value}+1",
+        "variable_type": "int",
+        "variable_desc": "add函数的返回值"
+    }
+    """
+    variable_key: str = Field(default=None, description=get_desc_by_lang('variable_name'))
+    variable_value: str = Field(default=None, description=get_desc_by_lang('variable_value'))
+    variable_type: str = Field(default=None, description=get_desc_by_lang('variable_type'))
+    variable_desc: str = Field(default=None, description=get_desc_by_lang('variable_desc'))

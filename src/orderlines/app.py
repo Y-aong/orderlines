@@ -13,8 +13,9 @@ from typing import List, Union
 
 from flask import Config
 
-from apis.orderlines.models import Process
+from apis.orderlines.models import Process, Variable, VariableInstance
 from apis.orderlines.schema.process_schema import ProcessRunningSchema
+from conf.config import OrderLinesConfig
 from orderlines.real_running.app_context import AppContext
 from orderlines.real_running.task_runner import TaskRunner
 
@@ -47,6 +48,12 @@ class OrderLines:
         self.session.query(Process).delete()
         self.session.commit()
 
+        self.session.query(Variable).delete()
+        self.session.commit()
+
+        self.session.query(VariableInstance).delete()
+        self.session.commit()
+
     def start_by_process_id(self, process_id: Union[int, str], dry):
         if isinstance(process_id, str):
             obj = self.session.query(Process).filter(Process.process_id == process_id).first()
@@ -67,13 +74,28 @@ class OrderLines:
             raise ValueError('file type is not support. orderlines is only support json or yaml')
         self.start_by_process_id(process_id, dry)
 
-    def start_by_dict(self, process_info: dict, task_nodes: List[dict], dry):
-        process_id = self.process_build.build_by_dict(process_info, task_nodes)
+    def start_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict], dry):
+        process_id = self.process_build.build_by_dict(process_info, task_nodes, variable)
         self.start_by_process_id(process_id, dry)
+
+    @property
+    def default_task_config(self):
+        task_config = dict()
+        task_config.setdefault('timeout', OrderLinesConfig.task_timeout)
+        task_config.setdefault('task_strategy', OrderLinesConfig.task_strategy)
+        task_config.setdefault('retry_time', OrderLinesConfig.retry_time)
+        task_config.setdefault('notice_type', OrderLinesConfig.notice_type)
+        task_config.setdefault('callback_func', OrderLinesConfig.callback_func)
+        task_config.setdefault('callback_module', OrderLinesConfig.callback_module)
+        return task_config
 
     def _start(self, process_info: dict, task_nodes: List[dict], dry):
         process_instance_id = str(uuid.uuid1().hex)
         process_info['process_instance_id'] = process_instance_id
+        for task_node in task_nodes:
+            if not task_node.get('method_kwargs'):
+                task_node['method_kwargs'] = {}
+            task_node['task_config'] = self.default_task_config
         process_instance_info = {'process_info': process_info, 'task_nodes': task_nodes}
         self.context.setdefault(process_instance_id, process_instance_info)
         t = TaskRunner(process_instance_id, self.context, dry)
@@ -85,6 +107,7 @@ class OrderLines:
             file_path: str = None,
             process_info: dict = None,
             task_nodes: List[dict] = None,
+            variable: List[dict] = None,
             dry: bool = False
     ) -> None:
         """
@@ -94,6 +117,7 @@ class OrderLines:
         @param file_path: start by file ,now only support json or yaml
         @param process_info: process info base process table info
         @param task_nodes: task node one process can have many task node
+        @param variable: process variable
         @param dry: True——not insert into db, False——insert into db
         @return:
         """
@@ -102,7 +126,7 @@ class OrderLines:
         elif file_path:
             self.start_by_file_path(file_path, dry)
         else:
-            self.start_by_dict(process_info, task_nodes, dry)
+            self.start_by_dict(process_info, task_nodes, variable, dry)
 
     def stop_process(self, process_instance_id: str):
         pass

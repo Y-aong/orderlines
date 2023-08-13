@@ -37,7 +37,8 @@ import gevent
 from conf.config import OrderLinesConfig
 from orderlines.libraries.BaseTask import BaseTask
 from orderlines.libraries.Group import GroupParam
-from orderlines.running.process_runner import ProcessRunner
+from orderlines.real_running.process_runner import ProcessRunner
+
 from orderlines.utils.base_orderlines_type import ParallelParam
 from orderlines.utils.parallel_util import ParallelUtils
 from orderlines.utils.utils import get_current_node

@@ -10,11 +10,23 @@
     Variable serialization class
 """
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow import fields
 
-from apis.orderlines.models.variable import VariableModel
+from apis.orderlines.models.variable import Variable
+from orderlines.utils.utils import get_variable_value
 
 
 class VariableSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = VariableModel
+        model = Variable
         exclude = ['active']
+
+
+class VariableInfoSchema(SQLAlchemyAutoSchema):
+    variable_key = fields.String()
+    variable_value = fields.Function(
+        serialize=lambda obj: get_variable_value(obj.variable_value, obj.variable_type)
+    )
+    variable_type = fields.String()
+    variable_desc = fields.String()
+    is_cache = fields.Boolean()

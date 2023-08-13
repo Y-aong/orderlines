@@ -19,7 +19,7 @@ from orderlines.real_running.base_runner import BaseRunner
 from orderlines.real_running.process_parse import ProcessParse
 from orderlines.real_running.task_build import TaskBuild
 from orderlines.utils.exceptions import OrderLineRunningException
-from orderlines.utils.process_action_enum import TaskStatus
+from orderlines.utils.orderlines_enum import TaskStatus
 
 
 class RunningStrategy(BaseRunner):
@@ -59,7 +59,9 @@ class RunningStrategy(BaseRunner):
             try:
                 self.logger.info(f'Start retry {time} times')
                 async with async_timeout.timeout(self.task_timeout):
-                    task = asyncio.create_task(self.task_build.build(self.current_task_id))
+                    task = asyncio.create_task(
+                        self.task_build.build(self.current_task_id, self.process_info, self.task_nodes)
+                    )
                     await task
                     task_result = task.result()
                     if task_result.get('status') == TaskStatus.green.value:
