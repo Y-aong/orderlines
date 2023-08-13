@@ -58,12 +58,12 @@ class BaseVariableStrategy(ABC):
                 VariableInstance.process_instance_id == self.process_instance_id,
                 VariableInstance.variable_key == variable_info.get('variable_key')
             ).update(process_instance_info)
-            logger.info(f'变量更新完成')
+            logger.info(f'variable instance update complete.')
         else:
             # todo handle is cache
             obj = VariableInstance(**variable_info)
             self.session.add(obj)
-            logger.info('变量插入完成')
+            logger.info('variable instance insert complete.')
         self.session.commit()
 
     def get_variable(self, process_instance_id: str, variable_key: str) -> Any:

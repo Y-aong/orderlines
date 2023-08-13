@@ -21,7 +21,6 @@ from orderlines.utils.exceptions import OrderlinesHasNoTaskType
 from orderlines.utils.orderlines_enum import TaskStatus
 from orderlines.utils.utils import get_method_param_annotation
 from orderlines.variable.variable_handler import VariableHandlerReal
-from public.logger import logger
 
 
 class TaskBuild:
@@ -83,9 +82,7 @@ class TaskBuild:
             raise OrderlinesHasNoTaskType(f'please check task type has no task type:{task_type}')
         task_kwargs, task_module, method_name = self.get_task_build_param()
         # 解析参数, parse task param
-        logger.info(f'before param ::{task_kwargs}')
         task_kwargs = variable_handler.variable_handle_params(task_type, task_kwargs)
-        logger.info(f'after param ::{task_kwargs}')
         if task_type in ['group', 'parallel', 'process_control']:
             task_kwargs['task_nodes'] = task_nodes
             task_kwargs['process_info'] = process_info
@@ -100,7 +97,6 @@ class TaskBuild:
             task_result = task_handler.handle(module, method_name, task_kwargs)
 
         assert isinstance(task_result, dict), 'The task return value must be a dictionary'
-        logger.info(f'parse return value {task_result}')
         # 解析返回值， parse return value
         task_result = variable_handler.variable_handle_result(
             task_type=task_type,
