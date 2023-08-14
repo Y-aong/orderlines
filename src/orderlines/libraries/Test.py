@@ -67,29 +67,26 @@ class Test(BaseTask):
         """乘法"""
         return {'multi_value': test_type.a * test_type.b}
 
-    def on_receive(self, param: BaseModel, task_name: str):
-        add_param = param.model_dump()
-        if task_name == 'test_add':
-            add_param['a'] = add_param.get('a') + 1
-            add_param['b'] = add_param.get('b') + 1
-            return TestParam(**add_param)
-        else:
-            add_param['a'] = 12
-            add_param['b'] = 13
-            return TestParam(**add_param)
-
-    def on_success(self, result: dict, task_name: str):
-        if task_name == 'test_add':
-            result['add_value'] = 108
-            return result
-        else:
-            return result
-
-    def on_failure(self, error: str, task_name: str):
-        if task_name == 'test_add':
-            return 'this is a add task error'
-        else:
-            return error
-
-
-
+    # def on_receive(self, param: BaseModel, task_name: str):
+    #     add_param = param.model_dump()
+    #     if task_name == 'test_add':
+    #         add_param['a'] = add_param.get('a') + 1
+    #         add_param['b'] = add_param.get('b') + 1
+    #         return TestParam(**add_param)
+    #     else:
+    #         add_param['a'] = 12
+    #         add_param['b'] = 13
+    #         return TestParam(**add_param)
+    #
+    # def on_success(self, result: dict, task_name: str):
+    #     if task_name == 'test_add':
+    #         result['add_value'] = 108
+    #         return result
+    #     else:
+    #         return result
+    #
+    # def on_failure(self, error: str, task_name: str):
+    #     if task_name == 'test_add':
+    #         return 'this is a add task error'
+    #     else:
+    #         return error

@@ -16,7 +16,7 @@ from werkzeug.exceptions import HTTPException
 
 class APIException(HTTPException):
     code = 500
-    msg = 'sorry, we make a mistakeO(∩_∩)O哈哈~'
+    msg = 'sorry, we make a mistake'
     error_code = 999
 
     def __init__(self, msg=None, code=None, error_code=None, herders=None):

@@ -46,7 +46,7 @@ from typing import List
 
 from conf.config import OrderLinesConfig
 from orderlines.libraries.BaseTask import BaseTask
-from orderlines.real_running.running_db_operator import RunningDBOperator
+from orderlines.task_running.running_db_operator import RunningDBOperator
 from orderlines.utils.base_orderlines_type import GroupParam, BaseProcessInfo
 from orderlines.utils.exceptions import OrderLineStopException, OrderLineRunningException
 from orderlines.utils.orderlines_enum import TaskStatus
@@ -79,7 +79,7 @@ class Group(BaseTask):
                 task_instance_id = self.run_db_operator.task_instance_insert(node)
                 print(f"group node {node}")
                 try:
-                    from orderlines.real_running.task_build import TaskBuild
+                    from orderlines.task_running.task_build import TaskBuild
                     task_build = TaskBuild(self.process_instance_id, node)
                     task_result = task_build.build_task(task_id, group_type.process_info, group_type.task_nodes)
                     logger.info(f'Task group result:{task_result}， task_id::{task_id}')

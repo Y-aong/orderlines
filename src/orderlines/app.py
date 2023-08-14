@@ -16,8 +16,8 @@ from flask import Config
 from apis.orderlines.models import Process, Variable, VariableInstance
 from apis.orderlines.schema.process_schema import ProcessRunningSchema
 from conf.config import OrderLinesConfig
-from orderlines.real_running.app_context import AppContext
-from orderlines.real_running.task_runner import TaskRunner
+from orderlines.task_running.app_context import AppContext
+from orderlines.task_running.task_runner import TaskRunner
 
 from orderlines.utils.process_build_adapter import ProcessBuildAdapter
 from public.base_model import get_session

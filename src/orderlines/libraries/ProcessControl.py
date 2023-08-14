@@ -21,7 +21,7 @@ Mode 2: Judging the running state of the process, success - Task A, failure - Ta
 
 from conf.config import OrderLinesConfig
 from orderlines.libraries.BaseTask import BaseTask
-from orderlines.real_running.running_check import CheckModule
+from orderlines.task_running.running_check import CheckModule
 from orderlines.utils.base_orderlines_type import ProcessControlParam, ProcessControlResult
 
 

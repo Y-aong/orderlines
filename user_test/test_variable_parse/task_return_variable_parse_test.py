@@ -9,7 +9,7 @@
 """
 import uuid
 
-from orderlines.variable.common_task_strategy import CommonTaskVariableStrategy
+from orderlines.variable.variable_handler import CommonTaskVariableStrategy
 
 
 def task_result_variable_parse():

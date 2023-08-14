@@ -11,7 +11,7 @@
     Schedule additions, deletions, corrections and checks
 """
 from apis.schedule_plan.models.schedule_plan_models import ApschedulerJobs
-from public.apscheduler_config import scheduler
+from public.apscheduler_utils.apscheduler_config import scheduler
 from public.base_model import get_session
 from public.logger import logger
 

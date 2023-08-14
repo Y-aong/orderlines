@@ -107,16 +107,15 @@ class BaseTarget(ABC):
             Variable.variable_key == temp.get('variable_key')
         ).first()
         if obj:
-            print(f'temp::{temp}')
             self.session.query(Variable).filter(
                 Variable.process_id == temp.get('process_id'),
                 Variable.variable_key == temp.get('variable_key')
             ).update(temp)
-            logger.info('变量修改成功')
+            logger.info('variable config update complete')
         else:
             obj = Variable(**temp)
             self.session.add(obj)
-            logger.info(f'变量创建成功')
+            logger.info(f'variable config insert complete')
         self.session.commit()
 
     def _build_variable(self, process_id: str, process_name: str, variables: List[dict]):

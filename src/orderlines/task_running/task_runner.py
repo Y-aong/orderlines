@@ -17,11 +17,11 @@ from typing import Any
 
 import async_timeout
 
-from orderlines.real_running.app_context import AppContext
-from orderlines.real_running.process_parse import ProcessParse
-from orderlines.real_running.running_check import CheckModule
-from orderlines.real_running.running_strategy import RunningStrategy
-from orderlines.real_running.task_build import TaskBuild
+from orderlines.task_running.app_context import AppContext
+from orderlines.task_running.process_parse import ProcessParse
+from orderlines.task_running.running_check import CheckModule
+from orderlines.task_running.running_strategy import RunningStrategy
+from orderlines.task_running.task_build import TaskBuild
 from orderlines.utils.exceptions import OrderLineRunningException, OrderLineStopException
 from orderlines.utils.orderlines_enum import TaskStatus, ProcessStatus
 from orderlines.utils.utils import get_method_param_annotation

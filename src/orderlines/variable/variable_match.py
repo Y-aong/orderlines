@@ -55,7 +55,8 @@ class VariableMatch:
         return match.replace('${', '').replace('}', '')
 
     def check_variable_name(self, variable_name: str) -> str:
+        """检查变量名称是否合规，check variable name is legal"""
         for temp in variable_name:
             if not temp.isalpha() and temp != '_':
-                raise VariableException(f'{self.variable_name}Incorrect setting, variables can only be letters and _')
+                raise VariableException(f'{self.variable_name} incorrect setting, variables can only be letters and _')
         return variable_name

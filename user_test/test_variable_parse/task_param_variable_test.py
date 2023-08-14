@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：测试任务参数解析
 """
-from orderlines.variable.common_task_strategy import CommonTaskVariableStrategy
+from orderlines.variable.variable_handler import CommonTaskVariableStrategy
 
 
 def task_param_variable_parse():
