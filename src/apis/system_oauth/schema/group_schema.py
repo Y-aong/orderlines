@@ -57,10 +57,8 @@ class SystemGroupSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = SystemGroup
-        exclude = ['active']
 
 
 class SystemGroupPermissionRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemGroupPermissionRelation
-        exclude = ['active']

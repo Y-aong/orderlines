@@ -13,6 +13,7 @@ from marshmallow import fields
 from marshmallow_sqlalchemy import auto_field, SQLAlchemyAutoSchema
 
 from apis.orderlines.models import Task, TaskInstance
+from public.custom_schema import CustomNested
 
 
 class TaskInstanceSchema(SQLAlchemyAutoSchema):
@@ -24,15 +25,13 @@ class TaskInstanceSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = TaskInstance
-        exclude = ['active']
 
 
 class TaskSchema(SQLAlchemyAutoSchema):
     insert_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     update_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     process_id = auto_field()
-    task_instance = fields.Nested(TaskInstanceSchema, many=True, dump_only=True)
+    task_instance = CustomNested(TaskInstanceSchema, many=True, dump_only=True)
 
     class Meta:
         model = Task
-        exclude = ['active']

@@ -77,7 +77,6 @@ class Group(BaseTask):
             assert task_type == 'common', 'The subtasks in a task group must be of the normal task type'
             if node.get('task_id') == task_id:
                 task_instance_id = self.run_db_operator.task_instance_insert(node)
-                print(f"group node {node}")
                 try:
                     from orderlines.task_running.task_build import TaskBuild
                     task_build = TaskBuild(self.process_instance_id, node)

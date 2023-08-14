@@ -17,4 +17,3 @@ from apis.system_oauth.models import SystemPermission
 class SystemPermissionSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemPermission
-        exclude = ['active']

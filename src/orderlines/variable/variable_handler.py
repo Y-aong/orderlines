@@ -10,9 +10,6 @@
 """
 from typing import List
 
-# from orderlines.variable.common_task_strategy import CommonTaskVariableStrategy
-# from orderlines.variable.process_control_strategy import ProcessControlVariableStrategy
-
 from orderlines.variable.variable_strategy import BaseVariableStrategy
 
 

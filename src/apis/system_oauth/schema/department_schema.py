@@ -9,16 +9,15 @@
     部门序列化类
     Departmental serialized class
 """
-from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.system_oauth.models import SystemDepartment
 from apis.system_oauth.schema.user_schema import SystemUserSchema
+from public.custom_schema import CustomNested
 
 
 class SystemDepartmentSchema(SQLAlchemyAutoSchema):
-    users = fields.Nested(SystemUserSchema, many=True, dump_only=True, only=('id', 'username'))
+    users = CustomNested(SystemUserSchema, many=True, dump_only=True, only=('id', 'username'))
 
     class Meta:
         model = SystemDepartment
-        exclude = ['active']

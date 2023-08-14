@@ -57,16 +57,13 @@ class SystemRoleSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = SystemRole
-        exclude = ['active']
 
 
 class SystemRolePermissionRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemRolePermissionRelation
-        exclude = ['active']
 
 
 class SystemUserRoleRelationSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SystemUserRoleRelation
-        exclude = ['active']

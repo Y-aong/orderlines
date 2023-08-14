@@ -50,7 +50,7 @@ class CommonHandler(AbstractHandler):
                 error = self.handle_on_failure(e, module, method_name)
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': f'error info {error} traceback {traceback.format_exc()}'
+                    'error_info': f'error info {error},\n traceback {traceback.format_exc()}'
                 }
         else:
             return super().handle(module, method_name, task_kwargs)
@@ -66,7 +66,7 @@ class ProcessControlHandler(AbstractHandler):
             except Exception as e:
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': f'error info {e} traceback {traceback.format_exc()}'
+                    'error_info': f'error info {e},\n traceback {traceback.format_exc()}'
                 }
         else:
             return super().handle(module, method_name, task_kwargs)
@@ -85,7 +85,7 @@ class GroupHandler(AbstractHandler):
             except Exception as e:
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': f'error info {e} traceback {traceback.format_exc()}'
+                    'error_info': f'error info {e},\n traceback {traceback.format_exc()}'
                 }
         else:
             return super().handle(module, method_name, task_kwargs)
@@ -105,8 +105,7 @@ class ParallelHandler(AbstractHandler):
             except Exception as e:
                 return {
                     'status': TaskStatus.red.value,
-                    'error_info': f'error info {e} traceback {traceback.format_exc()}'
-
+                    'error_info': f'error info {e},\n traceback {traceback.format_exc()}'
                 }
         else:
             return super().handle(module, method_name, task_kwargs)

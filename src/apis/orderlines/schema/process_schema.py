@@ -16,36 +16,35 @@ from marshmallow_sqlalchemy import auto_field, SQLAlchemyAutoSchema
 
 from apis.orderlines.models.process import Process, ProcessInstance
 from apis.orderlines.schema.task_schema import TaskInstanceSchema, TaskSchema
+from public.custom_schema import CustomNested
 
 
 class ProcessInstanceSchema(SQLAlchemyAutoSchema):
     process_id = auto_field()
-    task_instance = fields.Nested(TaskInstanceSchema, many=True, dump_only=True)
+    task_instance = CustomNested(TaskInstanceSchema, many=True, dump_only=True)
     start_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     end_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = ProcessInstance
-        exclude = ['active']
 
 
 class ProcessSchema(SQLAlchemyAutoSchema):
-    process_instance = fields.Nested(ProcessInstanceSchema, many=True, dump_only=True)
-    task = fields.Nested(TaskSchema, many=True, dump_only=True)
+    process_instance = CustomNested(ProcessInstanceSchema, many=True, dump_only=True)
+    task = CustomNested(TaskSchema, many=True, dump_only=True)
     insert_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
     update_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Process
-        exclude = ['active']
 
 
 class ProcessRunningSchema(SQLAlchemyAutoSchema):
-    task = fields.Nested(TaskSchema, many=True, dump_only=True)
+    task = CustomNested(TaskSchema, many=True, dump_only=True)
 
     class Meta:
         model = Process
-        exclude = ['active', 'id', 'update_time', 'insert_time']
+        exclude = ['id', 'update_time', 'insert_time']
 
 
 class ProcessInstanceExportSchema(SQLAlchemyAutoSchema):

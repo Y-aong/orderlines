@@ -12,7 +12,7 @@ import uuid
 from orderlines.variable.variable_handler import CommonTaskVariableStrategy
 
 
-def task_result_variable_parse():
+def test_task_result_variable_parse():
     variable_config = [
         {
             'variable_key': 'add_result',
@@ -33,6 +33,7 @@ def task_result_variable_parse():
     task_variable = CommonTaskVariableStrategy(process_instance_id)
     task_result = task_variable.handle_task_result(variable_config, task_result, node_result_config)
     print(task_result)
+    assert task_result.get('status') == 'SUCCESS'
 
 
-task_result_variable_parse()
+test_task_result_variable_parse()

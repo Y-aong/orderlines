@@ -19,7 +19,6 @@ from orderlines.utils.utils import get_variable_value
 class VariableSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Variable
-        exclude = ['active']
 
 
 class VariableInfoSchema(SQLAlchemyAutoSchema):

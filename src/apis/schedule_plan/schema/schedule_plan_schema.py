@@ -21,7 +21,6 @@ class IntervalPlanSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = IntervalPlan
-        exclude = ['active']
 
 
 class DatePlanSchema(SQLAlchemyAutoSchema):
@@ -29,7 +28,6 @@ class DatePlanSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = DatePlan
-        exclude = ['active']
 
 
 class CrontabPlanSchema(SQLAlchemyAutoSchema):
@@ -38,7 +36,6 @@ class CrontabPlanSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = CrontabPlan
-        exclude = ['active']
 
 
 class ApschedulerJobsSchema(SQLAlchemyAutoSchema):

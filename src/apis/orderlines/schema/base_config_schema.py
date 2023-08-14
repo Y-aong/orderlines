@@ -18,4 +18,3 @@ from apis.orderlines.models.base_config import BaseConfig
 class BaseConfigSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = BaseConfig
-        exclude = ['active']

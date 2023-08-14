@@ -10,7 +10,8 @@
 from orderlines.variable.variable_handler import CommonTaskVariableStrategy
 
 
-def task_param_variable_parse():
+def test_task_param_variable_parse():
+    # 需要替换process_instance_id
     process_instance_id = '477febc639a311ee836a001a7dda7111'
     task_kwargs = {
         "a": "${add_result}-1",
@@ -20,6 +21,4 @@ def task_param_variable_parse():
     task_variable = CommonTaskVariableStrategy(process_instance_id, )
     task_result = task_variable.handle_task_kwargs(task_kwargs)
     print(task_result)
-
-
-task_param_variable_parse()
+    assert task_result.get('status') == 'SUCCESS'

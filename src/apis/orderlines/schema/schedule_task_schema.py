@@ -25,7 +25,6 @@ class ScheduleTaskSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = ScheduleTask
-        exclude = ['active']
 
 
 class CreateScheduleTask(BaseModel):
