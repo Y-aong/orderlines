@@ -13,13 +13,15 @@ from typing import List, Union
 
 from flask import Config
 
-from apis.orderlines.models import Process, Variable, VariableInstance
-from apis.orderlines.schema.process_schema import ProcessRunningSchema
+from apis.orderlines.models import Process, Variable, VariableInstance, ProcessInstance
+from apis.orderlines.schema.process_schema import ProcessRunningSchema, ProcessInstanceSchema
 from conf.config import OrderLinesConfig
 from orderlines.task_running.app_context import AppContext
 from orderlines.task_running.task_runner import TaskRunner
 
 from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
+from orderlines.utils.orderlines_enum import ProcessStatus
+from public.apscheduler_utils.apscheduler_utils import ApschedulerUtils
 from public.base_model import get_session
 from public.logger import logger
 
@@ -128,20 +130,61 @@ class OrderLines:
         else:
             self.start_by_dict(process_info, task_nodes, variable, dry)
 
-    def stop_process(self, process_instance_id: str):
-        pass
+    def stop_process(self, process_instance_id: str, stop_schedule: bool = False):
+        """stop process"""
+        # todo check process
+        obj = self.session.query(ProcessInstance).filter(
+            ProcessInstance.process_instance_id == process_instance_id
+        ).first()
+        process_instance_info = ProcessInstanceSchema().dump(obj)
+        self.session.query(ProcessInstance).filter(
+            ProcessInstance.process_instance_id == process_instance_id
+        ).update(
+            {'process_status': ProcessStatus.yellow.value}
+        )
+        self.session.commit()
+        # stop schedule task
+        if stop_schedule:
+            ApschedulerUtils().paused_schedule_plan(process_instance_info.get('process_id'))
 
     def stop_all(self):
         pass
 
-    def paused_process(self, process_instance_id: str):
-        pass
+    def paused_process(self, process_instance_id: str, stop_schedule: bool = False):
+        """paused process"""
+        # todo check process
+        obj = self.session.query(ProcessInstance).filter(
+            ProcessInstance.process_instance_id == process_instance_id
+        ).first()
+        process_instance_info = ProcessInstanceSchema().dump(obj)
+        self.session.query(ProcessInstance).filter(
+            ProcessInstance.process_instance_id == process_instance_id
+        ).update(
+            {'process_status': ProcessStatus.purple.value}
+        )
+        self.session.commit()
+        # stop schedule task
+        if stop_schedule:
+            ApschedulerUtils().paused_schedule_plan(process_instance_info.get('process_id'))
 
     def paused_all(self):
         pass
 
-    def continue_process(self, process_instance_id: str):
-        pass
+    def recover_process(self, process_instance_id: str, recover_schedule: bool = False):
+        """recover process"""
+        # todo check process
+        obj = self.session.query(ProcessInstance).filter(
+            ProcessInstance.process_instance_id == process_instance_id
+        ).first()
+        process_instance_info = ProcessInstanceSchema().dump(obj)
+        self.session.query(ProcessInstance).filter(
+            ProcessInstance.process_instance_id == process_instance_id
+        ).update(
+            {'process_status': ProcessStatus.purple.value}
+        )
+        self.session.commit()
+        if recover_schedule:
+            ApschedulerUtils().recover_schedule_plan(process_instance_info.get('process_id'))
 
     def continue_all(self):
         pass

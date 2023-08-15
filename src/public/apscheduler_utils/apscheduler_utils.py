@@ -110,3 +110,11 @@ class ApschedulerUtils:
             scheduler.remove_job(job_id)
         else:
             raise ValueError(f'job id {job_id} not exist')
+
+    def paused_schedule_plan(self, job_id: str) -> None:
+        """暂停定时计划, paused schedule plan"""
+        pass
+
+    def recover_schedule_plan(self, job_id: str) -> None:
+        """恢复定时计划， recover schedule plan"""
+        pass

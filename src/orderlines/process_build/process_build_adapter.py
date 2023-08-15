@@ -152,7 +152,7 @@ class Adaptee:
             content = json.load(f)
         process_info = self.check_process_info(content.get('process_info'))
         task_nodes = self.check_task_nodes(content.get('task_nodes'))
-        variable = self.check_task_nodes(content.get('variable'))
+        variable = content.get('variable') or  [{}]
         return process_info, task_nodes, variable
 
     def adapter_yaml(self, file_path: str):

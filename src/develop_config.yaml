@@ -31,15 +31,15 @@ flask:
 email:
   # 是否发送邮件
   is_send: False
-  # 邮件配置
+  # 邮件配置--
   mail_host: "smtp.163.com"
-  mail_user: "***"
-  mail_pwd: "***"
+  mail_user: "15334927340"
+  mail_pwd: "TXFOQMKWMUAEQZLR"
   # 邮件发送方
-  sender: "***@163.com"
+  sender: "15334927340@163.com"
   # 邮件接受方
   receivers:
-    - "**@qq.com"
+    - "1627469727@qq.com"
 
 celery:
   enable_utc: False
