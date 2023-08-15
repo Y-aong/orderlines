@@ -14,7 +14,7 @@ from flask import request
 
 from flask_restful import Resource
 
-from orderlines.utils.process_build_adapter import ProcessBuildAdapter
+from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 from public.api_handle_exception import handle_api_error
 from public.base_response import generate_response
 

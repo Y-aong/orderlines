@@ -7,7 +7,7 @@
 # version    ：python 3.7
 # Description：根据yaml文件构建流程
 """
-from orderlines.utils.process_build_adapter import ProcessBuildAdapter
+from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 
 
 def build_process_by_yaml():

@@ -19,7 +19,7 @@ from conf.config import OrderLinesConfig
 from orderlines.task_running.app_context import AppContext
 from orderlines.task_running.task_runner import TaskRunner
 
-from orderlines.utils.process_build_adapter import ProcessBuildAdapter
+from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 from public.base_model import get_session
 from public.logger import logger
 
