@@ -25,5 +25,7 @@ class OrderLinesStartView(Resource):
     @handle_api_error
     def post(self):
         from tasks.orderlines_run import orderlines_run
-        orderlines_run.delay()
+
+        process_id = self.form_data.get('id') or self.form_data.get('process_id')
+        orderlines_run.delay(process_id=process_id)
         return generate_response(message='process begin run!')

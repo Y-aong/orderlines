@@ -9,7 +9,7 @@
 """
 
 from apis import create_app
-from public.apscheduler_utils.apscheduler_config import scheduler
+from public.schedule_utils.apscheduler_config import scheduler
 
 app = create_app()
 

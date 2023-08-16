@@ -14,7 +14,7 @@ from flask import request
 
 from apis.schedule_plan.models.schedule_plan_models import IntervalPlan, DatePlan, CrontabPlan
 from apis.schedule_plan.schema.schedule_plan_schema import DatePlanSchema, IntervalPlanSchema, CrontabPlanSchema
-from public.apscheduler_utils.apscheduler_utils import ApschedulerUtils
+from public.schedule_utils.apscheduler_utils import ApschedulerUtils
 from public.base_model import db
 from public.base_view import BaseView
 from public.logger import logger

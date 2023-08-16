@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*-
 
 """
-# File       : apscheduler_utils.py
+# File       : schedule_utils.py
 # Time       ：2023/6/29 10:58
 # Author     ：YangYong
 # version    ：python 3.10
@@ -11,7 +11,7 @@
     Schedule additions, deletions, corrections and checks
 """
 from apis.schedule_plan.models.schedule_plan_models import ApschedulerJobs
-from public.apscheduler_utils.apscheduler_config import scheduler
+from public.schedule_utils.apscheduler_config import scheduler
 from public.base_model import get_session
 from public.logger import logger
 

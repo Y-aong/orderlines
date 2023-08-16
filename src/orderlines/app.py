@@ -13,15 +13,16 @@ from typing import List, Union
 
 from flask import Config
 
-from apis.orderlines.models import Process, Variable, VariableInstance, ProcessInstance
+from apis.orderlines.models import Process, Variable, VariableInstance, ProcessInstance, BaseConfig
 from apis.orderlines.schema.process_schema import ProcessRunningSchema, ProcessInstanceSchema
 from conf.config import OrderLinesConfig
 from orderlines.task_running.app_context import AppContext
 from orderlines.task_running.task_runner import TaskRunner
 
 from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
+from orderlines.utils.exceptions import OrderLinesRunningException
 from orderlines.utils.orderlines_enum import ProcessStatus
-from public.apscheduler_utils.apscheduler_utils import ApschedulerUtils
+
 from public.base_model import get_session
 from public.logger import logger
 
@@ -132,11 +133,15 @@ class OrderLines:
 
     def stop_process(self, process_instance_id: str, stop_schedule: bool = False):
         """stop process"""
-        # todo check process
         obj = self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
         ).first()
         process_instance_info = ProcessInstanceSchema().dump(obj)
+        process_status = process_instance_info.get('process_status')
+        if process_status not in [ProcessStatus.grey.value, ProcessStatus.blue.value]:
+            raise OrderLinesRunningException(
+                f'process status is {process_status} not running or pending can not stop')
+
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
         ).update(
@@ -145,18 +150,20 @@ class OrderLines:
         self.session.commit()
         # stop schedule task
         if stop_schedule:
+            from public.schedule_utils.apscheduler_utils import ApschedulerUtils
             ApschedulerUtils().paused_schedule_plan(process_instance_info.get('process_id'))
-
-    def stop_all(self):
-        pass
 
     def paused_process(self, process_instance_id: str, stop_schedule: bool = False):
         """paused process"""
-        # todo check process
         obj = self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
         ).first()
         process_instance_info = ProcessInstanceSchema().dump(obj)
+        process_status = process_instance_info.get('process_status')
+        if process_status not in [ProcessStatus.grey.value, ProcessStatus.blue.value]:
+            raise OrderLinesRunningException(
+                f'process status is {process_status} not running or pending can not paused')
+
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
         ).update(
@@ -165,18 +172,19 @@ class OrderLines:
         self.session.commit()
         # stop schedule task
         if stop_schedule:
+            from public.schedule_utils.apscheduler_utils import ApschedulerUtils
             ApschedulerUtils().paused_schedule_plan(process_instance_info.get('process_id'))
-
-    def paused_all(self):
-        pass
 
     def recover_process(self, process_instance_id: str, recover_schedule: bool = False):
         """recover process"""
-        # todo check process
         obj = self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
         ).first()
         process_instance_info = ProcessInstanceSchema().dump(obj)
+        process_status = process_instance_info.get('process_status')
+        if process_status != ProcessStatus.purple.value:
+            raise OrderLinesRunningException(f'process status is {process_status} can not recover')
+
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
         ).update(
@@ -184,10 +192,19 @@ class OrderLines:
         )
         self.session.commit()
         if recover_schedule:
+            from public.schedule_utils.apscheduler_utils import ApschedulerUtils
             ApschedulerUtils().recover_schedule_plan(process_instance_info.get('process_id'))
 
-    def continue_all(self):
-        pass
+    def stop_all_schedule(self):
+        """stop all schedule task"""
+        self.session.query(BaseConfig).filter(
+            BaseConfig.config_name == 'stop_all_schedule'
+        ).update({'config_value': '1'})
+        self.session.commit()
 
-    def make_config(self):
-        pass
+    def recover_all_schedule(self):
+        """recover all schedule"""
+        self.session.query(BaseConfig).filter(
+            BaseConfig.config_name == 'stop_all_schedule'
+        ).update({'config_value': '0'})
+        self.session.commit()

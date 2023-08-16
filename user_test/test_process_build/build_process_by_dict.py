@@ -10,7 +10,7 @@
 from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 
 
-def build_process_by_dict():
+def test_build_process_by_dict():
     task_nodes = [
         {
             "task_id": "1001",
@@ -75,3 +75,6 @@ def build_process_by_dict():
     }
     process_build = ProcessBuildAdapter()
     process_build.build_by_dict(process_info, task_nodes)
+
+
+test_build_process_by_dict()

@@ -65,7 +65,7 @@ class RunningDBOperator:
                 'task_status': TaskStatus.green.value
             }
             for key, val in task_node.items():
-                if hasattr(TaskInstance, key):
+                if hasattr(TaskInstance, key) and key != 'id':
                     task_instance_info.setdefault(key, val)
             task_instance_info = TaskInstanceSchema().load(task_instance_info)
             obj = TaskInstance(**task_instance_info)
