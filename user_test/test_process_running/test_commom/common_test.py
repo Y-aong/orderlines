@@ -75,4 +75,4 @@ process_info = {
 if __name__ == "__main__":
     orderlines = OrderLines()
     orderlines.clear_db()
-    # orderlines.start(process_info=process_info, task_nodes=data, dry=False)
+    orderlines.start(process_info=process_info, task_nodes=data, dry=False)

@@ -4,7 +4,6 @@
     <title>report</title>
 
     <style>
-
         h1 {
             text-align: center;
             margin: 50px;
@@ -26,7 +25,7 @@
         .main {
             width: 90%;
             margin: 50px auto;
-            background: #fafafa;
+            background: #e3f0f7;
         }
 
         table {
@@ -40,7 +39,7 @@
         td {
             border: 1px solid #000000;
             text-align: center;
-            line-height:25px;
+            line-height: 25px;
         }
 
 
@@ -65,7 +64,7 @@
     <br>
     <p>流程状态：{{ process_status }}</p>
     <p>流程异常：{{ process_error_info }}</p>
-
+    <p>运行方式：{{ run_type }}</p>
     <p style="margin-bottom: 50px">流程描述：{{ process_desc }}</p>
 
     <h2>任务节点信息</h2>
@@ -84,19 +83,19 @@
         </tr>
 
         {% for item in items %}
-        <tr>
-            <td>{{ item.task_id }}</td>
-            <td>{{ item.task_name }}</td>
-            <td>{{ item.method_name }}</td>
-            <td>{{ item.method_kwargs }}</td>
-            <td>{{ item.task_result }}</td>
-            <td>{{ item.task_status }}</td>
-            <td>{{ item.task_error_info }}</td>
-            <td>{{ item.task_module }}</td>
-            <td>{{ item.module_version }}</td>
-            <td>{{ item.task_desc }}</td>
-        </tr>
-        {% endfor%}
+            <tr>
+                <td>{{ item.task_id }}</td>
+                <td>{{ item.task_name }}</td>
+                <td>{{ item.method_name }}</td>
+                <td>{{ item.method_kwargs }}</td>
+                <td>{{ item.task_result }}</td>
+                <td>{{ item.task_status }}</td>
+                <td>{{ item.task_error_info }}</td>
+                <td>{{ item.task_module }}</td>
+                <td>{{ item.module_version }}</td>
+                <td>{{ item.task_desc }}</td>
+            </tr>
+        {% endfor %}
     </table>
 
 </div>

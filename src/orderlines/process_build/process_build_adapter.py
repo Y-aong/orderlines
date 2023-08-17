@@ -139,6 +139,7 @@ class Adaptee:
         return process_info
 
     def check_task_nodes(self, task_nodes: List[dict]):
+        """检查节点数据"""
         for task_node in task_nodes:
             task_name = task_node.get('task_name')
             if task_node.get('task_type') not in self.task_types:

@@ -57,7 +57,7 @@ class OrderLines:
         self.session.query(VariableInstance).delete()
         self.session.commit()
 
-    def start_by_process_id(self, process_id: Union[int, str], dry):
+    def start_by_process_id(self, process_id: Union[int, str], dry, run_type):
         if isinstance(process_id, str):
             obj = self.session.query(Process).filter(Process.process_id == process_id).first()
         elif isinstance(process_id, int):
@@ -66,20 +66,20 @@ class OrderLines:
             raise ValueError(f'process id {process_id} type is not support. process id is only support int or str')
         process_info = ProcessRunningSchema().dump(obj)
         task_nodes = process_info.pop('task')
-        self._start(process_info, task_nodes, dry)
+        self._start(process_info, task_nodes, dry, run_type)
 
-    def start_by_file_path(self, file_path: str, dry):
+    def start_by_file_path(self, file_path: str, dry, run_type):
         if file_path.endswith('json'):
             process_id = self.process_build.build_by_json(file_path)
         elif file_path.endswith('yaml'):
             process_id = self.process_build.build_by_yaml(file_path)
         else:
             raise ValueError('file type is not support. orderlines is only support json or yaml')
-        self.start_by_process_id(process_id, dry)
+        self.start_by_process_id(process_id, dry, run_type)
 
-    def start_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict], dry):
+    def start_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict], dry, run_type):
         process_id = self.process_build.build_by_dict(process_info, task_nodes, variable)
-        self.start_by_process_id(process_id, dry)
+        self.start_by_process_id(process_id, dry, run_type)
 
     @property
     def default_task_config(self):
@@ -92,9 +92,10 @@ class OrderLines:
         task_config.setdefault('callback_module', OrderLinesConfig.callback_module)
         return task_config
 
-    def _start(self, process_info: dict, task_nodes: List[dict], dry):
+    def _start(self, process_info: dict, task_nodes: List[dict], dry, run_type):
         process_instance_id = str(uuid.uuid1().hex)
         process_info['process_instance_id'] = process_instance_id
+        process_info['run_type'] = run_type
         for task_node in task_nodes:
             if not task_node.get('method_kwargs'):
                 task_node['method_kwargs'] = {}
@@ -111,7 +112,8 @@ class OrderLines:
             process_info: dict = None,
             task_nodes: List[dict] = None,
             variable: List[dict] = None,
-            dry: bool = False
+            dry: bool = False,
+            run_type: str = 'trigger'
     ) -> None:
         """
         启动流程
@@ -122,14 +124,15 @@ class OrderLines:
         @param task_nodes: task node one process can have many task node
         @param variable: process variable
         @param dry: True——not insert into db, False——insert into db
+        @param run_type: schedule or trigger
         @return:
         """
         if process_id:
-            self.start_by_process_id(process_id, dry)
+            self.start_by_process_id(process_id, dry, run_type)
         elif file_path:
-            self.start_by_file_path(file_path, dry)
+            self.start_by_file_path(file_path, dry, run_type)
         else:
-            self.start_by_dict(process_info, task_nodes, variable, dry)
+            self.start_by_dict(process_info, task_nodes, variable, dry, run_type)
 
     def stop_process(self, process_instance_id: str, stop_schedule: bool = False):
         """stop process"""
@@ -144,9 +147,8 @@ class OrderLines:
 
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
-        ).update(
-            {'process_status': ProcessStatus.yellow.value}
-        )
+        ).update({'process_status': ProcessStatus.yellow.value})
+
         self.session.commit()
         # stop schedule task
         if stop_schedule:
@@ -166,9 +168,7 @@ class OrderLines:
 
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
-        ).update(
-            {'process_status': ProcessStatus.purple.value}
-        )
+        ).update({'process_status': ProcessStatus.purple.value})
         self.session.commit()
         # stop schedule task
         if stop_schedule:
@@ -187,9 +187,7 @@ class OrderLines:
 
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
-        ).update(
-            {'process_status': ProcessStatus.purple.value}
-        )
+        ).update({'process_status': ProcessStatus.purple.value})
         self.session.commit()
         if recover_schedule:
             from public.schedule_utils.apscheduler_utils import ApschedulerUtils
