@@ -13,7 +13,7 @@ from celery import Celery
 from flask import Flask
 
 from public.api_utils.orderlines_plugin import OrderlinesPlugHelper
-from public.api_utils.url_path_plugin import UrlPathPlugin
+from public.api_utils.default_config_plugin import DefaultConfig
 from public.api_utils.web_hook import WebHook
 
 celery = Celery(__name__)
@@ -21,8 +21,8 @@ celery.config_from_object('tasks.celery_config')
 
 
 def _register_plugin(app):
-    url_plugin = UrlPathPlugin()
-    url_plugin.init_app(app)
+    default_config = DefaultConfig()
+    default_config.init_app(app)
     OrderlinesPlugHelper().init_plugin()
 
 

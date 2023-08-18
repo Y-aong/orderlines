@@ -41,6 +41,9 @@ class UserView(BaseView):
                     db.session.commit()
 
         elif request.method == 'DELETE':
-            db.session.query(SystemUserRoleRelation).filter(SystemUserRoleRelation.user_id == self.table_id).delete()
-            db.session.query(SystemUserGroupRelation).filter(SystemUserRoleRelation.user_id == self.table_id).delete()
+            db.session.query(SystemUserRoleRelation).filter(
+                SystemUserRoleRelation.user_id == self.table_id).update({'active': 0})
+
+            db.session.query(SystemUserGroupRelation).filter(
+                SystemUserRoleRelation.user_id == self.table_id).update({'active': 0})
             db.session.commit()

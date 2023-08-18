@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : url_path_plugin.py
+# File       : default_config_plugin.py
 # Time       ：2023/7/19 21:52
 # Author     ：Y-aong
 # version    ：python 3.7
@@ -15,7 +15,7 @@ from apis.system_oauth.models import SystemPermission
 from public.base_model import get_session
 
 
-class UrlPathPlugin:
+class DefaultConfig:
     def __init__(self, app=None):
         if app is not None:
             self.init_app(app)
@@ -65,3 +65,10 @@ class UrlPathPlugin:
         Create a default super administrator
         """
         pass
+
+    def create_default_config(self):
+        """
+        创建orderlines默认配置
+        create orderlines default config
+        @return:
+        """

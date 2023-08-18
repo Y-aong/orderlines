@@ -35,6 +35,5 @@ class GroupView(BaseView):
 
         elif request.method == 'DELETE':
             with db.auto_commit():
-                db.session.query(
-                    SystemGroupPermissionRelation
-                ).filter(SystemGroupPermissionRelation.group_id == self.table_id).delete()
+                db.session.query(SystemGroupPermissionRelation).filter(
+                    SystemGroupPermissionRelation.group_id == self.table_id).update({'active': 0})

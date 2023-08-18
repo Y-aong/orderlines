@@ -35,6 +35,5 @@ class RoleView(BaseView):
 
         elif request.method == 'DELETE':
             with db.auto_commit():
-                db.session.query(
-                    SystemRolePermissionRelation
-                ).filter(SystemRolePermissionRelation.role_id == self.table_id).delete()
+                db.session.query(SystemRolePermissionRelation).filter(
+                    SystemRolePermissionRelation.role_id == self.table_id).update({'active': 0})
