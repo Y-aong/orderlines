@@ -9,9 +9,9 @@
     apscheduler配置信息
     apscheduler Configuration information
 """
-from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 from conf.config import FlaskConfig
 
@@ -29,7 +29,7 @@ job_defaults = {
     'max_instances': 3
 }
 
-scheduler = BackgroundScheduler(
+scheduler = BlockingScheduler(
     jobstores=job_stores,
     executors=executors,
     job_defaults=job_defaults,

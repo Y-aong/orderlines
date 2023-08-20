@@ -25,7 +25,7 @@
         .main {
             width: 90%;
             margin: 50px auto;
-            background: #343b47;
+            background: #eceff3;
         }
 
         table {
@@ -74,6 +74,7 @@
             <th style="width: 5%">任务名称</th>
             <th style="width: 5%">函数名称</th>
             <th style="width: 15%">任务参数</th>
+            <th style="width: 15%">任务配置</th>
             <th style="width: 10%">任务结果</th>
             <th style="width: 5%">任务状态</th>
             <th style="width: 5%">任务异常</th>
@@ -88,6 +89,7 @@
                 <td>{{ item.task_name }}</td>
                 <td>{{ item.method_name }}</td>
                 <td>{{ item.method_kwargs }}</td>
+                <td>{{ item.task_config }}</td>
                 <td>{{ item.task_result }}</td>
                 <td>{{ item.task_status }}</td>
                 <td>{{ item.task_error_info }}</td>

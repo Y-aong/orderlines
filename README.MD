@@ -344,3 +344,4 @@ celery -A celery_worker.celery beat -l info
 - 启动流程 `http://127.0.0.1:5000/orderlines_start` POST `{"process_id":"1001"}`
 
 ### 具体详细文档后续陆续更新
+pip install --editable .

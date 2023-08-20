@@ -9,10 +9,7 @@
 """
 
 from apis import create_app
-from public.schedule_utils.apscheduler_config import scheduler
-
-app = create_app()
 
 if __name__ == '__main__':
-    scheduler.start()
+    app = create_app()
     app.run(host='0.0.0.0', port=15900)

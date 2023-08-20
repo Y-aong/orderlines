@@ -117,7 +117,7 @@ def runserver(host, port):
 
 
 @cli.command()
-def run_schedule():
+def schedule():
     """start schedule plan."""
     scheduler.start()
 
