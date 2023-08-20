@@ -1,12 +1,14 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : build_process_by_dict.py
+# File       : test_build_process_by_dict.py
 # Time       ：2023/7/30 15:40
 # Author     ：Y-aong
 # version    ：python 3.7
 # Description：通过dict构建流程
 """
+import pytest
+
 from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 
 
@@ -22,6 +24,7 @@ def test_build_process_by_dict():
             "next_id": "1002",
             "task_config": None,
             "task_module": "BuiltIn",
+            "module_version": "1.0.0.1",
             "desc": None
         },
         {
@@ -37,6 +40,7 @@ def test_build_process_by_dict():
             "next_id": "1003",
             "task_config": None,
             "task_module": "Test",
+            "module_version": "1.0.0.1",
             "desc": None
         },
         {
@@ -52,6 +56,7 @@ def test_build_process_by_dict():
             "next_id": "1004",
             "task_config": None,
             "task_module": "Test",
+            "module_version": "1.0.0.1",
             "desc": None
         },
         {
@@ -64,6 +69,7 @@ def test_build_process_by_dict():
             "next_id": None,
             "task_config": None,
             "task_module": "BuiltIn",
+            "module_version": "1.0.0.1",
             "desc": None
         }
     ]
@@ -74,7 +80,9 @@ def test_build_process_by_dict():
         "updater": None,
     }
     process_build = ProcessBuildAdapter()
-    process_build.build_by_dict(process_info, task_nodes)
+    process_id = process_build.build_by_dict(process_info, task_nodes, clear_db=True)
+    assert process_id
 
 
-test_build_process_by_dict()
+if __name__ == '__main__':
+    pytest.main()

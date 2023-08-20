@@ -36,7 +36,8 @@ class OrderLines:
         self.context = AppContext()
         self.logger = logger
 
-    def clear_db(self):
+    def _clear_db(self):
+        """clear db only test"""
         from apis.orderlines.models import Process, ProcessInstance, Task, TaskInstance
 
         self.session.query(TaskInstance).delete()
@@ -81,9 +82,8 @@ class OrderLines:
         process_id = self.process_build.build_by_dict(process_info, task_nodes, variable)
         self.start_by_process_id(process_id, dry, run_type)
 
-    @property
-    def default_task_config(self):
-        task_config = dict()
+    @staticmethod
+    def default_task_config(task_config):
         task_config.setdefault('timeout', OrderLinesConfig.task_timeout)
         task_config.setdefault('task_strategy', OrderLinesConfig.task_strategy)
         task_config.setdefault('retry_time', OrderLinesConfig.retry_time)
@@ -94,12 +94,14 @@ class OrderLines:
 
     def _start(self, process_info: dict, task_nodes: List[dict], dry, run_type):
         process_instance_id = str(uuid.uuid1().hex)
+        logger.info(f'process_instance_id::{process_instance_id}')
         process_info['process_instance_id'] = process_instance_id
         process_info['run_type'] = run_type
         for task_node in task_nodes:
             if not task_node.get('method_kwargs'):
                 task_node['method_kwargs'] = {}
-            task_node['task_config'] = self.default_task_config
+            task_config = task_node['task_config'] or {}
+            task_node['task_config'] = self.default_task_config(task_config)
         process_instance_info = {'process_info': process_info, 'task_nodes': task_nodes}
         self.context.setdefault(process_instance_id, process_instance_info)
         t = TaskRunner(process_instance_id, self.context, dry)
@@ -113,7 +115,8 @@ class OrderLines:
             task_nodes: List[dict] = None,
             variable: List[dict] = None,
             dry: bool = False,
-            run_type: str = 'trigger'
+            run_type: str = 'trigger',
+            clear_db: bool = False
     ) -> None:
         """
         启动流程
@@ -125,8 +128,11 @@ class OrderLines:
         @param variable: process variable
         @param dry: True——not insert into db, False——insert into db
         @param run_type: schedule or trigger
+        @param clear_db: only test, if True will clear process ,process instance, task, task_instance
         @return:
         """
+        if clear_db:
+            self._clear_db()
         if process_id:
             self.start_by_process_id(process_id, dry, run_type)
         elif file_path:
@@ -137,8 +143,8 @@ class OrderLines:
     def stop_process(self, process_instance_id: str, stop_schedule: bool = False):
         """stop process"""
         obj = self.session.query(ProcessInstance).filter(
-            ProcessInstance.process_instance_id == process_instance_id
-        ).first()
+            ProcessInstance.process_instance_id == process_instance_id).first()
+
         process_instance_info = ProcessInstanceSchema().dump(obj)
         process_status = process_instance_info.get('process_status')
         if process_status not in [ProcessStatus.grey.value, ProcessStatus.blue.value]:
@@ -148,8 +154,8 @@ class OrderLines:
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
         ).update({'process_status': ProcessStatus.yellow.value})
-
         self.session.commit()
+
         # stop schedule task
         if stop_schedule:
             from public.schedule_utils.apscheduler_utils import ApschedulerUtils
@@ -158,8 +164,8 @@ class OrderLines:
     def paused_process(self, process_instance_id: str, stop_schedule: bool = False):
         """paused process"""
         obj = self.session.query(ProcessInstance).filter(
-            ProcessInstance.process_instance_id == process_instance_id
-        ).first()
+            ProcessInstance.process_instance_id == process_instance_id).first()
+
         process_instance_info = ProcessInstanceSchema().dump(obj)
         process_status = process_instance_info.get('process_status')
         if process_status not in [ProcessStatus.grey.value, ProcessStatus.blue.value]:
@@ -170,6 +176,7 @@ class OrderLines:
             ProcessInstance.process_instance_id == process_instance_id
         ).update({'process_status': ProcessStatus.purple.value})
         self.session.commit()
+
         # stop schedule task
         if stop_schedule:
             from public.schedule_utils.apscheduler_utils import ApschedulerUtils
@@ -178,8 +185,8 @@ class OrderLines:
     def recover_process(self, process_instance_id: str, recover_schedule: bool = False):
         """recover process"""
         obj = self.session.query(ProcessInstance).filter(
-            ProcessInstance.process_instance_id == process_instance_id
-        ).first()
+            ProcessInstance.process_instance_id == process_instance_id).first()
+
         process_instance_info = ProcessInstanceSchema().dump(obj)
         process_status = process_instance_info.get('process_status')
         if process_status != ProcessStatus.purple.value:
@@ -187,7 +194,7 @@ class OrderLines:
 
         self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == process_instance_id
-        ).update({'process_status': ProcessStatus.purple.value})
+        ).update({'process_status': ProcessStatus.blue.value})
         self.session.commit()
         if recover_schedule:
             from public.schedule_utils.apscheduler_utils import ApschedulerUtils

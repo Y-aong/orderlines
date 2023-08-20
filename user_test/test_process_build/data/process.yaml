@@ -14,6 +14,7 @@ task_nodes:
   task_module: BuiltIn
   task_name: 开始节点
   task_type: start
+  module_version: "1.0.0.1"
 - desc: null
   method_kwargs:
     a: 1
@@ -25,6 +26,7 @@ task_nodes:
     task_strategy: raise
   task_id: '1002'
   task_module: Test
+  module_version: "1.0.0.1"
   task_name: 加法
   task_type: common
 - desc: null
@@ -37,6 +39,7 @@ task_nodes:
   task_config: null
   task_id: '1003'
   task_module: Test
+  module_version: "1.0.0.1"
   task_name: 减法
   task_type: common
 - desc: null
@@ -47,5 +50,6 @@ task_nodes:
   task_config: null
   task_id: '1004'
   task_module: BuiltIn
+  module_version: "1.0.0.1"
   task_name: 结束节点
   task_type: end

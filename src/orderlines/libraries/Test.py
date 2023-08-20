@@ -56,37 +56,39 @@ class Test(BaseTask):
 
     def test_add(self, test_type: TestParam) -> AddResult:
         """加法"""
-        time.sleep(3)
+        time.sleep(1)
         return {'add_value': test_type.a + test_type.b}
 
     def test_subtraction(self, test_type: TestParam) -> SubtractionResult:
         """减法"""
+        time.sleep(1)
         return {'subtraction_value': test_type.a - test_type.b}
 
     def test_multi(self, test_type: TestParam) -> MultiResult:
         """乘法"""
+        time.sleep(1)
         return {'multi_value': test_type.a * test_type.b}
 
-    # def on_receive(self, param: BaseModel, task_name: str):
-    #     add_param = param.model_dump()
-    #     if task_name == 'test_add':
-    #         add_param['a'] = add_param.get('a') + 1
-    #         add_param['b'] = add_param.get('b') + 1
-    #         return TestParam(**add_param)
-    #     else:
-    #         add_param['a'] = 12
-    #         add_param['b'] = 13
-    #         return TestParam(**add_param)
-    #
-    # def on_success(self, result: dict, task_name: str):
-    #     if task_name == 'test_add':
-    #         result['add_value'] = 108
-    #         return result
-    #     else:
-    #         return result
-    #
-    # def on_failure(self, error: str, task_name: str):
-    #     if task_name == 'test_add':
-    #         return 'this is a add task error'
-    #     else:
-    #         return error
+    def on_receive(self, param: BaseModel, task_name: str):
+        add_param = param.model_dump()
+        if task_name == 'test_add':
+            add_param['a'] = add_param.get('a') + 1
+            add_param['b'] = add_param.get('b') + 1
+            return TestParam(**add_param)
+        else:
+            add_param['a'] = 12
+            add_param['b'] = 13
+            return TestParam(**add_param)
+
+    def on_success(self, result: dict, task_name: str):
+        if task_name == 'test_add':
+            result['add_value'] = 108
+            return result
+        else:
+            return result
+
+    def on_failure(self, error: str, task_name: str):
+        if task_name == 'test_add':
+            return 'this is a add task error'
+        else:
+            return error

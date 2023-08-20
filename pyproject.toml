@@ -1,0 +1,50 @@
+[project]
+name = "orderlines"
+version = "1.1.0"
+description = "python workflow"
+requires-python = ">=3.7"
+dependencies = [
+    "APScheduler==3.10.1",
+    "beautifulsoup4==4.12.2",
+    "celery==5.0.5",
+    "email-validator==1.2.1",
+    "Flask==1.1.4",
+    "Flask-HTTPAuth==4.6.0",
+    "flask-marshmallow==0.14.0",
+    "Flask-Migrate==2.7.0",
+    "Flask-RESTful==0.3.9",
+    "Flask-Script==2.0.6",
+    "Flask-SQLAlchemy==2.5.1",
+    "flask-unittest==0.1.2",
+    "gevent==22.10.2",
+    "pandas==2.0.3",
+    "pydantic==2.0.3",
+    "PyJWT==2.3.0",
+    "PyMySQL==1.0.2",
+    "pytz==2022.7.1",
+    "PyYAML==6.0",
+    "redis==4.4.2",
+    "requests==2.28.2"
+]
+authors = [{ name = "Yong Yang", email = "1627469727@qq.com" }]
+readme = "README.md"
+
+[project.scripts]
+orderlines = "cli:cli"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "orderlines"
+
+# 需要打包的数据
+[tool.flit.sdist]
+include = [
+    "data/",
+    "DockerFile/",
+    "docs/",
+    "user_test/",
+    "requirements.txt",
+]

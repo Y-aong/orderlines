@@ -95,19 +95,22 @@ class TaskRunner(threading.Thread):
         self.running_db_operator.process_instance_update(process_status=ProcessStatus.blue.value)
 
         while self.is_run and not self.stop:
-            task_instance_id = self.running_db_operator.task_instance_insert(self.current_node(), self.dry)
-            try:
-                # 解析变量，parse variable
-                task_status, result_or_error = await self.on_running(task_instance_id)
-            except OrderLineStopException as error:
-                task_status, result_or_error = await self.on_stop(error, task_instance_id)
-            except Exception as error:
-                task_status, result_or_error = await self.on_failure(error, task_instance_id)
+            if not self.paused:
+                task_instance_id = self.running_db_operator.task_instance_insert(self.current_node(), self.dry)
+                try:
+                    # 解析变量，parse variable
+                    task_status, result_or_error = await self.on_running(task_instance_id)
+                except OrderLineStopException as error:
+                    task_status, result_or_error = await self.on_stop(error, task_instance_id)
+                except Exception as error:
+                    task_status, result_or_error = await self.on_failure(error, task_instance_id)
 
-            if task_status != TaskStatus.green.value:
-                self.callback(task_status, result_or_error)
+                if task_status != TaskStatus.green.value:
+                    self.callback(task_status, result_or_error)
+                self.logger.info(f'current task id {self.current_task_id}, task result {result_or_error}')
 
-            self.stop, self.paused = self.running_db_operator.process_instance_is_stop_or_paused()
+            self.stop, self.paused = self.running_db_operator.process_instance_is_stop_or_paused(self.dry)
+
             if self.stop:
                 self.logger.info(f'process name {self.process_name} is stop')
                 break
@@ -120,7 +123,7 @@ class TaskRunner(threading.Thread):
             if not self.paused:
                 # if process not paused get next
                 self.is_run = self.process_parse.parse()
-            self.logger.info(f'current task id {self.current_task_id}, task result {result_or_error}')
+
             self.current_task_id = self.task_stock.top
             await asyncio.sleep(sleep_time)
 
@@ -133,6 +136,8 @@ class TaskRunner(threading.Thread):
             task_status: 任务状态
             result_or_error: 异常信息or任务结果
         """
+        if self.paused:
+            return TaskStatus.green.value, ''
         task_config = self.process_parse.task_config(self.current_task_id)
         task_timeout = task_config.get('timeout')
         async with async_timeout.timeout(task_timeout):

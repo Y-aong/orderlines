@@ -99,7 +99,7 @@ class SystemRole(Base):
 class SystemUserRoleRelation(Base):
     __tablename__ = 'system_user_role_relation'
 
-    user_id = db.Column(db.Integer, comment='userid')
+    user_id = db.Column(db.Integer, comment='user id')
     role_id = db.Column(db.Integer, comment='role id')
 
 

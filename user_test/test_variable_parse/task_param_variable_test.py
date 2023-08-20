@@ -20,5 +20,8 @@ def test_task_param_variable_parse():
 
     task_variable = CommonTaskVariableStrategy(process_instance_id, )
     task_result = task_variable.handle_task_kwargs(task_kwargs)
-    print(task_result)
     assert task_result.get('status') == 'SUCCESS'
+
+
+if __name__ == '__main__':
+    test_task_param_variable_parse()

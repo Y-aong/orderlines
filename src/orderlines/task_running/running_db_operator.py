@@ -29,7 +29,9 @@ class RunningDBOperator:
 
     def process_instance_insert(self, process_info: dict, dry=False) -> None:
         if not dry:
-            process_instance_info = dict()
+            process_instance_info = {
+                'process_status': ProcessStatus.grey.value
+            }
             for key, val in process_info.items():
                 if hasattr(ProcessInstance, key):
                     process_instance_info.setdefault(key, val)
@@ -51,9 +53,9 @@ class RunningDBOperator:
             }
             if process_status in ['SUCCESS', 'FAILURE', 'STOP']:
                 process_instance_info['end_time'] = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
-                self.session.query(ProcessInstance).filter(
-                    ProcessInstance.process_instance_id == self.process_instance_id).update(process_instance_info)
-                self.session.commit()
+            self.session.query(ProcessInstance).filter(
+                ProcessInstance.process_instance_id == self.process_instance_id).update(process_instance_info)
+            self.session.commit()
 
     def task_instance_insert(self, task_node: dict, dry=False) -> str:
         if not dry:
@@ -98,6 +100,7 @@ class RunningDBOperator:
             return False, False
         obj = self.session.query(ProcessInstance).filter(
             ProcessInstance.process_instance_id == self.process_instance_id).first()
+        self.session.commit()
         instance = ProcessInstanceSchema().dump(obj)
-        instance_status = instance.get('status')
+        instance_status = instance.get('process_status')
         return instance_status == ProcessStatus.yellow.value, instance_status == ProcessStatus.purple.value

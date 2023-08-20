@@ -12,7 +12,10 @@ from flask_restful import Api
 
 from apis.orderlines.views import TaskView, TaskInstanceView, ProcessView, ProcessInstanceView
 from apis.orderlines.views.orderlines_build_view import ProcessBuildView
+from apis.orderlines.views.orderlines_recover_view import OrderlinesRecoverView
+from apis.orderlines.views.orderlines_paused_view import OrderlinesPausedView
 from apis.orderlines.views.orderlines_start_view import OrderLinesStartView
+from apis.orderlines.views.orderlines_stop_view import OrderlinesStopView
 from apis.orderlines.views.plugin_info_view import PluginInfoView
 from apis.orderlines.views.process_instance_view import ProcessInstanceReportView, ProcessInstanceExcelReportView, \
     ProcessInstanceHtmlReportView
@@ -27,6 +30,9 @@ order_line_api.add_resource(ProcessView, ProcessView.url)
 order_line_api.add_resource(ProcessInstanceView, ProcessInstanceView.url)
 order_line_api.add_resource(ProcessBuildView, ProcessBuildView.url)
 order_line_api.add_resource(OrderLinesStartView, OrderLinesStartView.url)
+order_line_api.add_resource(OrderlinesStopView, OrderlinesStopView.url)
+order_line_api.add_resource(OrderlinesPausedView, OrderlinesPausedView.url)
+order_line_api.add_resource(OrderlinesRecoverView, OrderlinesRecoverView.url)
 order_line_api.add_resource(PluginInfoView, PluginInfoView.url)
 order_line_api.add_resource(ProcessInstanceReportView, ProcessInstanceReportView.url)
 order_line_api.add_resource(ProcessInstanceExcelReportView, ProcessInstanceExcelReportView.url)

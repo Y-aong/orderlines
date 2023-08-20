@@ -21,7 +21,6 @@ from orderlines.utils.exceptions import OrderlinesHasNoTaskType
 from orderlines.utils.orderlines_enum import TaskStatus
 from orderlines.utils.utils import get_method_param_annotation
 from orderlines.variable.variable_handler import VariableHandlerReal
-from public.logger import logger
 
 
 class TaskBuild:
@@ -99,13 +98,11 @@ class TaskBuild:
 
         assert isinstance(task_result, dict), 'The task return value must be a dictionary'
         # 解析返回值， parse return value
-        logger.info(f'{task_id} parsed task result before {task_result}')
         task_result = variable_handler.variable_handle_result(
             task_type=task_type,
             variable_config=self.variable_config(),
             task_result=task_result,
             node_result_config=self.task_node.get('result_config')
         )
-        logger.info(f'{task_id} parsed task result after {task_result}')
         task_result.setdefault('status', TaskStatus.green.value)
         return task_result

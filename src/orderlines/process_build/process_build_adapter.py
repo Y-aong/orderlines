@@ -111,11 +111,9 @@ class BaseTarget(ABC):
                 Variable.process_id == temp.get('process_id'),
                 Variable.variable_key == temp.get('variable_key')
             ).update(temp)
-            logger.info('variable config update complete')
         else:
             obj = Variable(**temp)
             self.session.add(obj)
-            logger.info(f'variable config insert complete')
         self.session.commit()
 
     def _build_variable(self, process_id: str, process_name: str, variables: List[dict]):
@@ -144,7 +142,7 @@ class Adaptee:
             task_name = task_node.get('task_name')
             if task_node.get('task_type') not in self.task_types:
                 raise ValueError(f'task type must in {self.task_types}')
-            if not task_node.get('module version'):
+            if not task_node.get('module_version'):
                 logger.warn(f'task name {task_name} has no module version')
         return task_nodes
 
@@ -153,7 +151,7 @@ class Adaptee:
             content = json.load(f)
         process_info = self.check_process_info(content.get('process_info'))
         task_nodes = self.check_task_nodes(content.get('task_nodes'))
-        variable = content.get('variable') or  [{}]
+        variable = content.get('variable') or [{}]
         return process_info, task_nodes, variable
 
     def adapter_yaml(self, file_path: str):
@@ -162,7 +160,7 @@ class Adaptee:
         content = yaml.load(content, Loader=yaml.SafeLoader)
         process_info = self.check_process_info(content.get('process_info'))
         task_nodes = self.check_task_nodes(content.get('task_nodes'))
-        variable = self.check_task_nodes(content.get('variable'))
+        variable = content.get('variable') or [{}]
         return process_info, task_nodes, variable
 
     def adapter_dict(self, process_info: dict, task_nodes: List[dict]):
@@ -175,14 +173,46 @@ class ProcessBuildAdapter(BaseTarget):
         super(ProcessBuildAdapter, self).__init__()
         self.adaptee = Adaptee()
 
-    def build_by_json(self, file_path: str):
+    def _clear_db(self):
+        """clear db only test"""
+        from apis.orderlines.models import Process, ProcessInstance, Task, TaskInstance
+        from apis.orderlines.models import VariableInstance
+
+        self.session.query(TaskInstance).delete()
+        self.session.commit()
+
+        self.session.query(Task).delete()
+        self.session.commit()
+
+        self.session.query(ProcessInstance).delete()
+        self.session.commit()
+
+        self.session.query(Process).delete()
+        self.session.commit()
+
+        self.session.query(Variable).delete()
+        self.session.commit()
+
+        self.session.query(VariableInstance).delete()
+        self.session.commit()
+
+    def build_by_json(self, file_path: str, clear_db=False):
+        """根据json文件创建流程， build process by json file"""
+        if clear_db:
+            self._clear_db()
         process_info, task_nodes, variable = self.adaptee.adapter_json(file_path)
         return self.build(process_info, task_nodes, variable)
 
-    def build_by_yaml(self, file_path: str):
+    def build_by_yaml(self, file_path: str, clear_db=False):
+        """根据yaml文件创建流程， build process by yaml file"""
+        if clear_db:
+            self._clear_db()
         process_info, task_nodes, variable = self.adaptee.adapter_yaml(file_path)
         return self.build(process_info, task_nodes, variable)
 
-    def build_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict] = None):
+    def build_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict] = None, clear_db=False):
+        """根据dict创建流程， build process by dict"""
+        if clear_db:
+            self._clear_db()
         process_info, task_nodes = self.adaptee.adapter_dict(process_info, task_nodes)
         return self.build(process_info, task_nodes, variable)

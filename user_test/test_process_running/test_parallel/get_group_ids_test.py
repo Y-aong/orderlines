@@ -7,10 +7,12 @@
 # version    ：python 3.7
 # Description：
 """
+import pytest
+
 from orderlines.utils.parallel_util import ParallelUtils
 
 
-def get_group_ids():
+def test_get_group_ids():
     data = [
         {
             'task_id': "1001",
@@ -55,8 +57,8 @@ def get_group_ids():
     ]
     parallel_task = ['1001', '1002', '1003', '1004', '1005', '1006', '1007', '1008']
     ret = ParallelUtils(data).get_group_id(parallel_task)
-    print(ret)
+    assert ret == [['1001', '1002'], ['1003', '1004', '1005'], ['1006', '1007'], ['1008']]
 
 
 if __name__ == '__main__':
-    get_group_ids()
+    test_get_group_ids()

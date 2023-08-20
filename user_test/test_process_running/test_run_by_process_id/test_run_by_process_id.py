@@ -8,12 +8,15 @@
 # Description：
 """
 from orderlines import OrderLines
+from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 
 
 def test_run_by_process_id():
-    process_id = 134
+    json_path = './data/process.json'
+    process_id = ProcessBuildAdapter().build_by_json(json_path, clear_db=True)
     orderlines = OrderLines()
     orderlines.start(process_id=process_id)
 
 
-test_run_by_process_id()
+if __name__ == '__main__':
+    test_run_by_process_id()

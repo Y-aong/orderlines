@@ -2,7 +2,7 @@
 
 项目名称 orderlines
 
-使用flask celery协程自主开发的一套工作流框架，现在为未完成状态 目前已实现功能
+使用flask celery自主开发的一套工作流框架，现在为未完成状态 目前已实现功能
 
 - 流程串行，基本功能
 - 流程并行（可选择使用协程io密集型和进程cpu密集型）
@@ -137,7 +137,7 @@ class Test(BaseTask):
 
 ### 目录结构介绍
 
-![img.png](docu/images/img.png)
+![img.png](docs/images/img.png)
 
 ## 使用方法
 
@@ -152,7 +152,7 @@ class Test(BaseTask):
 
 - src 目录设置为source root
 
-  ![img.png](docu/images/img1.png)
+  ![img.png](docs/images/img1.png)
 
 - 修改配置文件
     - 本地测试。复制配置文件product_config.yaml为develop_config.yaml，修改.env
@@ -160,7 +160,7 @@ class Test(BaseTask):
 
 - 运行测试文件，出现以下输出，最好把所有的测试用例运行一遍，结果如下
 
-  ![img.png](docu/images/img2.png)
+  ![img.png](docs/images/img2.png)
 
 ### 流程文件配置介绍
 

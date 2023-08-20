@@ -32,8 +32,4 @@ def test_task_result_variable_parse():
     process_instance_id = str(uuid.uuid1().hex)
     task_variable = CommonTaskVariableStrategy(process_instance_id)
     task_result = task_variable.handle_task_result(variable_config, task_result, node_result_config)
-    print(task_result)
     assert task_result.get('status') == 'SUCCESS'
-
-
-test_task_result_variable_parse()

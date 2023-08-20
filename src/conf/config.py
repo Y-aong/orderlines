@@ -17,9 +17,7 @@ import yaml
 def read_yaml():
     current_path = os.path.dirname(os.path.realpath(__file__))
     yaml_dir_path = os.path.dirname(current_path)
-    env = os.environ.get('ORDERLINES')
-    yaml_file = 'product_config.yaml' if env == 'product' else 'develop_config.yaml'
-    yaml_path = os.path.join(yaml_dir_path, yaml_file)
+    yaml_path = os.path.join(yaml_dir_path, 'config.yaml')
     with open(yaml_path, mode='r', encoding='utf-8') as f:
         config_ctx = f.read()
     return config_ctx

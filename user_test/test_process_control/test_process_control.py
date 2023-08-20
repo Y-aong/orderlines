@@ -8,6 +8,7 @@
 # version    ：python 3.10
 # Description：
 """
+import pytest
 from orderlines.libraries.ProcessControl import ProcessControl
 from orderlines.utils.base_orderlines_type import ProcessControlParam
 
@@ -75,3 +76,7 @@ def test_process_control_by_status():
     }
     task_id = ProcessControl().process_control(ProcessControlParam(**process_control))
     assert task_id == '1015'
+
+
+if __name__ == '__main__':
+    pytest.main()
