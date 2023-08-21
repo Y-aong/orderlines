@@ -77,3 +77,20 @@ class LoggerConfig:
 class LanguageConfig:
     _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('language')
     language_type = _ctx.get('language_type')
+
+
+class RedisConfig:
+    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('redis')
+    host = _ctx.get('host')
+    port = _ctx.get('port')
+    db = _ctx.get('db')
+
+
+class MongoConfig:
+    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('mongodb')
+    host = _ctx.get('host')
+    port = _ctx.get('port')
+    username = _ctx.get('username')
+    password = _ctx.get('password')
+    db = _ctx.get('db')
+    collection = _ctx.get('collection')

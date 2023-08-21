@@ -1,0 +1,69 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+
+service OrderlinesService {
+  rpc StartProcess(StartRequest) returns(StartResponse){}
+  rpc StopProcess(ProcessOperatorRequest) returns(ProcessOperatorResponse){}
+  rpc PausedProcess(ProcessOperatorRequest) returns(ProcessOperatorResponse){}
+  rpc RecoverProcess(ProcessRecoverRequest) returns(ProcessOperatorResponse){}
+  rpc BuildProcessByJson(BuildProcessByJsonRequest) returns(BuildProcessResponse){}
+  rpc BuildProcessByYaml(BuildProcessByYamlRequest) returns(BuildProcessResponse){}
+  rpc BuildProcessByDict(BuildProcessByDictRequest) returns(BuildProcessResponse){}
+}
+
+message StartRequest{
+  // you can use process id or process table id, if process_id type str, if process_table_id type is int
+  string process_id = 1;
+  string run_type = 2;
+  bool dry = 3;
+  bool clear_db = 4;
+
+}
+message StartResponse{
+  int32 code = 1;
+  string message = 2;
+  string process_instance_id = 3;
+}
+
+// process stop or paused
+message ProcessOperatorRequest{
+  string process_instance_id = 1;
+  bool stop_schedule = 2;
+}
+message ProcessOperatorResponse{
+  int32 code = 1;
+  string message = 2;
+}
+
+// process recover
+message ProcessRecoverRequest{
+  string process_instance_id = 1;
+  bool recover_schedule = 2;
+}
+
+// build process
+message BuildProcessByJsonRequest{
+  string filepath = 1;
+  bool clear_db = 2;
+}
+
+message BuildProcessByYamlRequest{
+  string filepath = 1;
+  bool clear_db = 2;
+
+}
+
+message BuildProcessByDictRequest{
+  string process_info = 1;
+  string task_node = 2;
+  string variable = 3;
+  bool clear_db = 4;
+
+}
+
+message BuildProcessResponse{
+  int32 code = 1;
+  string message = 2;
+  string process_id = 3;
+}

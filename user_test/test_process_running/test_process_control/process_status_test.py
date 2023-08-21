@@ -10,7 +10,7 @@
 from orderlines.app import OrderLines
 
 
-def test_process_control_status():
+def process_control_status_test():
     nodes = [
         {
             "task_id": "1011",
@@ -121,4 +121,4 @@ def test_process_control_status():
 
 
 if __name__ == '__main__':
-    test_process_control_status()
+    process_control_status_test()

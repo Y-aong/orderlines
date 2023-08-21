@@ -53,6 +53,16 @@ logger:
   FMT: "%(asctime)s %(levelname)s %(message)s"
   DATE_FMT: "%Y-%m-%d %H:%M:%S"
 
-
 language:
   language_type: "ZH"
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  db: 3
+
+mongodb:
+  host: "127.0.0.1"
+  port: 27017
+  db: "orderlines"
+  collection: "variable"

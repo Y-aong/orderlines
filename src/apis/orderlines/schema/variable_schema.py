@@ -12,13 +12,18 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields
 
-from apis.orderlines.models.variable import Variable
+from apis.orderlines.models.variable import Variable, VariableInstance
 from orderlines.utils.utils import get_variable_value
 
 
 class VariableSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Variable
+
+
+class VariableInstanceSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = VariableInstance
 
 
 class VariableInfoSchema(SQLAlchemyAutoSchema):

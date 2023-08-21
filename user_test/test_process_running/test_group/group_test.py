@@ -11,7 +11,7 @@
 from orderlines.app import OrderLines
 
 
-def test_group_task():
+def group_task_test():
     data = [
         {
             "task_id": "1001",
@@ -117,4 +117,4 @@ def test_group_task():
 
 
 if __name__ == '__main__':
-    test_group_task()
+    group_task_test()

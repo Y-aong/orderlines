@@ -10,7 +10,7 @@
 from orderlines.app import OrderLines
 
 
-def test_process_control_return():
+def process_control_return_test():
     data = [
         {
             "task_id": "1011",
@@ -142,4 +142,4 @@ def test_process_control_return():
 
 
 if __name__ == '__main__':
-    test_process_control_return()
+    process_control_return_test()

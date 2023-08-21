@@ -108,7 +108,7 @@ class BaseExpression(BaseModel):
 
 class ProcessControlParam(BasePluginParam):
     """
-    with return
+    return params
     "conditions": [
                 {
                     'A': [{'condition': 1, 'target': "${add_value}", 'sign': '='},
@@ -123,7 +123,7 @@ class ProcessControlParam(BasePluginParam):
         'A': {'task_id': "1014"},
         'B': {'task_id': "1015"}
     }
-    with status
+    status params
     "conditions": "1012",  # 这里传递task_id
     "expression": {
         "success": {"task_id": "1014"},
@@ -152,3 +152,9 @@ class TaskResultConfigType(BaseModel):
     variable_value: str = Field(default=None, description=get_desc_by_lang('variable_value'))
     variable_type: str = Field(default=None, description=get_desc_by_lang('variable_type'))
     variable_desc: str = Field(default=None, description=get_desc_by_lang('variable_desc'))
+
+
+class VariableParam(BaseModel):
+    variable_key: str = Field(default=None, description=get_desc_by_lang('variable_name'))
+    variable_value: str = Field(default=None, description=get_desc_by_lang('variable_value'))
+    variable_type: str = Field(default=None, description=get_desc_by_lang('variable_type'))

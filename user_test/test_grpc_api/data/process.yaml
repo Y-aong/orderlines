@@ -1,0 +1,55 @@
+process_info:
+  creator: blue
+  process_id: '10002'
+  process_name: test_common001
+  updater: null
+task_nodes:
+- desc: null
+  method_kwargs: null
+  method_name: start
+  next_id: '1002'
+  prev_id: null
+  task_config: null
+  task_id: '1001'
+  task_module: BuiltIn
+  task_name: 开始节点
+  task_type: start
+  module_version: "1.0.0.1"
+- desc: null
+  method_kwargs:
+    a: 1
+    b: 2
+  method_name: test_add
+  next_id: '1003'
+  prev_id: '1001'
+  task_config:
+    task_strategy: raise
+  task_id: '1002'
+  task_module: Test
+  module_version: "1.0.0.1"
+  task_name: 加法
+  task_type: common
+- desc: null
+  method_kwargs:
+    a: 10
+    b: 12
+  method_name: test_subtraction
+  next_id: '1004'
+  prev_id: '1002'
+  task_config: null
+  task_id: '1003'
+  task_module: Test
+  module_version: "1.0.0.1"
+  task_name: 减法
+  task_type: common
+- desc: null
+  method_kwargs: null
+  method_name: end
+  next_id: null
+  prev_id: '1003'
+  task_config: null
+  task_id: '1004'
+  task_module: BuiltIn
+  module_version: "1.0.0.1"
+  task_name: 结束节点
+  task_type: end

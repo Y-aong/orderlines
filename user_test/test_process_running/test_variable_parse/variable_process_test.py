@@ -10,7 +10,7 @@
 from orderlines.app import OrderLines
 
 
-def test_variable_process():
+def variable_process_test():
     data = [
         {
             "task_id": "1001",
@@ -98,4 +98,4 @@ def test_variable_process():
 
 
 if __name__ == '__main__':
-    test_variable_process()
+    variable_process_test()

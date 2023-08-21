@@ -10,7 +10,7 @@
 from orderlines.app import OrderLines
 
 
-def test_callback_task():
+def callback_task_test():
     data = [
         {
             "task_id": "1001",
@@ -85,4 +85,4 @@ def test_callback_task():
 
 
 if __name__ == '__main__':
-    test_callback_task()
+    callback_task_test()

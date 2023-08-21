@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
 """
-# File       : test_run_by_process_id.py
+# File       : run_by_process_id.py
 # Time       ：2023/8/16 22:42
 # Author     ：Y-aong
 # version    ：python 3.7
@@ -11,7 +11,7 @@ from orderlines import OrderLines
 from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 
 
-def test_run_by_process_id():
+def run_by_process_id_test():
     json_path = './data/process.json'
     process_id = ProcessBuildAdapter().build_by_json(json_path, clear_db=True)
     orderlines = OrderLines()
@@ -19,4 +19,4 @@ def test_run_by_process_id():
 
 
 if __name__ == '__main__':
-    test_run_by_process_id()
+    run_by_process_id_test()

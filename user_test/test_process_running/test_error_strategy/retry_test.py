@@ -11,7 +11,7 @@
 from orderlines.app import OrderLines
 
 
-def test_retry_task():
+def retry_task_test():
     data = [
         {
             "task_id": "1001",
@@ -86,4 +86,4 @@ def test_retry_task():
 
 
 if __name__ == '__main__':
-    test_retry_task()
+    retry_task_test()

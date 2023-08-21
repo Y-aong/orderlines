@@ -11,8 +11,9 @@
 """
 from datetime import datetime
 
-from apis.orderlines.models import BaseConfig, ScheduleTask
-from apis.orderlines.schema.base_config_schema import BaseConfigSchema
+from apis.config.models import BaseConfig
+from apis.orderlines.models import ScheduleTask
+from apis.config.schema.base_config_schema import BaseConfigSchema
 from apis.orderlines.schema.schedule_task_schema import ScheduleTaskSchema
 from public.base_model import get_session
 

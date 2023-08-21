@@ -24,7 +24,10 @@ dependencies = [
     "pytz==2022.7.1",
     "PyYAML==6.0",
     "redis==4.4.2",
-    "requests==2.28.2"
+    "requests==2.28.2",
+    "grpcio==1.57.0",
+    "grpcio-tools==1.57.0",
+    "pymongo==4.4.1"
 ]
 authors = [{ name = "Yong Yang", email = "1627469727@qq.com" }]
 readme = "README.md"

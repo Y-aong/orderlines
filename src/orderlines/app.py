@@ -13,7 +13,8 @@ from typing import List, Union
 
 from flask import Config
 
-from apis.orderlines.models import Process, Variable, VariableInstance, ProcessInstance, BaseConfig
+from apis.config.models import BaseConfig
+from apis.orderlines.models import Process, Variable, VariableInstance, ProcessInstance
 from apis.orderlines.schema.process_schema import ProcessRunningSchema, ProcessInstanceSchema
 from conf.config import OrderLinesConfig
 from orderlines.task_running.app_context import AppContext
@@ -66,8 +67,11 @@ class OrderLines:
         else:
             raise ValueError(f'process id {process_id} type is not support. process id is only support int or str')
         process_info = ProcessRunningSchema().dump(obj)
-        task_nodes = process_info.pop('task')
-        self._start(process_info, task_nodes, dry, run_type)
+        if process_info.get('task'):
+            task_nodes = process_info.pop('task')
+            return self._start(process_info, task_nodes, dry, run_type)
+        else:
+            raise OrderLinesRunningException(f'can not find task node by process id {process_id}')
 
     def start_by_file_path(self, file_path: str, dry, run_type):
         if file_path.endswith('json'):
@@ -76,11 +80,11 @@ class OrderLines:
             process_id = self.process_build.build_by_yaml(file_path)
         else:
             raise ValueError('file type is not support. orderlines is only support json or yaml')
-        self.start_by_process_id(process_id, dry, run_type)
+        return self.start_by_process_id(process_id, dry, run_type)
 
     def start_by_dict(self, process_info: dict, task_nodes: List[dict], variable: List[dict], dry, run_type):
         process_id = self.process_build.build_by_dict(process_info, task_nodes, variable)
-        self.start_by_process_id(process_id, dry, run_type)
+        return self.start_by_process_id(process_id, dry, run_type)
 
     @staticmethod
     def default_task_config(task_config):
@@ -106,6 +110,7 @@ class OrderLines:
         self.context.setdefault(process_instance_id, process_instance_info)
         t = TaskRunner(process_instance_id, self.context, dry)
         t.start()
+        return process_instance_id
 
     def start(
             self,
@@ -117,7 +122,7 @@ class OrderLines:
             dry: bool = False,
             run_type: str = 'trigger',
             clear_db: bool = False
-    ) -> None:
+    ) -> str:
         """
         启动流程
         start process
@@ -134,11 +139,11 @@ class OrderLines:
         if clear_db:
             self._clear_db()
         if process_id:
-            self.start_by_process_id(process_id, dry, run_type)
+            return self.start_by_process_id(process_id, dry, run_type)
         elif file_path:
-            self.start_by_file_path(file_path, dry, run_type)
+            return self.start_by_file_path(file_path, dry, run_type)
         else:
-            self.start_by_dict(process_info, task_nodes, variable, dry, run_type)
+            return self.start_by_dict(process_info, task_nodes, variable, dry, run_type)
 
     def stop_process(self, process_instance_id: str, stop_schedule: bool = False):
         """stop process"""

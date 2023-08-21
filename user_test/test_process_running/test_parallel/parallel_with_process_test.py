@@ -10,7 +10,7 @@
 from orderlines.app import OrderLines
 
 
-def test_parallel_with_process():
+def parallel_with_process_test():
     data = [
         {
             "task_id": "1000",
@@ -126,4 +126,4 @@ def test_parallel_with_process():
 
 
 if __name__ == '__main__':
-    test_parallel_with_process()
+    parallel_with_process_test()

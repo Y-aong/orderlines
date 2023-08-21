@@ -9,8 +9,8 @@
     插件信息视图
     Plug-in information view
 """
-from apis.orderlines.models import PluginInfo
-from apis.orderlines.schema.plugin_info_schema import PluginInfoSchema
+from apis.config.models import PluginInfo
+from apis.config.schema.plugin_info_schema import PluginInfoSchema
 from public.base_view import BaseView
 
 

@@ -34,11 +34,12 @@ def _register_webhook(app):
 def _register_db(app: Flask):
     from public.base_model import db
     from apis.orderlines.models import (
-        ProcessInstance, Process, Task, TaskInstance, Variable, VariableInstance, PluginInfo, ScheduleTask, BaseConfig)
+        ProcessInstance, Process, Task, TaskInstance, Variable, VariableInstance, ScheduleTask)
     from apis.schedule_plan.models import IntervalPlan, DatePlan, CrontabPlan, ApschedulerJobs
     from apis.system_oauth.models import (
         SystemUser, SystemRole, SystemPermission, SystemGroup, SystemDepartment, SystemUserRoleRelation,
         SystemUserGroupRelation, SystemGroupPermissionRelation, SystemRolePermissionRelation)
+    from apis.config.models import PluginInfo, BaseConfig
 
     db.init_app(app)
     with app.app_context():
@@ -49,10 +50,12 @@ def _register_resource(app):
     from apis.orderlines import order_line_blue
     from apis.schedule_plan import schedule_plan_blue
     from apis.system_oauth import system_oauth_blue
+    from apis.config import conf_blue
 
     app.register_blueprint(system_oauth_blue)
     app.register_blueprint(order_line_blue)
     app.register_blueprint(schedule_plan_blue)
+    app.register_blueprint(conf_blue)
 
 
 def create_app():

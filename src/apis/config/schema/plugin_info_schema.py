@@ -11,7 +11,7 @@
 """
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
-from apis.orderlines.models.plugin_info import PluginInfo
+from apis.config.models.plugin_info import PluginInfo
 
 
 class PluginInfoSchema(SQLAlchemyAutoSchema):

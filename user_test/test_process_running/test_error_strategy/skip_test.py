@@ -10,7 +10,7 @@
 from orderlines.app import OrderLines
 
 
-def test_skip_task():
+def skip_task_test():
     data = [
         {
             "task_id": "1001",
@@ -85,4 +85,4 @@ def test_skip_task():
 
 
 if __name__ == '__main__':
-    test_skip_task()
+    skip_task_test()

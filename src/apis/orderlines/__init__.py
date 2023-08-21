@@ -16,7 +16,7 @@ from apis.orderlines.views.orderlines_recover_view import OrderlinesRecoverView
 from apis.orderlines.views.orderlines_paused_view import OrderlinesPausedView
 from apis.orderlines.views.orderlines_start_view import OrderLinesStartView
 from apis.orderlines.views.orderlines_stop_view import OrderlinesStopView
-from apis.orderlines.views.plugin_info_view import PluginInfoView
+from apis.config.views.plugin_info_view import PluginInfoView
 from apis.orderlines.views.process_instance_view import ProcessInstanceReportView, ProcessInstanceExcelReportView, \
     ProcessInstanceHtmlReportView
 from apis.orderlines.views.schedule_task_view import ScheduleTaskView
@@ -33,7 +33,6 @@ order_line_api.add_resource(OrderLinesStartView, OrderLinesStartView.url)
 order_line_api.add_resource(OrderlinesStopView, OrderlinesStopView.url)
 order_line_api.add_resource(OrderlinesPausedView, OrderlinesPausedView.url)
 order_line_api.add_resource(OrderlinesRecoverView, OrderlinesRecoverView.url)
-order_line_api.add_resource(PluginInfoView, PluginInfoView.url)
 order_line_api.add_resource(ProcessInstanceReportView, ProcessInstanceReportView.url)
 order_line_api.add_resource(ProcessInstanceExcelReportView, ProcessInstanceExcelReportView.url)
 order_line_api.add_resource(ProcessInstanceHtmlReportView, ProcessInstanceHtmlReportView.url)

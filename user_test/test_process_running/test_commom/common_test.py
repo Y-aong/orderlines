@@ -7,12 +7,10 @@
 # version    ：python 3.7
 # Description：测试简单流程
 """
-import pytest
-
 from orderlines.app import OrderLines
 
 
-def test_common_test():
+def common_task_test():
     data = [
         {
             "task_id": "1001",
@@ -85,4 +83,4 @@ def test_common_test():
 
 
 if __name__ == '__main__':
-    pytest.main()
+    common_task_test()

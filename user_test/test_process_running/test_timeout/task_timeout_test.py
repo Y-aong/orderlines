@@ -11,7 +11,7 @@
 from orderlines.app import OrderLines
 
 
-def test_timeout_task():
+def timeout_task_test():
     data = [
         {
             "task_id": "1001",
@@ -85,4 +85,4 @@ def test_timeout_task():
 
 
 if __name__ == '__main__':
-    test_timeout_task()
+    timeout_task_test()

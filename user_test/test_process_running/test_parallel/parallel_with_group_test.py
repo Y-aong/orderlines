@@ -12,7 +12,7 @@ import pytest
 from orderlines.app import OrderLines
 
 
-def test_parallel_with_group():
+def parallel_with_group_test():
     data = [
         {
             "task_id": '1000',
@@ -127,4 +127,4 @@ def test_parallel_with_group():
 
 
 if __name__ == '__main__':
-    test_parallel_with_group()
+    parallel_with_group_test()

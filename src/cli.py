@@ -13,6 +13,7 @@ import os
 import click
 
 from apis import create_app
+from grpc_api.orderlines_grpc_server import grpc_server
 from orderlines import OrderLines
 from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 from public.api_utils.default_config_plugin import DefaultConfig
@@ -144,7 +145,7 @@ def build_process_by_yaml(filename):
 @click.option("--email", default="", help="super user email default None.")
 @click.option("--phone", default="", help="super user phone default None.")
 def create_super_user(username, password, email, phone):
-    """Create a super administrator."""
+    """create a super administrator."""
     DefaultConfig().create_user(username, password, email, phone, admin=True)
 
 
@@ -154,5 +155,13 @@ def create_super_user(username, password, email, phone):
 @click.option("--email", default="", help="super user email default None.")
 @click.option("--phone", default="", help="super user phone default None.")
 def create_user(username, password, email, phone):
-    """Create a super administrator."""
+    """create a super administrator."""
     DefaultConfig().create_user(username, password, email, phone, admin=False)
+
+
+@cli.command()
+@click.option("--host", "-h", default="0.0.0.0", help="The grpc server interface to bind to.")
+@click.option("--port", "-p", default=50051, help="The grpc server port to bind to.")
+def run_grpc(host, port):
+    """run grpc server."""
+    grpc_server(host, port)

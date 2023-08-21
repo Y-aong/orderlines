@@ -12,7 +12,7 @@
 """
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
-from apis.orderlines.models.base_config import BaseConfig
+from apis.config.models.base_config import BaseConfig
 
 
 class BaseConfigSchema(SQLAlchemyAutoSchema):
