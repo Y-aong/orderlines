@@ -1,6 +1,7 @@
 #!/bin/bash
-version = "1.0.0.1"
+version="1.0.0.1"
 docker build -f orderlines.dockerfile -t orderlines:${version} .
+# shellcheck disable=SC2164
 cd docker-compose
 ENV_FILE="$PWD/.env"
 echo "env file is $ENV_FILE"
