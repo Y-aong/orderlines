@@ -12,15 +12,8 @@ from datetime import timedelta
 from conf.config import CeleryConfig
 
 imports = (
-    'tasks.orderlines_run',
+    'tasks.orderlines_run'
 )
-
-beat_schedule = {
-    'test every 10 seconds': {
-        'task': 'orderlines_run',
-        'schedule': timedelta(seconds=10),
-    }
-}
 
 # #Timezone
 enable_utc = CeleryConfig.enable_utc

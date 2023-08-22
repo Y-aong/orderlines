@@ -12,13 +12,6 @@ import os
 
 import click
 
-from apis import create_app
-from grpc_api.orderlines_grpc_server import grpc_server
-from orderlines import OrderLines
-from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
-from public.api_utils.default_config_plugin import DefaultConfig
-from public.schedule_utils.apscheduler_config import scheduler
-
 
 class Config:
 
@@ -75,6 +68,7 @@ def cli():
                    'process,process instance,task,task_instance variable,variable_instance.')
 def start_process(process_id=None, process_table_id=None, dry=False, run_type='trigger', clear_db=False):
     """start process by process instance id."""
+    from orderlines import OrderLines
     if process_id:
         process_id = process_id
     elif process_table_id:
@@ -89,6 +83,7 @@ def start_process(process_id=None, process_table_id=None, dry=False, run_type='t
 @click.option('--stop_schedule', type=bool, default=False, help='if true stop schedule task,default false.')
 def stop_process(process_instance_id, stop_schedule=False):
     """stop process by process instance id."""
+    from orderlines import OrderLines
     OrderLines().stop_process(process_instance_id=process_instance_id, stop_schedule=stop_schedule)
 
 
@@ -97,6 +92,7 @@ def stop_process(process_instance_id, stop_schedule=False):
 @click.option('--stop_schedule', type=bool, default=False, help='if true stop schedule task,default false.')
 def paused_process(process_instance_id, stop_schedule=False):
     """pause process by process instance id."""
+    from orderlines import OrderLines
     OrderLines().paused_process(process_instance_id=process_instance_id, stop_schedule=stop_schedule)
 
 
@@ -105,6 +101,7 @@ def paused_process(process_instance_id, stop_schedule=False):
 @click.option('--recover_schedule', type=bool, default=False, help='if true recover schedule task,default false,')
 def recover_process(process_instance_id, recover_schedule=False):
     """recover process by process instance id."""
+    from orderlines import OrderLines
     OrderLines().recover_process(process_instance_id=process_instance_id, recover_schedule=recover_schedule)
 
 
@@ -113,6 +110,7 @@ def recover_process(process_instance_id, recover_schedule=False):
 @click.option("--port", "-p", default=15900, help="The port to bind to.")
 def runserver(host, port):
     """run orderlines server, default port 15900."""
+    from apis import create_app
     app = create_app()
     app.run(host=host, port=port)
 
@@ -120,6 +118,7 @@ def runserver(host, port):
 @cli.command()
 def schedule():
     """start schedule plan."""
+    from public.schedule_utils.apscheduler_config import scheduler
     scheduler.start()
 
 
@@ -127,6 +126,7 @@ def schedule():
 @click.option("--filename", "-f", type=click.Path(exists=True), help="the json file path to build process.")
 def build_process_by_json(filename):
     """build process by json file."""
+    from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
     ProcessBuildAdapter().build_by_json(filename)
     click.echo('process build success')
 
@@ -135,6 +135,7 @@ def build_process_by_json(filename):
 @click.option("--filename", "-f", type=click.Path(exists=True), help="the yaml file path to build process.")
 def build_process_by_yaml(filename):
     """build process by yaml file."""
+    from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
     ProcessBuildAdapter().build_by_yaml(filename)
     click.echo('process build success')
 
@@ -146,6 +147,7 @@ def build_process_by_yaml(filename):
 @click.option("--phone", default="", help="super user phone default None.")
 def create_super_user(username, password, email, phone):
     """create a super administrator."""
+    from public.api_utils.default_config_plugin import DefaultConfig
     DefaultConfig().create_user(username, password, email, phone, admin=True)
 
 
@@ -156,6 +158,7 @@ def create_super_user(username, password, email, phone):
 @click.option("--phone", default="", help="super user phone default None.")
 def create_user(username, password, email, phone):
     """create a super administrator."""
+    from public.api_utils.default_config_plugin import DefaultConfig
     DefaultConfig().create_user(username, password, email, phone, admin=False)
 
 
@@ -164,4 +167,5 @@ def create_user(username, password, email, phone):
 @click.option("--port", "-p", default=50051, help="The grpc server port to bind to.")
 def run_grpc(host, port):
     """run grpc server."""
+    from grpc_api.orderlines_grpc_server import grpc_server
     grpc_server(host, port)

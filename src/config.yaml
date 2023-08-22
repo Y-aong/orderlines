@@ -23,30 +23,24 @@ orderlines:
 flask:
   SQLALCHEMY_TRACK_MODIFICATIONS: True
   SQLALCHEMY_COMMIT_TEARDOWN: True
-  SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:123456@127.0.0.1:3306/orderlines"
   SECRET_KEY: "1dfd00abcsdafgdargdsf"
-  PRE_PAGE: 10
-  PAGE: 1
 
 email:
   # 是否发送邮件
   is_send: False
   # 邮件配置--
   mail_host: "smtp.163.com"
-  mail_user: "15334927340"
-  mail_pwd: "TXFOQMKWMUAEQZLR"
+  mail_user: "***"
+  mail_pwd: "***"
   # 邮件发送方
-  sender: "15334927340@163.com"
+  sender: "***@163.com"
   # 邮件接受方
   receivers:
-    - "1627469727@qq.com"
+    - "***@qq.com"
 
 celery:
   enable_utc: False
   timezone: "Asia/Shanghai"
-  beat_db_uri: "mysql+pymysql://root:123456@127.0.0.1:3306/orderlines"
-  broker_url: "redis://127.0.0.1:6379/0"
-  result_backend: "redis://127.0.0.1:6379/1"
 
 logger:
   logger_path: "/orderlines_logs"
@@ -65,4 +59,13 @@ mongodb:
   host: "127.0.0.1"
   port: 27017
   db: "orderlines"
+  username: "orderlines"
+  password: "orderlines"
   collection: "variable"
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "123456"
+  db: "orderlines"

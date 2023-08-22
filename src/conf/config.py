@@ -23,6 +23,32 @@ def read_yaml():
     return config_ctx
 
 
+class Mysql:
+    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('orderlines')
+    host = _ctx.get('host') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MYSQL_HOST')
+    port = _ctx.get('port') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MYSQL_PORT')
+    username = _ctx.get('username') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MYSQL_ROOT_USER')
+    password = _ctx.get('password') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MYSQL_ROOT_PASSWORD')
+    db = _ctx.get('db') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MYSQL_DATABASE')
+
+
+class MongoConfig:
+    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('mongodb')
+    host = _ctx.get('host') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MONGODB_HOST')
+    port = _ctx.get('port') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MONGODB_PORT')
+    username = _ctx.get('username') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MONGODB_USERNAME')
+    password = _ctx.get('password') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MONGODB_PASSWORD')
+    db = _ctx.get('db') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MONGODB_DB')
+    collection = _ctx.get('collection') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('MONGODB_COLLECTION')
+
+
+class Redis:
+    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('redis')
+    host = _ctx.get('host') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('REDIS_HOST')
+    port = _ctx.get('port') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('REDIS_PORT')
+    db = _ctx.get('db') if os.getenv('ORDERLINES_ENV') != 'docker' else os.getenv('REDIS_DB')
+
+
 class OrderLinesConfig:
     _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('orderlines')
     std_lib_location = _ctx.get('standard_library_location')
@@ -51,20 +77,18 @@ class CeleryConfig:
     _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('celery')
     enable_utc = _ctx.get('enable_utc')
     timezone = _ctx.get('timezone')
-    beat_db_uri = _ctx.get('beat_db_uri')
-    broker_url = _ctx.get('broker_url')
-    result_backend = _ctx.get('result_backend')
+    beat_db_uri = f"mysql+pymysql://{Mysql.username}:{Mysql.password}@{Mysql.host}:{Mysql.port}/{Mysql.db}"
+    broker_url = f"redis://{Redis.host}:{Redis.port}/{Redis.db}"
+    result_backend = f"redis://{Redis.host}:{Redis.port}/{Redis.db}"
 
 
 class FlaskConfig:
     _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('flask')
     SQLALCHEMY_TRACK_MODIFICATIONS = _ctx.get('SQLALCHEMY_TRACK_MODIFICATIONS')
     SQLALCHEMY_COMMIT_TEARDOWN = _ctx.get('SQLALCHEMY_COMMIT_TEARDOWN')
-    SQLALCHEMY_DATABASE_URI = _ctx.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{Mysql.username}:{Mysql.password}@{Mysql.host}:{Mysql.port}/{Mysql.db}"
     EXPIRY = 2 * 60 * 60
     SECRET_KEY = _ctx.get('SECRET_KEY')
-    PRE_PAGE = _ctx.get('PRE_PAGE')
-    PAGE = _ctx.get('PAGE')
 
 
 class LoggerConfig:
@@ -77,20 +101,3 @@ class LoggerConfig:
 class LanguageConfig:
     _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('language')
     language_type = _ctx.get('language_type')
-
-
-class RedisConfig:
-    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('redis')
-    host = _ctx.get('host')
-    port = _ctx.get('port')
-    db = _ctx.get('db')
-
-
-class MongoConfig:
-    _ctx: dict = yaml.load(read_yaml(), Loader=yaml.SafeLoader).get('mongodb')
-    host = _ctx.get('host')
-    port = _ctx.get('port')
-    username = _ctx.get('username')
-    password = _ctx.get('password')
-    db = _ctx.get('db')
-    collection = _ctx.get('collection')

@@ -16,12 +16,12 @@ from typing import Any, List
 import pandas as pd
 import redis
 
-from conf.config import RedisConfig
+from conf.config import Redis
 
 
 class RedisUtils:
     def __init__(self, name=None):
-        self.redis = redis.Redis(host=RedisConfig.host, port=RedisConfig.port, db=RedisConfig.db)
+        self.redis = redis.Redis(host=Redis.host, port=Redis.port, db=Redis.db)
         self.name = name
 
     def len(self) -> int:

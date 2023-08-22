@@ -25,5 +25,4 @@ COPY ./README.MD /app
 RUN ls
 RUN python -m pip install --upgrade pip
 RUN python -m pip install --editable .
-RUN which orderlines
-RUN which celery
+RUN /usr/local/bin/orderlines

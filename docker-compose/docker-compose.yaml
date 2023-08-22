@@ -15,7 +15,7 @@ services:
       - "15900:15900"
     env_file:
       - .env
-    command: [ "/usr/local/bin/orderlines","runserver" ]
+    command: [ "/usr/local/bin/orderlines", "runserver" ]
 
   orderlines_worker:
     container_name: orderlines_worker
@@ -28,7 +28,30 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    command: [ "/usr/local/bin/celery", "runserver" ]
+    command:
+      [
+        "/usr/local/bin/celery",
+        "-A",
+        "celery_worker.celery",
+        "worker",
+        "--loglevel",
+        "info",
+        "--pool",
+        "solo"
+      ]
+
+  orderlines_schedule:
+    container_name: orderlines_schedule
+    image: orderlines:${ORDERLINES_TAG}
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    command: [ "/usr/local/bin/orderlines", "schedule" ]
 
   orderlines_grpc:
     container_name: orderlines_grpc
@@ -43,21 +66,21 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    command: [ "/usr/local/bin/orderlines", "run_grpc" ]
+    command: [ "/usr/local/bin/orderlines", "run-grpc" ]
 
   mysql:
     container_name: mysql
     healthcheck:
       test:
         [
-            "CMD",
-            "mysqladmin",
-            "-u",
-            "${MYSQL_ROOT_USER}",
-            "-p${MYSQL_ROOT_PASSWORD}",
-            "ping",
-            "-h",
-            "localhost"
+          "CMD",
+          "mysqladmin",
+          "-u",
+          "${MYSQL_ROOT_USER}",
+          "-p${MYSQL_ROOT_PASSWORD}",
+          "ping",
+          "-h",
+          "localhost"
         ]
       interval: 3s
       timeout: 1s
@@ -67,6 +90,8 @@ services:
       - "3306:3306"
     volumes:
       - ${PROJECT_FILE_PATH}/mysql:/var/lib/mysql
+      - ./my.cnf:/etc/my.cnf
+      - /etc/localtime:/etc/localtime
     env_file:
       - .env
 
@@ -80,3 +105,16 @@ services:
       interval: 3s
       timeout: 1s
       retries: 5
+
+  mongo:
+    restart: always
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ${PROJECT_FILE_PATH}/mongodb:/data/db
+      - /etc/localtime:/etc/localtime
+    environment:
+      - TZ=Asia/Shanghai
+      - wiredTigerCacheSizeGB=1.5
