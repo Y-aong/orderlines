@@ -11,7 +11,7 @@
 """
 from flask import Flask
 
-from apis.config.models import BaseConfig
+
 from apis.system_oauth.models import SystemPermission, SystemUser, SystemRole, SystemUserRoleRelation
 from public.base_model import get_session
 
@@ -67,9 +67,10 @@ class DefaultConfig:
         创建默认的超级管理员用户。
         Create a default super administrator
         """
+        from public.api_utils.jwt_utils import encrypt_password
         user_info = {
             'username': username,
-            'password': password,
+            'password': encrypt_password(password),
             'email': email,
             'phone': phone,
 
@@ -82,7 +83,7 @@ class DefaultConfig:
         if admin:
             admin_role = self.session.query(SystemRole).filter(SystemRole.role_name == 'admin').first()
             if not admin_role:
-                obj = SystemRole({'role_name': 'admin', 'desc': 'super admin'})
+                obj = SystemRole(**{'role_name': 'admin', 'desc': 'super admin'})
                 self.session.add(obj)
                 self.session.commit()
                 admin_role_id = obj.id
@@ -98,6 +99,7 @@ class DefaultConfig:
         create orderlines default config
         @return:
         """
+        from apis.config.models import BaseConfig
         default_configs = [
             {
                 'config_name': 'stop_all_schedule',

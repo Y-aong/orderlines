@@ -44,4 +44,4 @@ def grpc_client_build_by_json():
         print(f'build process by json response {response}')
 
 
-grpc_client_start()
+grpc_client_build_by_json()

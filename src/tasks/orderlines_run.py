@@ -9,16 +9,16 @@
     orderlines celery方法入口
     orderlines celery method enter point
 """
-from celery.signals import before_task_publish
+from typing import Union
 
+from celery.signals import before_task_publish
 from apis import celery
-from orderlines import OrderLines
 from public.logger import logger
-from public.schedule_utils.schedule_check import ScheduleCheck
 
 
 @before_task_publish.connect(sender='orderlines_run')
 def orderlines_check(headers=None, body=None, **kwargs):
+    from public.schedule_utils.schedule_check import ScheduleCheck
     _, params, _ = body
     process_id = params.get('process_id')
     run_type = params.get('run_type')
@@ -39,4 +39,9 @@ def orderlines_check(headers=None, body=None, **kwargs):
 
 @celery.task(name='orderlines_run')
 def orderlines_run(process_id, run_type='schedule'):
+    from orderlines import OrderLines
     OrderLines().start(process_id=process_id, run_type=run_type)
+
+
+def orderlines_schedule_run(process_id: Union[str, int], run_type: str):
+    orderlines_run.delay(process_id=process_id, run_type=run_type)

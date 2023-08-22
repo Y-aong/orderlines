@@ -16,10 +16,6 @@ from public.base_model import get_session
 from public.logger import logger
 
 
-def demo(process_name: str, exe_type: str):
-    logger.info(f'this is a test {process_name}, {exe_type}')
-
-
 class ApschedulerUtils:
     def __init__(self):
         self.exe_type = 'schedule'
@@ -32,7 +28,6 @@ class ApschedulerUtils:
             'cron': self.cron_key,
             'date': self.date_key
         }
-        self.target_func = demo
 
     def check_param(self, param: dict, trigger: str) -> dict:
         data = dict()
@@ -66,6 +61,8 @@ class ApschedulerUtils:
             **schedule_data
     ) -> None:
         """创建定时任务入口"""
+        from tasks.orderlines_run import orderlines_schedule_run
+
         schedule_data.setdefault('timezone', 'Asia/Shanghai')
         if trigger_type == 'interval':
             schedule_data = self.check_param(schedule_data, trigger_type)
@@ -77,7 +74,7 @@ class ApschedulerUtils:
             raise ValueError(f'trigger::{trigger_type}Parameter error')
         scheduler.add_job(
             id=job_id,
-            func=self.target_func,
+            func=orderlines_schedule_run,
             args=(job_id, self.exe_type),
             name=process_name,
             coalesce=True,
@@ -113,8 +110,14 @@ class ApschedulerUtils:
 
     def paused_schedule_plan(self, job_id: str) -> None:
         """暂停定时计划, paused schedule plan"""
-        pass
+        if self.check_plan(job_id):
+            scheduler.pause_job(job_id)
+        else:
+            logger.warn(f'con find job id {job_id}')
 
     def recover_schedule_plan(self, job_id: str) -> None:
         """恢复定时计划， recover schedule plan"""
-        pass
+        if self.check_plan(job_id):
+            scheduler.resume_job(job_id)
+        else:
+            logger.warn(f'con find job id {job_id}')

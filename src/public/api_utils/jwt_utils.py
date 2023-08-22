@@ -27,11 +27,10 @@ def encrypt_password(value: str) -> str:
 
 
 def generate_token(payload: dict, expiry: int, secret=None) -> str:
-    _payload = {"exp": datetime.datetime.now() + datetime.timedelta(seconds=expiry)}
-    _payload.update(payload)
+    payload['exp'] = datetime.datetime.now() + datetime.timedelta(seconds=expiry)
     if not secret:
         secret = current_app.config["SECRET_KEY"]
-    return jwt.encode(_payload, secret, algorithm="HS256")
+    return jwt.encode(payload, secret, algorithm="HS256")
 
 
 def verify_token(token, secret=None):
@@ -40,9 +39,9 @@ def verify_token(token, secret=None):
     try:
         payload = jwt.decode(token, secret, algorithms=["HS256"])
     except ExpiredSignatureError:
-        raise JWTVerifyException("The current token has expired")
+        raise JWTVerifyException("The current token has expired.")
     except DecodeError:
-        raise DecodeError("jwt parsing failed")
+        raise DecodeError("jwt parse failed.")
 
     return payload
 

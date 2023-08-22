@@ -57,7 +57,7 @@ class BaseTarget(ABC):
         self._build_task(task_nodes, process_id)
         if variable:
             self._build_variable(process_id, process_name, variable)
-        return str(process_table_id)
+        return process_table_id
 
     def _build_process(self, process_info: dict) -> tuple:
         """

@@ -41,6 +41,8 @@ class ScheduleCheck:
         schedule_task = ScheduleTaskSchema().dump(obj)
         invalid_start_time = schedule_task.get('invalid_start_time')
         invalid_end_time = schedule_task.get('invalid_end_time')
+        if not invalid_start_time or not invalid_end_time:
+            return True
         invalid_start_datetime = datetime.strptime(invalid_start_time, '%Y-%m-%d %H-%M-%S')
         invalid_end_datetime = datetime.strptime(invalid_end_time, '%Y-%m-%d %H-%M-%S')
         curren_datetime = datetime.now()

@@ -10,6 +10,7 @@
     orderlines grpc server
     python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. .\orderlines.proto
 """
+import json
 import traceback
 
 import grpc
@@ -38,6 +39,7 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
         self.orderlines = OrderLines()
 
     def StartProcess(self, request, context):
+        logger.info(f'StartProcess request {request}')
         try:
             process_instance_id = self.orderlines.start(
                 process_id=request.process_id,
@@ -53,6 +55,7 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
             return orderlines_pb2.StartResponse(**response)
 
     def StopProcess(self, request, context):
+        logger.info(f'StopProcess request {request}')
         try:
             self.orderlines.stop_process(request.process_instance_id, request.stop_schedule)
             response = generate_grpc_response(200, 'process stop success')
@@ -63,6 +66,7 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
             return orderlines_pb2.ProcessOperatorResponse(**response)
 
     def PausedProcess(self, request, context):
+        logger.info(f'PausedProcess request {request}')
         try:
             self.orderlines.paused_process(request.process_instance_id, request.stop_schedule)
             response = generate_grpc_response(200, 'process paused success')
@@ -73,6 +77,7 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
             return orderlines_pb2.ProcessOperatorResponse(**response)
 
     def RecoverProcess(self, request, context):
+        logger.info(f'RecoverProcess request {request}')
         try:
             self.orderlines.recover_process(request.process_instance_id, request.recover_schedule)
             response = generate_grpc_response(200, 'process recover success')
@@ -83,6 +88,7 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
             return orderlines_pb2.ProcessOperatorResponse(**response)
 
     def BuildProcessByJson(self, request, context):
+        logger.info(f'BuildProcessByJson request {request}')
         try:
             process_id = ProcessBuildAdapter().build_by_json(request.filepath, request.clear_db)
             response = generate_grpc_response(200, 'process build success', process_id=process_id)
@@ -93,6 +99,7 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
             return orderlines_pb2.BuildProcessResponse(**response)
 
     def BuildProcessByYaml(self, request, context):
+        logger.info(f'BuildProcessByYaml request {request}')
         try:
             process_id = ProcessBuildAdapter().build_by_yaml(request.filepath, request.clear_db)
             response = generate_grpc_response(200, 'process build success', process_id=process_id)
@@ -103,11 +110,12 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
             return orderlines_pb2.BuildProcessResponse(**response)
 
     def BuildProcessByDict(self, request, context):
+        logger.info(f'BuildProcessByDict request {request}')
         try:
             process_id = ProcessBuildAdapter().build_by_dict(
-                process_info=request.process_info,
-                task_nodes=request.task_nodes,
-                variable=request.variable,
+                process_info=json.loads(request.process_info),
+                task_nodes=json.loads(request.task_nodes),
+                variable=json.loads(request.variable),
                 clear_db=request.clear_db
             )
             response = generate_grpc_response(200, 'process build success', process_id=process_id)

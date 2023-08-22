@@ -15,17 +15,17 @@ from typing import Any
 import pandas as pd
 import pymongo
 
-from conf.config import MongoConfig
+from conf.config import Mongo
 from orderlines.utils.exceptions import VariableException
 from public.logger import logger
 
 
 class MongoDBUtil:
     def __init__(self):
-        self.mongo = pymongo.MongoClient(host=MongoConfig.host, port=MongoConfig.port)
-        self.db = self.mongo[MongoConfig.db]
+        self.mongo = pymongo.MongoClient(host=Mongo.host, port=Mongo.port)
+        self.db = self.mongo[Mongo.db]
         print(f'self.db::{self.db}')
-        self.collection = self.db[MongoConfig.collection]
+        self.collection = self.db[Mongo.collection]
 
     def set_value(self, process_instance_id: str, variable_key: str, variable_value: Any):
         """mongodb set value"""

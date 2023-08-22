@@ -25,7 +25,7 @@ class WebHook:
         if app is not None:
             self.init_app(app)
         self.black_list = []
-        self.white_list = ['/refresh_token', '/token']
+        self.white_list = ['/refresh_token', '/token', '/register']
 
     def init_app(self, app: Flask):
         app.before_request(self.authentication)
@@ -78,7 +78,7 @@ class WebHook:
                     if not role_permission and not group_permission:
                         return generate_abort(401, data='Permission Denied')
                 except JWTVerifyException:
-                    return generate_abort(400, data='Please log in again after the token expires.')
+                    return generate_abort(400, data='Please login again after the token expires.')
                 except DecodeError:
                     return generate_abort(400, data='Please check the user name and password.')
             else:

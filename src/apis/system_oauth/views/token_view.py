@@ -14,6 +14,8 @@ from flask_restful import Resource
 
 from apis.system_oauth.models import SystemUser
 from conf.config import FlaskConfig
+from public.api_handle_exception import handle_api_error
+from public.base_model import db
 from public.base_response import generate_response
 from public.api_utils.jwt_utils import generate_token, refresh_token
 
@@ -40,6 +42,7 @@ class TokenView(Resource):
             'password': password
         }
 
+    @handle_api_error
     def post(self):
         pay_load = self.generate_payload()
         token = generate_token(pay_load, expiry=FlaskConfig.EXPIRY)
@@ -52,6 +55,34 @@ class RefreshTokenView(Resource):
     def __init__(self):
         self.token = request.json.get('token')
 
+    @handle_api_error
     def post(self):
         token = refresh_token(self.token)
         return generate_response(token)
+
+
+class RegisterView(Resource):
+    url = '/register'
+
+    def __init__(self):
+        self.username = request.json.get('username')
+        self.password = request.json.get('password')
+        self.email = request.json.get('email')
+        self.phone = request.json.get('phone')
+
+    @handle_api_error
+    def post(self):
+        if not self.username or self.password:
+            raise ValueError('username or password can not been null')
+        user_info = {
+            'username': self.username,
+            'password': self.password,
+            'email': self.email,
+            'phone': self.phone,
+        }
+
+        with db.auto_commit():
+            obj = SystemUser(**user_info)
+            db.session.add(obj)
+
+        return generate_response(message=f'user {self.username} register success!')
