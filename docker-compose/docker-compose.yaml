@@ -1,11 +1,10 @@
-name: rmss
+name: orderlines
 
 services:
 
-
   orderlines_web:
     container_name: orderlines_web
-    image: orderlines_web:${ORDERLINES_TAG}
+    image: orderlines:${ORDERLINES_TAG}
     restart: always
     depends_on:
       mysql:
@@ -14,29 +13,52 @@ services:
         condition: service_healthy
     ports:
       - "15900:15900"
-    volumes:
-      - ${PROJECT_FILE_PATH}/logs/orderlines_web:/usr/orderlines_web
     env_file:
       - .env
+    command: [ "/usr/local/bin/orderlines","runserver" ]
 
-  celery_worker:
-    container_name: celery_worker
-    image: orderlines_worker:${ORDERLINES_TAG}
+  orderlines_worker:
+    container_name: orderlines_worker
+    image: orderlines:${ORDERLINES_TAG}
     restart: always
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - ${PROJECT_FILE_PATH}/logs/celery_worker:/usr/celery_worker
     env_file:
       - .env
+    command: [ "/usr/local/bin/celery", "runserver" ]
+
+  orderlines_grpc:
+    container_name: orderlines_grpc
+    image: orderlines:${ORDERLINES_TAG}
+    restart: always
+    ports:
+      - "50051:50051"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    command: [ "/usr/local/bin/orderlines", "run_grpc" ]
 
   mysql:
     container_name: mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "-u", "${MYSQL_ROOT_USER}", "-p${MYSQL_ROOT_PASSWORD}", "ping", "-h", "localhost" ]
+      test:
+        [
+            "CMD",
+            "mysqladmin",
+            "-u",
+            "${MYSQL_ROOT_USER}",
+            "-p${MYSQL_ROOT_PASSWORD}",
+            "ping",
+            "-h",
+            "localhost"
+        ]
       interval: 3s
       timeout: 1s
       retries: 5
@@ -58,5 +80,3 @@ services:
       interval: 3s
       timeout: 1s
       retries: 5
-
-

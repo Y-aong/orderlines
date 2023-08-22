@@ -11,7 +11,7 @@
 """
 from flask import Flask
 
-from apis.orderlines.models import BaseConfig
+from apis.config.models import BaseConfig
 from apis.system_oauth.models import SystemPermission, SystemUser, SystemRole, SystemUserRoleRelation
 from public.base_model import get_session
 

@@ -30,7 +30,7 @@ dependencies = [
     "pymongo==4.4.1"
 ]
 authors = [{ name = "Yong Yang", email = "1627469727@qq.com" }]
-readme = "README.md"
+readme = "README.MD"
 
 [project.scripts]
 orderlines = "cli:cli"

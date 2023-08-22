@@ -49,7 +49,7 @@ celery:
   result_backend: "redis://127.0.0.1:6379/1"
 
 logger:
-  linux_logger_path: "/orderlines_logs"
+  logger_path: "/orderlines_logs"
   FMT: "%(asctime)s %(levelname)s %(message)s"
   DATE_FMT: "%Y-%m-%d %H:%M:%S"
 
