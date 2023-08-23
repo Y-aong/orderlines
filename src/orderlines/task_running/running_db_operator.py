@@ -11,7 +11,6 @@
     db operator on running
 """
 import json
-import uuid
 from datetime import datetime
 
 from apis.orderlines.models import ProcessInstance, TaskInstance
@@ -59,12 +58,12 @@ class RunningDBOperator:
 
     def task_instance_insert(self, task_node: dict, dry=False) -> str:
         if not dry:
-            task_instance_id = str(uuid.uuid1().hex)
+            task_instance_id = task_node.get('task_instance_id')
             task_instance_info = {
                 'process_id': self.process_id,
                 'process_instance_id': self.process_instance_id,
                 'task_instance_id': task_instance_id,
-                'task_status': TaskStatus.green.value
+                'task_status': TaskStatus.grey.value
             }
             for key, val in task_node.items():
                 if hasattr(TaskInstance, key) and key != 'id':

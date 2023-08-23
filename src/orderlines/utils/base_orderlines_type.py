@@ -55,8 +55,8 @@ class BaseProcessNode(BaseModel):
 
 
 class BasePluginParam(BaseModel):
-    task_config: Union[None, dict] = Field(
-        default=dict(), description=get_desc_by_lang('task_config'))
+    task_config: Union[None, dict] = Field(default=dict(), description=get_desc_by_lang('task_config'))
+    task_instance_id: str = Field(description=get_desc_by_lang('task_instance_id'))
 
 
 class GateWayParam(BasePluginParam):

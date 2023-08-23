@@ -57,13 +57,14 @@ class OrderLinesServicer(orderlines_pb2_grpc.OrderlinesServiceServicer):
     def StopProcess(self, request, context):
         logger.info(f'StopProcess request {request}')
         try:
-            self.orderlines.stop_process(request.process_instance_id, request.stop_schedule)
-            response = generate_grpc_response(200, 'process stop success')
-            return orderlines_pb2.ProcessOperatorResponse(**response)
+            task_instance_ids = self.orderlines.stop_process(request.process_instance_id, request.stop_schedule)
+            task_instance_ids = ','.join(task_instance_ids)
+            response = generate_grpc_response(200, 'process stop success', task_instance_ids=task_instance_ids)
+            return orderlines_pb2.ProcessStopResponse(**response)
         except Exception as e:
             logger.error(f'grpc stop process error. {traceback.format_exc()}')
-            response = generate_grpc_response(500, f'grpc stop process error, {e}.')
-            return orderlines_pb2.ProcessOperatorResponse(**response)
+            response = generate_grpc_response(500, f'grpc stop process error, {e}.', task_instance_ids='')
+            return orderlines_pb2.ProcessStopResponse(**response)
 
     def PausedProcess(self, request, context):
         logger.info(f'PausedProcess request {request}')

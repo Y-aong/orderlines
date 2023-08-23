@@ -24,6 +24,7 @@ from flask import request
 
 def handle_api_error(func):
     def wrapper(*args, **kwargs):
+        from orderlines.utils.exceptions import OrderLinesRunningException
         try:
             res = func(*args, **kwargs)
         except IntegrityError as e:
@@ -39,6 +40,8 @@ def handle_api_error(func):
             return generate_abort(data='The current token has expired.', code=400)
         except DecodeError:
             return generate_abort(data='jwt parse failed.', code=400)
+        except OrderLinesRunningException as e:
+            return generate_abort(data=f'orderlines run failure, {e}.', code=400)
         except Exception as e:
             logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
             return generate_abort(data='Server exception.', code=500)

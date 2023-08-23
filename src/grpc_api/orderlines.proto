@@ -4,7 +4,7 @@ import "google/protobuf/any.proto";
 
 service OrderlinesService {
   rpc StartProcess(StartRequest) returns(StartResponse){}
-  rpc StopProcess(ProcessOperatorRequest) returns(ProcessOperatorResponse){}
+  rpc StopProcess(ProcessOperatorRequest) returns(ProcessStopResponse){}
   rpc PausedProcess(ProcessOperatorRequest) returns(ProcessOperatorResponse){}
   rpc RecoverProcess(ProcessRecoverRequest) returns(ProcessOperatorResponse){}
   rpc BuildProcessByJson(BuildProcessByJsonRequest) returns(BuildProcessResponse){}
@@ -34,6 +34,12 @@ message ProcessOperatorRequest{
 message ProcessOperatorResponse{
   int32 code = 1;
   string message = 2;
+}
+
+message ProcessStopResponse{
+  int32 code = 1;
+  string message = 2;
+  string task_instance_ids = 3;
 }
 
 // process recover

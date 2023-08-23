@@ -22,7 +22,7 @@ from orderlines.task_running.task_runner import TaskRunner
 
 from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 from orderlines.utils.exceptions import OrderLinesRunningException
-from orderlines.utils.orderlines_enum import ProcessStatus
+from orderlines.utils.orderlines_enum import ProcessStatus, TaskStatus
 
 from public.base_model import get_session
 from public.logger import logger
@@ -106,6 +106,7 @@ class OrderLines:
                 task_node['method_kwargs'] = {}
             task_config = task_node['task_config'] or {}
             task_node['task_config'] = self.default_task_config(task_config)
+            task_node['task_instance_id'] = str(uuid.uuid1().hex)
         process_instance_info = {'process_info': process_info, 'task_nodes': task_nodes}
         self.context.setdefault(process_instance_id, process_instance_info)
         t = TaskRunner(process_instance_id, self.context, dry)
@@ -165,6 +166,20 @@ class OrderLines:
         if stop_schedule:
             from public.schedule_utils.apscheduler_utils import ApschedulerUtils
             ApschedulerUtils().paused_schedule_plan(process_instance_info.get('process_id'))
+
+        # get current running task instance id
+        from apis.orderlines.models import TaskInstance
+        from apis.orderlines.schema.task_schema import TaskInstanceSchema
+        obj = self.session.query(TaskInstance).filter(TaskInstance.process_instance_id == process_instance_id).all()
+        task_instance_info = TaskInstanceSchema().dump(obj, many=True)
+        if task_instance_info:
+            return [
+                item.get('task_instance_id')
+                for item in task_instance_info
+                if item.get('task_status') in [TaskStatus.blue.value, TaskStatus.grey.value]
+            ]
+        else:
+            return []
 
     def paused_process(self, process_instance_id: str, stop_schedule: bool = False):
         """paused process"""

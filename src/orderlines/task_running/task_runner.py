@@ -112,7 +112,14 @@ class TaskRunner(threading.Thread):
             self.stop, self.paused = self.running_db_operator.process_instance_is_stop_or_paused(self.dry)
 
             if self.stop:
-                self.logger.info(f'process name {self.process_name} is stop')
+                task_instance_id = self.current_node().get('task_instance_id')
+                error_info = f'process name {self.process_name} is stop, current task instance id {task_instance_id}'
+                self.running_db_operator.task_instance_update(
+                    task_instance_id=task_instance_id,
+                    task_status=TaskStatus.yellow.value,
+                    error_info=error_info
+                )
+                self.logger.info(error_info)
                 break
             if not self.is_run:
                 self.logger.info(f'process name {self.process_name} run complete')
@@ -140,6 +147,7 @@ class TaskRunner(threading.Thread):
             return TaskStatus.green.value, ''
         task_config = self.process_parse.task_config(self.current_task_id)
         task_timeout = task_config.get('timeout')
+        self.running_db_operator.task_instance_update(task_instance_id, TaskStatus.blue.value)
         async with async_timeout.timeout(task_timeout):
             task_build = TaskBuild(self.process_instance_id, self.current_node())
             task = asyncio.create_task(
@@ -198,7 +206,7 @@ class TaskRunner(threading.Thread):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}
             self.logger.error(f'current_task_id:{self.current_task_id}, run timeout \n{error_info}')
         else:
-            error_info = {'error_info': f'{error, traceback.format_exc()}'}
+            error_info = {'error_info':  traceback.format_exc()}
             self.logger.error(f'current_task_id:{self.current_task_id}, run error \n{error_info}')
         task_build = TaskBuild(self.process_instance_id, self.current_node())
         running_strategy = RunningStrategy(

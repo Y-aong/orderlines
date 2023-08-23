@@ -66,7 +66,7 @@ def create_app():
     app.config.from_object('conf.config.FlaskConfig')
     _register_db(app)
     _register_resource(app)
-    _register_webhook(app)
+    # _register_webhook(app)
     _register_plugin(app)
 
     return app

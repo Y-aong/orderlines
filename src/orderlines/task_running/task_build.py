@@ -92,8 +92,11 @@ class TaskBuild:
             flag, annotation = get_method_param_annotation(getattr(module, method_name))
             assert flag, 'task group and parallel params must be a pydantic param'
             task_kwargs.setdefault('task_id', task_id)
+            if task_module == 'Group':
+                task_kwargs['task_instance_id'] = self.task_node.get('task_instance_id')
             task_result = task_handler.handle(module, method_name, annotation(**task_kwargs))
         else:
+            task_kwargs['task_instance_id'] = self.task_node.get('task_instance_id')
             task_result = task_handler.handle(module, method_name, task_kwargs)
 
         assert isinstance(task_result, dict), 'The task return value must be a dictionary'

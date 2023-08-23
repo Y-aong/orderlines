@@ -22,7 +22,7 @@ class OrderlinesServiceStub(object):
         self.StopProcess = channel.unary_unary(
                 '/OrderlinesService/StopProcess',
                 request_serializer=orderlines__pb2.ProcessOperatorRequest.SerializeToString,
-                response_deserializer=orderlines__pb2.ProcessOperatorResponse.FromString,
+                response_deserializer=orderlines__pb2.ProcessStopResponse.FromString,
                 )
         self.PausedProcess = channel.unary_unary(
                 '/OrderlinesService/PausedProcess',
@@ -107,7 +107,7 @@ def add_OrderlinesServiceServicer_to_server(servicer, server):
             'StopProcess': grpc.unary_unary_rpc_method_handler(
                     servicer.StopProcess,
                     request_deserializer=orderlines__pb2.ProcessOperatorRequest.FromString,
-                    response_serializer=orderlines__pb2.ProcessOperatorResponse.SerializeToString,
+                    response_serializer=orderlines__pb2.ProcessStopResponse.SerializeToString,
             ),
             'PausedProcess': grpc.unary_unary_rpc_method_handler(
                     servicer.PausedProcess,
@@ -174,7 +174,7 @@ class OrderlinesService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/OrderlinesService/StopProcess',
             orderlines__pb2.ProcessOperatorRequest.SerializeToString,
-            orderlines__pb2.ProcessOperatorResponse.FromString,
+            orderlines__pb2.ProcessStopResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
