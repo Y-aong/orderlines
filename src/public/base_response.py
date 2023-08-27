@@ -27,7 +27,7 @@ def generate_response(data=None, code=200, message='success'):
     return res
 
 
-def generate_abort(code=401, success='failure', **kwargs):
+def generate_abort(code=401, success=False, **kwargs):
     kwargs.setdefault('success', success)
     kwargs.setdefault('code', code)
     return abort(code, kwargs)

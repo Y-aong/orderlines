@@ -11,6 +11,7 @@ import os.path
 
 from celery import Celery
 from flask import Flask
+from flask_cors import  CORS
 
 from public.api_utils.orderlines_plugin import OrderlinesPlugHelper
 
@@ -52,18 +53,22 @@ def _register_resource(app):
     from apis.schedule_plan import schedule_plan_blue
     from apis.system_oauth import system_oauth_blue
     from apis.config import conf_blue
+    from apis.token import token_blue
 
     app.register_blueprint(system_oauth_blue)
     app.register_blueprint(order_line_blue)
     app.register_blueprint(schedule_plan_blue)
     app.register_blueprint(conf_blue)
+    app.register_blueprint(token_blue)
 
 
 def create_app():
+
     src_file_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     template = os.path.join(src_file_path, 'templates')
     app = Flask(__name__, template_folder=template)
     app.config.from_object('conf.config.FlaskConfig')
+    CORS(app, supports_credentials=True)
     _register_db(app)
     _register_resource(app)
     # _register_webhook(app)

@@ -22,7 +22,7 @@ class BaseView(Resource):
     def __init__(self):
         self.table_orm = None
         self.table_schema = None
-        if request.method == 'GET':
+        if request.method == 'GET' or request.method == 'DELETE':
             self.form_data: dict = request.args
         else:
             self.form_data: dict = request.json

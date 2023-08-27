@@ -10,11 +10,15 @@
     配置类序列化类
     base config schema
 """
+from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from apis.config.models.base_config import BaseConfig
 
 
 class BaseConfigSchema(SQLAlchemyAutoSchema):
+    insert_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+    update_time = fields.DateTime(format="%Y-%m-%d %H:%M:%S")
+
     class Meta:
         model = BaseConfig

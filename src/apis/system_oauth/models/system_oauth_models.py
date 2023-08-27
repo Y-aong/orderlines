@@ -47,7 +47,7 @@ class SystemUser(Base):
             raise ValueError(f'login_type::{login_type} is not exist')
         user = db.session.query(SystemUser).filter(getattr(SystemUser, login_type) == login_value).first()
         if not user:
-            raise ValueError(f'user{login_value} is not exist')
+            raise ValueError(f'user {login_value} is not exist')
 
         db_password = user.password
         if db_password != _password:

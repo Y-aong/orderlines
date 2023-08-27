@@ -11,7 +11,6 @@
 """
 from flask import Flask
 
-
 from apis.system_oauth.models import SystemPermission, SystemUser, SystemRole, SystemUserRoleRelation
 from public.base_model import get_session
 
@@ -107,6 +106,11 @@ class DefaultConfig:
             }
         ]
         for item in default_configs:
-            obj = BaseConfig(**item)
-            self.session.add(obj)
-            self.session.commit()
+            obj = self.session.query(BaseConfig).filter(
+                BaseConfig.config_name == item.get('config_name'),
+                BaseConfig.active == 1
+            ).first()
+            if not obj:
+                conf = BaseConfig(**item)
+                self.session.add(conf)
+                self.session.commit()
