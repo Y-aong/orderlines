@@ -25,10 +25,10 @@ class PluginInfoView(BaseView):
         self.table_schema = PluginInfoSchema
 
     def handle_filter(self):
-        self.filter.append(self.table_orm.active ==1)
+        self.filter.append(self.table_orm.active == 1)
         for key, val in self.form_data.items():
             if hasattr(self.table_orm, key) and val:
-                self.filter.append(getattr(self.table_orm, key)==val)
+                self.filter.append(getattr(self.table_orm, key) == val)
             elif key == 'keyword' and val:
                 self.filter.append(
                     or_(

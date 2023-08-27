@@ -23,6 +23,7 @@ dnspython==2.2.1
 email-validator==1.2.1
 exceptiongroup==1.1.0
 Flask==1.1.4
+Flask-Cors==4.0.0
 Flask-HTTPAuth==4.6.0
 flask-marshmallow==0.14.0
 Flask-Migrate==2.7.0
@@ -47,6 +48,7 @@ MarkupSafe==2.0.1
 marshmallow==3.19.0
 marshmallow-sqlalchemy==0.29.0
 numpy==1.24.4
+-e git+https://github.com/Y-aong/orderlines.git@e001410d1a3cb1334bef2ebc69d73c91026770dd#egg=orderlines
 packaging==23.0
 pandas==2.0.3
 pluggy==1.0.0
