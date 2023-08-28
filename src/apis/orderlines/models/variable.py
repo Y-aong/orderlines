@@ -9,6 +9,8 @@
     变量模型类
     Variable model class
 """
+from sqlalchemy import func
+
 from public.base_model import Base, db
 
 
@@ -27,6 +29,12 @@ class Variable(Base):
     # When the variable value is large data,
     # the variable value can be placed in the cache database, and variable_value stores the id
     is_cache = db.Column(db.Boolean, default=False, comment='is cache')
+    insert_time = db.Column(db.DateTime, default=func.now(), comment='insert time')
+    update_time = db.Column(db.DateTime, onupdate=func.now(), comment='update time')
+    creator_name = db.Column(db.String(64), comment='creator name')
+    creator_id = db.Column(db.Integer, comment='creator id')
+    updator_name = db.Column(db.String(64), comment='updator name')
+    updator_id = db.Column(db.Integer, comment='updator name')
 
 
 class VariableInstance(Base):

@@ -10,30 +10,37 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from apis.orderlines.views import TaskView, TaskInstanceView, ProcessView, ProcessInstanceView
-from apis.orderlines.views.orderlines_build_view import ProcessBuildView
-from apis.orderlines.views.orderlines_recover_view import OrderlinesRecoverView
-from apis.orderlines.views.orderlines_paused_view import OrderlinesPausedView
-from apis.orderlines.views.orderlines_start_view import OrderLinesStartView
-from apis.orderlines.views.orderlines_stop_view import OrderlinesStopView
-from apis.config.views.plugin_info_view import PluginInfoView
-from apis.orderlines.views.process_instance_view import ProcessInstanceReportView, ProcessInstanceExcelReportView, \
-    ProcessInstanceHtmlReportView
-from apis.orderlines.views.schedule_task_view import ScheduleTaskView
+from apis.orderlines.views import TaskView, TaskInstanceView
+from apis.orderlines.views.orderlines_build.orderlines_build_view import ProcessBuildView
+from apis.orderlines.views.orderlines_manager.process_view import ProcessView
+from apis.orderlines.views.orderlines_operator.orderlines_recover_view import OrderlinesRecoverView
+from apis.orderlines.views.orderlines_operator.orderlines_paused_view import OrderlinesPausedView
+from apis.orderlines.views.orderlines_operator.orderlines_start_view import OrderLinesStartView
+from apis.orderlines.views.orderlines_operator.orderlines_stop_view import OrderlinesStopView
+from apis.orderlines.views.orderlines_manager.process_instance_view import ProcessInstanceReportView, \
+    ProcessInstanceExcelReportView, ProcessInstanceView
+from apis.orderlines.views.orderlines_running.orderlines_running_log_view import OrderlinesRunningLogView
+from apis.orderlines.views.orderlines_schedule.schedule_task_view import ScheduleTaskView
+from apis.orderlines.views.orderlines_show.orderlines_base_info_view import OrderlinesBaseInfoView
+from apis.orderlines.views.orderlines_show.orderlines_export_view import ProcessInstanceHtmlReportView
+from apis.orderlines.views.orderlines_show.orderlines_show_view import OrderlinesShowView
 
-order_line_blue = Blueprint("order_line", __name__, url_prefix="")
-order_line_api = Api(order_line_blue)
+orderlines_blue = Blueprint("orderlines", __name__, url_prefix="")
+orderlines_api = Api(orderlines_blue)
 
-order_line_api.add_resource(TaskView, TaskView.url)
-order_line_api.add_resource(TaskInstanceView, TaskInstanceView.url)
-order_line_api.add_resource(ProcessView, ProcessView.url)
-order_line_api.add_resource(ProcessInstanceView, ProcessInstanceView.url)
-order_line_api.add_resource(ProcessBuildView, ProcessBuildView.url)
-order_line_api.add_resource(OrderLinesStartView, OrderLinesStartView.url)
-order_line_api.add_resource(OrderlinesStopView, OrderlinesStopView.url)
-order_line_api.add_resource(OrderlinesPausedView, OrderlinesPausedView.url)
-order_line_api.add_resource(OrderlinesRecoverView, OrderlinesRecoverView.url)
-order_line_api.add_resource(ProcessInstanceReportView, ProcessInstanceReportView.url)
-order_line_api.add_resource(ProcessInstanceExcelReportView, ProcessInstanceExcelReportView.url)
-order_line_api.add_resource(ProcessInstanceHtmlReportView, ProcessInstanceHtmlReportView.url)
-order_line_api.add_resource(ScheduleTaskView, ScheduleTaskView.url)
+orderlines_api.add_resource(TaskView, TaskView.url)
+orderlines_api.add_resource(TaskInstanceView, TaskInstanceView.url)
+orderlines_api.add_resource(ProcessView, ProcessView.url)
+orderlines_api.add_resource(ProcessInstanceView, ProcessInstanceView.url)
+orderlines_api.add_resource(ProcessBuildView, ProcessBuildView.url)
+orderlines_api.add_resource(OrderLinesStartView, OrderLinesStartView.url)
+orderlines_api.add_resource(OrderlinesStopView, OrderlinesStopView.url)
+orderlines_api.add_resource(OrderlinesPausedView, OrderlinesPausedView.url)
+orderlines_api.add_resource(OrderlinesRecoverView, OrderlinesRecoverView.url)
+orderlines_api.add_resource(ProcessInstanceReportView, ProcessInstanceReportView.url)
+orderlines_api.add_resource(ProcessInstanceExcelReportView, ProcessInstanceExcelReportView.url)
+orderlines_api.add_resource(ProcessInstanceHtmlReportView, ProcessInstanceHtmlReportView.url)
+orderlines_api.add_resource(ScheduleTaskView, ScheduleTaskView.url)
+orderlines_api.add_resource(OrderlinesRunningLogView, OrderlinesRunningLogView.url)
+orderlines_api.add_resource(OrderlinesBaseInfoView, OrderlinesBaseInfoView.url)
+orderlines_api.add_resource(OrderlinesShowView, OrderlinesShowView.url)

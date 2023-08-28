@@ -33,8 +33,6 @@ class BaseView(Resource):
         self.pre_page = self.form_data.get('pre_page')
 
     def handle_filter(self):
-        if self.table_orm:
-            self.filter.append(self.table_orm.active == 1)
         for key, value in self.form_data.items():
             if hasattr(self.table_orm, key):
                 self.filter.append(getattr(self.table_orm, key) == value)
@@ -57,8 +55,7 @@ class BaseView(Resource):
 
     def _get_multi(self):
         """多条查询, Multiple query"""
-        multi_data = db.session.query(self.table_orm).filter(*self.filter).order_by(
-            self.table_orm.id)
+        multi_data = db.session.query(self.table_orm).filter(*self.filter).order_by(self.table_orm.id.desc())
         if self.page and self.pre_page:
             multi_data = multi_data.paginate(page=int(self.page), per_page=int(self.pre_page))
             items = self.table_schema().dump(multi_data.items, many=True)
@@ -75,8 +72,9 @@ class BaseView(Resource):
 
     @handle_api_error
     def get(self):
+        if self.table_orm:
+            self.filter.append(self.table_orm.active == 1)
         self.handle_filter()
-
         if self.check_form_data() or self.form_data.get('pre_page'):
             self.response_data = self._get_multi()
         else:

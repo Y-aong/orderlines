@@ -7,9 +7,7 @@
 # version    ：python 3.7
 # Description：
 """
-from .task_view import TaskView
-from .task_instance_view import TaskInstanceView
-from .process_view import ProcessView
-from .process_instance_view import ProcessInstanceView
-from .orderlines_build_view import ProcessBuildView
-from .orderlines_start_view import OrderLinesStartView
+from apis.orderlines.views.orderlines_manager.task_view import TaskView
+from apis.orderlines.views.orderlines_manager.task_instance_view import TaskInstanceView
+from apis.orderlines.views.orderlines_build.orderlines_build_view import ProcessBuildView
+from apis.orderlines.views.orderlines_operator.orderlines_start_view import OrderLinesStartView

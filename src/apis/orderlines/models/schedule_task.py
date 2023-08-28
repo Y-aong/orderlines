@@ -23,11 +23,13 @@ class ScheduleTask(Base):
     process_params = db.Column(db.JSON, comment='process params')
     process_config = db.Column(db.JSON, comment='process other config')
     desc = db.Column(db.String(255), comment='process desc')
-    insert_time = db.Column(db.DateTime, default=func.now(), comment='process insert time')
-    update_time = db.Column(db.DateTime, comment='process update time')
-    creator = db.Column(db.String(30), comment='process creator')
-    updater = db.Column(db.String(30), comment='process updater')
+    insert_time = db.Column(db.DateTime, default=func.now(), comment='insert time')
+    update_time = db.Column(db.DateTime, onupdate=func.now(), comment='update time')
 
+    creator = db.Column(db.String(30), comment='process creator name')
+    creator_id = db.Column(db.Integer, comment='process creator id')
+    updater = db.Column(db.String(30), comment='process updater name')
+    updater_id = db.Column(db.Integer, comment='process updater id')
     # schedule relation
     trigger = db.Column(db.Enum('date', 'interval', 'crontab'), comment='schedule trigger type')
     schedule_plan = db.Column(db.JSON, comment='schedule plan param')

@@ -49,14 +49,14 @@ def _register_db(app: Flask):
 
 
 def _register_resource(app):
-    from apis.orderlines import order_line_blue
+    from apis.orderlines import orderlines_blue
     from apis.schedule_plan import schedule_plan_blue
     from apis.system_oauth import system_oauth_blue
     from apis.config import conf_blue
     from apis.token import token_blue
 
     app.register_blueprint(system_oauth_blue)
-    app.register_blueprint(order_line_blue)
+    app.register_blueprint(orderlines_blue)
     app.register_blueprint(schedule_plan_blue)
     app.register_blueprint(conf_blue)
     app.register_blueprint(token_blue)

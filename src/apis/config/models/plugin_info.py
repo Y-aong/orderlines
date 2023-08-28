@@ -9,6 +9,8 @@
     orderlines插件信息表
     Orderlines plug-in information table
 """
+from sqlalchemy import func
+
 from public.base_model import Base, db
 
 
@@ -21,3 +23,9 @@ class PluginInfo(Base):
     method_desc = db.Column(db.String(255), comment='Plug-in library method desc')
     parameters = db.Column(db.JSON, comment='Plug-in library method parma, type is list')
     return_value = db.Column(db.JSON, comment='Plug-in library returns value parameters')
+    creator_name = db.Column(db.String(64), comment='creator name')
+    creator_id = db.Column(db.Integer, comment='creator id')
+    updator_name = db.Column(db.String(64), comment='updator name')
+    updator_id = db.Column(db.Integer, comment='updator name')
+    insert_time = db.Column(db.DateTime, default=func.now(), comment='insert time')
+    update_time = db.Column(db.DateTime, onupdate=func.now(), comment='update time')
