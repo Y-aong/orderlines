@@ -17,6 +17,7 @@ orderlines:
   # 默认流程的超时时间
   process_timeout: 120
   version: "1.0.0.1"
+  # 提示类型
   notice_type: "FAILURE"
   task_strategy: "RAISE"
 

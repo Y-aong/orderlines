@@ -11,6 +11,8 @@
 """
 import datetime
 
+from sqlalchemy import or_
+
 from apis.orderlines.models import TaskInstance
 from apis.orderlines.models.process import ProcessInstance
 from apis.orderlines.schema.process_schema import ProcessInstanceSchema, ProcessInstanceExportSchema
@@ -26,6 +28,18 @@ class ProcessInstanceView(BaseView):
         super(ProcessInstanceView, self).__init__()
         self.table_orm = ProcessInstance
         self.table_schema = ProcessInstanceSchema
+
+    def handle_filter(self):
+        self.filter.append(self.table_orm.active == 1)
+        for key, val in self.form_data.items():
+            if hasattr(self.table_orm, key) and val:
+                self.filter.append(getattr(self.table_orm, key) == val)
+            if key == 'keyword' and val:
+                self.filter.append(or_(
+                    self.table_orm.id == val,
+                    self.table_orm.process_id == val,
+                    self.table_orm.process_instance_id == val
+                ))
 
 
 class ProcessInstanceReportView(ProcessInstanceView, BaseExportExcelView):
