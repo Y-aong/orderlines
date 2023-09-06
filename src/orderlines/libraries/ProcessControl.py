@@ -36,7 +36,8 @@ class ProcessControl(BaseTask):
 
     def process_control(self, process_control_type: ProcessControlParam) -> ProcessControlResult:
         """
-        流程控制，控制流程的运行节点
+        流程控制
+        控制流程的运行节点
         Control the running nodes of the flow
         :param process_control_type:process control param type
         :return:

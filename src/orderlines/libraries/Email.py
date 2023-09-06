@@ -62,6 +62,7 @@ class Email(BaseTask):
 
     def send_msg(self, email_info: EmailParam) -> EmailResult:
         """
+        邮件发送
         发送消息测试库，可用作回调方法
         Send message test library, which can be used as callback method
         :param email_info: email info

@@ -66,6 +66,7 @@ class Group(BaseTask):
 
     def task_group(self, group_type: GroupParam) -> dict:
         """
+        任务组
         根据子任务id组合为任务链
         Task chains are grouped according to subtask ids
         :return:

@@ -26,6 +26,25 @@ class OrderlinesPlugHelper:
         self.base_params = ['process_id', 'process_name', 'process_info',
                             'task_nodes', 'task_id', 'task_config', 'result', 'process_instance_id']
         self.exclude_method = ['on_receive', 'on_success', 'on_failure']
+        self.node_type = {
+            'BuiltIn': 'base',
+            'ProcessControl': 'process_control',
+            'Group': 'group',
+            'Parallel': 'parallel'
+        }
+        self.node_title = {
+            'BuiltIn': '基础节点',
+            'ProcessControl': '流程网关',
+            'Group': '流程网关',
+            'Parallel': '流程网关'
+        }
+        self.node_types = {
+            'start': 'start-node',
+            'end': 'end-node',
+            'parallel': 'parallel-node',
+            'process_control': 'process-control-node',
+            'group': 'group-node'
+        }
 
     def init_plugin(self):
         modules = CheckModule().get_module()
@@ -34,7 +53,6 @@ class OrderlinesPlugHelper:
             self.insert_info_plugin_info(plugin)
 
     def insert_info_plugin_info(self, plugin):
-
         methods = plugin.get('methods')
         for method in methods:
             obj = self.session.query(PluginInfo).filter(
@@ -49,6 +67,10 @@ class OrderlinesPlugHelper:
                 'parameters': method.get('parameters'),
                 'return_value': method.get('return'),
             }
+            plugin_info.setdefault('node_type', self.node_types.get(method.get('method_name'), 'function-node'))
+            plugin_info.setdefault('title', self.node_title.get(plugin.get('class_name'), plugin.get('class_name')))
+            plugin_info.setdefault('background', 'rgb(255,255,255)')
+
             if obj:
                 self.session.query(PluginInfo).filter(
                     PluginInfo.class_name == plugin.get('class_name'),

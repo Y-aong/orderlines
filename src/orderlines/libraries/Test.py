@@ -55,17 +55,17 @@ class Test(BaseTask):
         self.handle_error_method = ['test_multi']
 
     def test_add(self, test_type: TestParam) -> AddResult:
-        """加法"""
+        """加法测试"""
         time.sleep(1)
         return {'add_value': test_type.a + test_type.b}
 
     def test_subtraction(self, test_type: TestParam) -> SubtractionResult:
-        """减法"""
+        """减法测试"""
         time.sleep(1)
         return {'subtraction_value': test_type.a - test_type.b}
 
     def test_multi(self, test_type: TestParam) -> MultiResult:
-        """乘法"""
+        """乘法测试"""
         time.sleep(1)
         return {'multi_value': test_type.a * test_type.b}
 

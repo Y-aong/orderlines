@@ -101,6 +101,7 @@ class Parallel(BaseTask):
 
     def parallel_task(self, parallel_type: ParallelParam) -> dict:
         """
+        并行网关
         运行并行任务组
         Run parallel task groups
         :param parallel_type:parallel task param type
