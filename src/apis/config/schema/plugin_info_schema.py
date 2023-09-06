@@ -9,7 +9,6 @@
     插件序列化类
     Plug-in serialization class
 """
-import json
 
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields
@@ -34,5 +33,6 @@ class PluginNodeInfoSchema(SQLAlchemyAutoSchema):
 
 
 class PluginInfoParamSchema(SQLAlchemyAutoSchema):
-    parameters = fields.Function(serialize=lambda obj: json.loads(obj.parameters))
-    return_value = fields.Function(serialize=lambda obj: json.loads(obj.return_value))
+    class Meta:
+        model = PluginInfo
+        fields = ['parameters', 'return_value', 'version', 'method_desc']
