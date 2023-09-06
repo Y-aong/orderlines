@@ -9,6 +9,8 @@
     流程视图
     process view
 """
+from sqlalchemy import or_
+
 from apis.orderlines.models.process import Process
 from apis.orderlines.schema.process_schema import ProcessSchema
 from public.base_view import BaseView
@@ -21,3 +23,14 @@ class ProcessView(BaseView):
         super(ProcessView, self).__init__()
         self.table_orm = Process
         self.table_schema = ProcessSchema
+
+    def handle_filter(self):
+        self.filter.append(self.table_orm.active == 1)
+        for key, val in self.form_data.items():
+            if hasattr(self.table_orm, key) and val:
+                self.filter.append(getattr(self.table_orm, key) == val)
+            if key == 'keyword' and val:
+                self.filter.append(or_(
+                    self.table_orm.id == val,
+                    self.table_orm.desc == val
+                ))
