@@ -22,3 +22,9 @@ class BaseConfigSchema(SQLAlchemyAutoSchema):
 
     class Meta:
         model = BaseConfig
+
+
+class DefaultTaskConfigSchema(SQLAlchemyAutoSchema):
+    config_name = fields.String()
+    config_value = fields.String()
+    desc = fields.String()

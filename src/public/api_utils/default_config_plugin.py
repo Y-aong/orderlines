@@ -102,8 +102,45 @@ class DefaultConfig:
         default_configs = [
             {
                 'config_name': 'stop_all_schedule',
-                'config_value': '1'
+                'config_value': '1',
+                'desc': '定时任务总开关，1定时任务生效，0定时任务不生效。'
+            },
+            {
+                'config_name': 'retry_time',
+                'config_value': '3',
+                'desc': '重试次数。默认为重试3次。',
+            },
+            {
+                'config_name': 'sleep_time',
+                'config_value': '1',
+                'desc': '重试策略的休眠时间。默认为1秒。',
+            },
+            {
+                'config_name': 'task_timeout',
+                'config_value': '120',
+                'desc': '默认任务的超时时间。默认120秒。',
+            },
+            {
+                'config_name': 'process_timeout',
+                'config_value': '120',
+                'desc': '默认流程的超时时间。默认为120秒。',
+            },
+            {
+                'config_name': 'notice_type',
+                'config_value': 'FAILURE',
+                'desc': '失败情况下进行回调。默认为失败，可选为失败、成功、重试、忽略、跳过。'
+            },
+            {
+                'config_name': 'task_strategy',
+                'config_value': 'RAISE',
+                'desc': '任务异常处理策略。默认为报错，可选为报错，重试，忽略。'
+            },
+            {
+                'config_name': 'callback_module',
+                'config_value': 'Email',
+                'desc': '任务异常回调方法。默认为邮件。'
             }
+
         ]
         for item in default_configs:
             obj = self.session.query(BaseConfig).filter(

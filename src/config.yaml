@@ -4,6 +4,9 @@ orderlines:
   # 标准库文件位置
   standard_library_location:
     - "orderlines.libraries"
+
+  # 默认流程的超时时间
+  process_timeout: 120
   # 任务运行失败的回调模块
   callback_module: Email
   # 任务运行失败的回调函数
@@ -14,8 +17,6 @@ orderlines:
   sleep_time: 1
   # 默认每个任务的运行超时时间为120秒
   task_timeout: 120
-  # 默认流程的超时时间
-  process_timeout: 120
   version: "1.0.0.1"
   # 提示类型
   notice_type: "FAILURE"
