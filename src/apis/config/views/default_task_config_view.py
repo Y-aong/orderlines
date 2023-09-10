@@ -32,34 +32,34 @@ class DefaultTaskConfigView(Resource):
         ]
         self.task_strategy = [
             {
-                'value': '报错',
-                'label': 'RAISE',
+                'value': 'RAISE',
+                'label': '报错',
             },
             {
-                'value': '重试',
-                'label': 'RETRY',
+                'value': 'RETRY',
+                'label': '重试',
             },
             {
-                'value': '忽略',
-                'label': 'SKIP',
+                'value': 'SKIP',
+                'label': '忽略',
             }
         ]
         self.notice_type = [
             {
-                'value': '失败',
-                'label': TaskStatus.red.value,
+                'value': TaskStatus.red.value,
+                'label': '失败',
             },
             {
-                'value': '成功',
-                'label': TaskStatus.green.value,
+                'value': TaskStatus.green.value,
+                'label': '成功',
             },
             {
-                'value': '重试',
-                'label': TaskStatus.orange.value,
+                'value': TaskStatus.orange.value,
+                'label': '重试',
             },
             {
-                'value': '忽略',
-                'label': TaskStatus.pink.value,
+                'value': TaskStatus.pink.value,
+                'label': '忽略',
             }
         ]
 

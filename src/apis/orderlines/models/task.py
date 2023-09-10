@@ -25,7 +25,7 @@ class Task(Base):
     method_name = db.Column(db.String(50), comment='task run method name')
     method_kwargs = db.Column(db.JSON, comment='task run parma')
     insert_time = db.Column(db.DateTime, default=func.now(), comment='insert time')
-    update_time = db.Column(db.DateTime,onupdate=func.now(), comment='update time')
+    update_time = db.Column(db.DateTime, onupdate=func.now(), comment='update time')
     creator = db.Column(db.String(30), comment='task creator name')
     creator_id = db.Column(db.Integer, comment='task creator id')
     updater = db.Column(db.String(30), comment='task updater name')
