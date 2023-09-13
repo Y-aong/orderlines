@@ -26,7 +26,6 @@ class TaskView(BaseView):
         self.table_schema = TaskSchema
 
     def handle_request_params(self):
-        print(self.form_data)
         if request.method == 'PUT':
             obj = db.session.query(Task).filter(Task.id == self.table_id).first()
             info = TaskSchema().dump(obj)
@@ -53,4 +52,3 @@ class TaskView(BaseView):
                     if key and val:
                         task_config[key] = val
                 self.form_data['task_config'] = task_config
-        print(self.form_data)

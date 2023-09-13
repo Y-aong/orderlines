@@ -28,9 +28,9 @@ class PluginNodeView(Resource):
 
     @staticmethod
     def get_nodes_type(title, plugin_info):
-        for itme in plugin_info:
-            if itme.get('title') == title:
-                return itme.get('class_name')
+        for item in plugin_info:
+            if item.get('title') == title:
+                return item.get('class_name')
         return ''
 
     @staticmethod
