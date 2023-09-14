@@ -1,27 +1,32 @@
 # !/usr/bin/env python
 # -*-coding:utf-8 -*-
+
 """
-# File       : default_task_config_view.py
-# Time       ：2023/9/7 22:43
-# Author     ：Y-aong
-# version    ：python 3.7
+# File       : task_node_view.py
+# Time       ：2023/9/14 9:29
+# Author     ：YangYong
+# version    ：python 3.10
 # Description：
-    默认的任务配置参数
-    default task config
+    获取任务节点
+    get task node
 """
+from flask import request
 from flask_restful import Resource
 
-from apis.config.models import BaseConfig
+from apis.config.models import BaseConfig, PluginInfo
 from apis.config.schema.base_config_schema import DefaultTaskConfigSchema
+from apis.config.schema.plugin_info_schema import NodeParamSchema, NodeResultSchema, NodeConfigSchema
 from orderlines.utils.orderlines_enum import TaskStatus
+from public.api_handle_exception import handle_api_error
 from public.base_model import db
 from public.base_response import generate_response
 
 
-class DefaultTaskConfigView(Resource):
-    url = '/default_task_config'
+class TaskNodeView(Resource):
+    url = '/task_node'
 
     def __init__(self):
+        self.form_data = request.args
         self.default_task_config = [
             'task_timeout',
             'task_strategy',
@@ -63,7 +68,7 @@ class DefaultTaskConfigView(Resource):
             }
         ]
 
-    def get(self):
+    def get_default_task_config(self):
         objs = db.session.query(BaseConfig).filter(
             BaseConfig.config_name.in_(self.default_task_config)).all()
 
@@ -75,5 +80,36 @@ class DefaultTaskConfigView(Resource):
             elif item.get('config_name') == 'notice_type':
                 item['config_value'] = self.notice_type
             default_task_config.append(item)
+        return default_task_config
 
-        return generate_response(default_task_config)
+    def get_node_param_result(self):
+        obj = db.session.query(PluginInfo).filter(
+            PluginInfo.method_name == self.form_data.get('method_name'),
+            PluginInfo.class_name == self.form_data.get('class_name'),
+            PluginInfo.version == self.form_data.get('version')
+        ).first()
+        node_param = NodeParamSchema().dump(obj)
+        node_result = NodeResultSchema().dump(obj)
+        return node_param, node_result
+
+    def get_node_config(self):
+        print(self.form_data)
+        obj = db.session.query(PluginInfo).filter(
+            PluginInfo.method_name == self.form_data.get('method_name'),
+            PluginInfo.class_name == self.form_data.get('class_name'),
+            PluginInfo.version == self.form_data.get('version')
+        ).first()
+        return NodeConfigSchema().dump(obj)
+
+    @handle_api_error
+    def get(self):
+        node_param, node_result = self.get_node_param_result()
+        node_config = self.get_node_config()
+        default_task_config = self.get_default_task_config()
+        data = {
+            'nodeConfig': node_config,
+            'nodeParam': node_param,
+            'nodeResult': node_result,
+            'defaultTaskConfig': default_task_config
+        }
+        return generate_response(data, message='success')

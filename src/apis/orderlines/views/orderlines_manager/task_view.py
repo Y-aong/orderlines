@@ -25,8 +25,21 @@ class TaskView(BaseView):
         self.table_orm = Task
         self.table_schema = TaskSchema
 
+    def update_task_item(self, item_name:str):
+        """修改巡视任务的item中的值"""
+        obj = db.session.query(Task).filter(Task.id == self.table_id).first()
+        info = TaskSchema().dump(obj)
+        item: dict = info.get(item_name)
+        _item: dict = self.form_data.get(item_name)
+        if item and _item and isinstance(_item, dict):
+            for key, val in _item.items():
+                if key and val:
+                    item[key] = val
+            self.form_data['method_kwargs'] = item
+
+
+
     def handle_request_params(self):
-        print(self.form_data)
         if request.method == 'PUT':
             obj = db.session.query(Task).filter(Task.id == self.table_id).first()
             info = TaskSchema().dump(obj)
@@ -53,4 +66,3 @@ class TaskView(BaseView):
                     if key and val:
                         task_config[key] = val
                 self.form_data['task_config'] = task_config
-        print(self.form_data)

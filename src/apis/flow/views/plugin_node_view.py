@@ -19,12 +19,11 @@ from public.base_model import db
 from public.base_response import generate_response
 
 
-class PluginNodeView(Resource):
-    url = '/plugin_node'
+class NodeMenuView(Resource):
+    url = '/node_menu'
 
     def __init__(self):
         self.form_data = request.args
-        self.type = self.form_data.get('type')
 
     @staticmethod
     def get_nodes_type(title, plugin_info):
@@ -73,6 +72,5 @@ class PluginNodeView(Resource):
         return plugin_nodes
 
     def get(self):
-        if self.type == 'task_nodes':
-            plugin_nodes = self.get_plugin_nodes()
-            return generate_response(plugin_nodes)
+        plugin_nodes = self.get_plugin_nodes()
+        return generate_response(plugin_nodes)

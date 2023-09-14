@@ -32,7 +32,20 @@ class PluginNodeInfoSchema(SQLAlchemyAutoSchema):
     version = fields.String()
 
 
-class PluginInfoParamSchema(SQLAlchemyAutoSchema):
+class NodeParamSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = PluginInfo
-        fields = ['parameters', 'return_value', 'version', 'method_desc']
+        fields = ['parameters']
+
+
+class NodeResultSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = PluginInfo
+        fields = ['return_value']
+
+
+class NodeConfigSchema(SQLAlchemyAutoSchema):
+    task_name = fields.Function(lambda obj: obj.method_desc)
+    version = fields.String()
+    desc = fields.Function(lambda obj: obj.method_desc)
+    method_name = fields.String()
