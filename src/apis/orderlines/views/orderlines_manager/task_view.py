@@ -24,8 +24,11 @@ class TaskView(BaseView):
         super(TaskView, self).__init__()
         self.table_orm = Task
         self.table_schema = TaskSchema
+        self.items = [
+            'method_kwargs', 'result_config', 'task_config'
+        ]
 
-    def update_task_item(self, item_name:str):
+    def update_task_item(self, item_name: str):
         """修改巡视任务的item中的值"""
         obj = db.session.query(Task).filter(Task.id == self.table_id).first()
         info = TaskSchema().dump(obj)
@@ -37,32 +40,8 @@ class TaskView(BaseView):
                     item[key] = val
             self.form_data['method_kwargs'] = item
 
-
-
     def handle_request_params(self):
         if request.method == 'PUT':
-            obj = db.session.query(Task).filter(Task.id == self.table_id).first()
-            info = TaskSchema().dump(obj)
-            method_kwargs: dict = info.get('method_kwargs')
-            result_config: dict = info.get('result_config')
-            task_config: dict = info.get('task_config')
-            _method_kwargs = self.form_data.get('method_kwargs')
-            _result_config = self.form_data.get('result_config')
-            _task_config = self.form_data.get('task_config')
-            if method_kwargs and _method_kwargs and isinstance(_method_kwargs, dict):
-                for key, val in _method_kwargs.items():
-                    if key and val:
-                        method_kwargs[key] = val
-                self.form_data['method_kwargs'] = method_kwargs
-            # 增加返回值
-            if result_config and _result_config and isinstance(_result_config, dict):
-                for key, val in _result_config.items():
-                    if key and val:
-                        result_config[key] = val
-                self.form_data['result_config'] = result_config
-            # 修改任务配置
-            if task_config and _task_config and isinstance(_task_config, dict):
-                for key, val in _task_config.items():
-                    if key and val:
-                        task_config[key] = val
-                self.form_data['task_config'] = task_config
+            for key, val in self.form_data.items():
+                if key in self.items:
+                    self.update_task_item(key)
