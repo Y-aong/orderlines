@@ -54,12 +54,14 @@ def _register_resource(app):
     from apis.system_oauth import system_oauth_blue
     from apis.config import conf_blue
     from apis.token import token_blue
+    from apis.flow import flow_blue
 
     app.register_blueprint(system_oauth_blue)
     app.register_blueprint(orderlines_blue)
     app.register_blueprint(schedule_plan_blue)
     app.register_blueprint(conf_blue)
     app.register_blueprint(token_blue)
+    app.register_blueprint(flow_blue)
 
 
 def create_app():

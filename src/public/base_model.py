@@ -11,7 +11,7 @@
 """
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from sqlalchemy import Column, SmallInteger
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import StaticPool
 from contextlib import contextmanager
 
 from conf.config import FlaskConfig
@@ -32,7 +32,10 @@ def get_session():
     db_uri = FlaskConfig.SQLALCHEMY_DATABASE_URI
     engine = create_engine(
         url=db_uri,
-        poolclass=NullPool
+        poolclass=StaticPool,
+        isolation_level="READ UNCOMMITTED",
+        pool_recycle=3600,
+        pool_pre_ping=True,
     )
     session_factory = sessionmaker(bind=engine)
     return scoped_session(session_factory)
