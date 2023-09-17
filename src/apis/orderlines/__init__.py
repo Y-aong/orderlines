@@ -13,6 +13,7 @@ from flask_restful import Api
 from apis.orderlines.views import TaskView, TaskInstanceView
 from apis.orderlines.views.orderlines_build.orderlines_build_view import ProcessBuildView
 from apis.orderlines.views.orderlines_manager.process_view import ProcessView
+from apis.orderlines.views.orderlines_manager.variable_view import VariableView
 from apis.orderlines.views.orderlines_operator.orderlines_recover_view import OrderlinesRecoverView
 from apis.orderlines.views.orderlines_operator.orderlines_paused_view import OrderlinesPausedView
 from apis.orderlines.views.orderlines_operator.orderlines_start_view import OrderLinesStartView
@@ -44,3 +45,4 @@ orderlines_api.add_resource(ScheduleTaskView, ScheduleTaskView.url)
 orderlines_api.add_resource(OrderlinesRunningLogView, OrderlinesRunningLogView.url)
 orderlines_api.add_resource(OrderlinesBaseInfoView, OrderlinesBaseInfoView.url)
 orderlines_api.add_resource(OrderlinesShowView, OrderlinesShowView.url)
+orderlines_api.add_resource(VariableView, VariableView.url)

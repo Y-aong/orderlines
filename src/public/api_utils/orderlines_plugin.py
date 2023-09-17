@@ -88,18 +88,19 @@ class OrderlinesPlugHelper:
         properties = annotation.model_json_schema().get('properties')
         model_fields = annotation.model_fields
         for property_name, property_val in properties.items():
-            annotation_info = {
-                'name': property_name,
-                'title': property_val.get('title'),
-                'type': str(model_fields.get(property_name).annotation),
-                'default': property_val.get('default'),
-                'required': False if property_val.get('default') else True,
-                'desc': property_val.get('description'),
-            }
-            if property_name not in self.base_params and is_params:
-                field_infos.append(annotation_info)
-            if not is_params:
-                field_infos.append(annotation_info)
+            if property_name != 'task_instance_id':
+                annotation_info = {
+                    'name': property_name,
+                    'title': property_val.get('title'),
+                    'type': str(model_fields.get(property_name).annotation),
+                    'default': property_val.get('default'),
+                    'required': False if property_val.get('default') else True,
+                    'desc': property_val.get('description'),
+                }
+                if property_name not in self.base_params and is_params:
+                    field_infos.append(annotation_info)
+                if not is_params:
+                    field_infos.append(annotation_info)
 
         return field_infos
 
@@ -107,7 +108,7 @@ class OrderlinesPlugHelper:
     def parse_common_annotation(params: Any):
         field_infos = list()
         for name, param in dict(params).items():
-            if name != 'self':
+            if name != 'self' and name != 'task_instance_id':
                 default = '' if "empty" in str(param.default) else str(param.default)
                 field_infos.append({
                     'name': str(param.name),

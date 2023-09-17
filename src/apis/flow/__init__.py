@@ -11,10 +11,14 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from apis.flow.views.plugin_node_view import NodeMenuView
+from apis.flow.views.flow_data_view import FlowDataView
+from apis.flow.views.flow_task_config_view import FlowTaskConfigView
+from apis.flow.views.menu_node_view import NodeMenuView
 from apis.flow.views.task_node_view import TaskNodeView
 
 flow_blue = Blueprint("flow", __name__, url_prefix="")
 flow_api = Api(flow_blue)
 flow_api.add_resource(NodeMenuView, NodeMenuView.url)
 flow_api.add_resource(TaskNodeView, TaskNodeView.url)
+flow_api.add_resource(FlowTaskConfigView, FlowTaskConfigView.url)
+flow_api.add_resource(FlowDataView, FlowDataView.url)

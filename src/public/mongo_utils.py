@@ -21,13 +21,37 @@ from public.logger import logger
 
 
 class MongoDBUtil:
-    def __init__(self):
+    def __init__(self, collection=None):
         self.mongo = pymongo.MongoClient(host=Mongo.host, port=Mongo.port)
         self.db = self.mongo[Mongo.db]
-        print(f'self.db::{self.db}')
-        self.collection = self.db[Mongo.collection]
+        if not collection:
+            collection = Mongo.collection
+        self.collection = self.db[collection]
 
-    def set_value(self, process_instance_id: str, variable_key: str, variable_value: Any):
+    def set_value(self, process_id: str, task_id: str, **kwargs):
+        try:
+            filter_ = {'process_id': process_id, 'task_id': task_id}
+            obj = self.collection.find_one(filter_)
+            if obj:
+                self.collection.update_one(filter=filter_, update={'$set': kwargs}, upsert=True)
+            else:
+                data = {
+                    'process_id': process_id,
+                    'task_id': task_id,
+                }
+                data.update(kwargs)
+                self.collection.insert_one(data)
+        except Exception as e:
+            raise VariableException(f'mongo db set value error. error info is {e}')
+
+    def get_value(self, process_id: str, task_id: str):
+        try:
+            filter_ = {'process_id': process_id, 'task_id': task_id}
+            return self.collection.find_one(filter_)
+        except Exception as e:
+            raise VariableException(f'mongo db get value error. error info is {e}')
+
+    def set_variable_value(self, process_instance_id: str, variable_key: str, variable_value: Any):
         """mongodb set value"""
         try:
             if isinstance(variable_value, pd.DataFrame):
@@ -42,7 +66,7 @@ class MongoDBUtil:
             logger.error(f'mongo db set value error. error info is {e}')
             raise VariableException(f'mongo db set value error. error info is {e}')
 
-    def get_value(self, process_instance_id: str, variable_key: str, variable_type: str):
+    def get_variable_value(self, process_instance_id: str, variable_key: str, variable_type: str):
         """mongodb get value"""
         try:
             search_key = {

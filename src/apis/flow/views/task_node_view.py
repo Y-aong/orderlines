@@ -93,7 +93,6 @@ class TaskNodeView(Resource):
         return node_param, node_result
 
     def get_node_config(self):
-        print(self.form_data)
         obj = db.session.query(PluginInfo).filter(
             PluginInfo.method_name == self.form_data.get('method_name'),
             PluginInfo.class_name == self.form_data.get('class_name'),

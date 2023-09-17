@@ -33,8 +33,8 @@ class Variable(Base):
     update_time = db.Column(db.DateTime, onupdate=func.now(), comment='update time')
     creator_name = db.Column(db.String(64), comment='creator name')
     creator_id = db.Column(db.Integer, comment='creator id')
-    updator_name = db.Column(db.String(64), comment='updator name')
-    updator_id = db.Column(db.Integer, comment='updator name')
+    updater_name = db.Column(db.String(64), comment='updater name')
+    updater_id = db.Column(db.Integer, comment='updater name')
 
 
 class VariableInstance(Base):

@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*-
 
 """
-# File       : plugin_node_view.py
+# File       : menu_node_view.py
 # Time       ：2023/9/5 21:49
 # Author     ：YangYong
 # version    ：python 3.10
@@ -47,10 +47,10 @@ class NodeMenuView(Resource):
                 })
         return nodes
 
-    def get_plugin_nodes(self):
+    def get_menu_nodes(self):
         plugin_nodes = list()
         objs = db.session.query(PluginInfo).all()
-        plugin_info = PluginNodeInfoSchema().dump(objs, many=True)
+        plugin_info = PluginNodeInfoSchema().dump(objs, many=True)[::-1]
         titles = set([item.get('title') for item in plugin_info])
         _titles = list()
         sort_title = list()
@@ -72,5 +72,5 @@ class NodeMenuView(Resource):
         return plugin_nodes
 
     def get(self):
-        plugin_nodes = self.get_plugin_nodes()
-        return generate_response(plugin_nodes)
+        menu_nodes = self.get_menu_nodes()
+        return generate_response(menu_nodes)

@@ -25,9 +25,7 @@ class PluginNodeInfoSchema(SQLAlchemyAutoSchema):
     title = fields.Function(serialize=lambda obj: obj.title)
     background = fields.String()
     class_name = fields.String()
-    text = fields.Function(
-        serialize=lambda obj: obj.method_desc
-    )
+    text = fields.Function(serialize=lambda obj: obj.method_desc)
     method_name = fields.String()
     version = fields.String()
 
@@ -45,7 +43,7 @@ class NodeResultSchema(SQLAlchemyAutoSchema):
 
 
 class NodeConfigSchema(SQLAlchemyAutoSchema):
-    task_name = fields.Function(lambda obj: obj.method_desc)
+    task_name = fields.Function(lambda obj: obj.method_desc if obj else '')
     version = fields.String()
-    desc = fields.Function(lambda obj: obj.method_desc)
+    desc = fields.Function(lambda obj: obj.method_desc if obj else '')
     method_name = fields.String()
