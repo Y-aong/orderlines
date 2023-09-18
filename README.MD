@@ -2,7 +2,7 @@
 
 项目名称 orderlines
 
-使用flask celery自主开发的一套工作流框架，现在为未完成状态 目前已实现功能
+使用flask celery自主开发的一套工作流框架，目前已实现功能
 
 - 流程串行，基本功能
 - 流程并行（可选择使用协程io密集型和进程cpu密集型）
@@ -12,38 +12,33 @@
 - 定时任务，根据时间间隔，指定时间运行
 - 异常处理策略，重试，忽略，抛错
 - 任务回调，任务运行失败可以指定回调函数
-- 任务停止
-
-优化点
-
-- api接口不完善，完善接口——进行时
-- 添加命令行模式
+- 任务停止，支持有状态任务和无状态任务的停止
+- 命令行模式，详情查看`orderlines --help`
 - 支持大返回值使用mongodb或者redis进行存储
-- 运行时增加变量，变量可以在流程中使用
-- 增加grpc方式接口
-- rbac权限，完善认证和权限控制——已完成
-- 使用k8s进行运行定时任务和异步任务
-- 增加前端界面
-- docker 文件编写
+- 运行时增加变量 变量可以在流程中使用
+- 增加grpc方式启动接口
+- rbac权限，完善认证和权限控制，角色和群组两种模式
+- 前端配置界面，详情请见`https://github.com/Y-aong/orderlines_front`
+- docker-compose文件编写
 
 ### 模块简介
 
 - 触发方式
-    - 定时触发
-    - 手动触发
+    - 定时触发：定时触发，周期触发，间隔触发
+    - 手动触发：直接运行
 
 - 流程运行
-    - 流程构建
-    - 流程解析
-    - 流程运行
-    - 流程日志
-    - 流程运行报告
+    - 流程构建：根据json，yaml构建流程
+    - 流程解析：解析任务，解析变量(参数)
+    - 流程运行：流程并行，流程串行
+    - 流程日志：实时运行日志推送
+    - 流程运行报告：任务运行报告下载
 
-- 任务组件
-    - 任务插件
+- 任务插件
+    - 任务插件，基础插件(开始节点，结束节点，延时节点，变量赋值，远程调用，执行python脚本)
     - 任务构建，任务解析
-    - 异常策略
-    - 流程网关。并行，任务组，流程控制
+    - 异常策略：报错，忽略，重试
+    - 流程网关：并行，任务组，流程控制，forEach(迭代器模式)
     - 任务返回值
 
 - api接口，命令行模式
@@ -56,41 +51,95 @@
 
 流程的使用链表进行串联
 
-组件库就是我们具体要运行的任务，组件库中有基本的标准库，如start, end, process_control, parallel, group,common, 启动start, end作为内置built_in模块
-common是支持我们自主进行编写的任务组件库，process_control, parallel作为网关控制我们任务的运行顺序，group作为抽象任务其中可以包含多个任务
+插件库就是我们具体要运行的任务，插件库中有基本的标准库，如start, end, process_control, parallel, group,common, 启动start, end作为内置built_in模块
+common是支持我们自主进行编写的任务插件库，process_control, parallel作为网关控制我们任务的运行顺序，group作为抽象任务其中可以包含多个任务
 
 celery在这里不是必须的，可以替换为k8s，celery只是作为流程运行的载体
 
-### 组件库的设计思路
+### 插件库的设计思路
 
-- 组件库实际上就是真正运行的任务
+- 插件库实际上就是真正运行的任务
 - 任务函数的参数必须增加**kw,因为流程运行中可能会有其他的参数
 - 任务函数的返回值包含两个部分第一为运行状态，这里框架会自己处理，第二为自己的返回值，可以自定义
 - 有返回值必须为dict字段方便扩展
-- 组件库的初心是为了方便业务任务和流程框架的解耦，方便业务的扩展
+- 插件库的初心是为了方便业务任务和流程框架的解耦，方便业务的扩展
 
 **简单示例**
 
 ```python
 import time
 
-from orderlines.libraries.BaseTask import BaseTask, run_keyword_variant
+from pydantic import Field, BaseModel
+
+from conf.config import OrderLinesConfig
+from orderlines.libraries.BaseTask import BaseTask
+from orderlines.utils.base_orderlines_type import BasePluginParam
+
+
+class TestParam(BasePluginParam):
+    a: int = Field(description='测试参数a')
+    b: int = Field(description='测试参数b')
+
+
+class AddResult(BaseModel):
+    add_value: int = Field(description='相加的得到的值')
+
+
+class SubtractionResult(BaseModel):
+    subtraction_value: int = Field(description='相减的得到的值')
+
+
+class MultiResult(BaseModel):
+    multi_value: int = Field(description='相乘的得到的值')
 
 
 class Test(BaseTask):
+    version = OrderLinesConfig.version
 
-    @run_keyword_variant('Test')
-    def test_add(self, a: int, b: int, **kwargs) -> dict:
-        time.sleep(10)
-        return {'add_value': a + b}
+    def __init__(self):
+        super(Test, self).__init__()
+        self.handle_param_method = ['test_add']
+        self.handle_result_method = ['test_subtraction']
+        self.handle_error_method = ['test_multi']
 
-    @run_keyword_variant('Test')
-    def test_subtraction(self, a: int, b: int, **kwargs) -> dict:
-        return {'subtraction_value': a - b}
+    def test_add(self, test_type: TestParam) -> AddResult:
+        """加法测试"""
+        time.sleep(1)
+        return {'add_value': test_type.a + test_type.b}
 
-    @run_keyword_variant('Test')
-    def test_multi(self, a: int, b: int, **kwargs) -> dict:
-        return {'subtraction_value': a * b}
+    def test_subtraction(self, test_type: TestParam) -> SubtractionResult:
+        """减法测试"""
+        time.sleep(1)
+        return {'subtraction_value': test_type.a - test_type.b}
+
+    def test_multi(self, test_type: TestParam) -> MultiResult:
+        """乘法测试"""
+        time.sleep(1)
+        return {'multi_value': test_type.a * test_type.b}
+
+    def on_receive(self, param: BaseModel, task_name: str):
+        add_param = param.model_dump()
+        if task_name == 'test_add':
+            add_param['a'] = add_param.get('a') + 1
+            add_param['b'] = add_param.get('b') + 1
+            return TestParam(**add_param)
+        else:
+            add_param['a'] = 12
+            add_param['b'] = 13
+            return TestParam(**add_param)
+
+    def on_success(self, result: dict, task_name: str):
+        if task_name == 'test_add':
+            result['add_value'] = 108
+            return result
+        else:
+            return result
+
+    def on_failure(self, error: str, task_name: str):
+        if task_name == 'test_add':
+            return 'this is a add task error'
+        else:
+            return error
 ```
 
 ### 网关设计
@@ -137,7 +186,7 @@ class Test(BaseTask):
 
 ### 目录结构介绍
 
-![img.png](docs/images/img.png)
+![img.png](docs/images/content.png)
 
 ## 使用方法
 
@@ -146,155 +195,103 @@ class Test(BaseTask):
 - python3.7 以上，笔者使用python3.9
 - mysql
 - redis
+- mongodb
 - pycharm
 
 ### 基础配置
 
 - src 目录设置为source root
 
-  ![img.png](docs/images/img1.png)
+  ![img.png](docs/images/setting.png)
 
 - 修改配置文件
-    - 本地测试。复制配置文件product_config.yaml为develop_config.yaml，修改.env
-    - 正式环境需要修改环境变量
-
-- 运行测试文件，出现以下输出，最好把所有的测试用例运行一遍，结果如下
-
-  ![img.png](docs/images/img2.png)
+    - 修改配置文件中的数据库配置
 
 ### 流程文件配置介绍
 
 ```python
 # 整个流程的配置是使用双向链表的形式
-nodes = [
-    # 每个流程必有的start和end节点
+data = [
     {
-        "task_id": 1000,  # 任务id唯一，应由前端生成
-        "task_name": "start",  # 任务名称可以自定义 
-        "task_module": "BuiltIn",  # 任务的组件库类名
-        "method_name": "start",  # 对应组件库中的方法名称
-        "task_type": "start",  # 流程类型分为start,common,process_control,parallel,group,end
-        "method_kwargs": {},  # 任务运行需要的参数
-        "prev_id": None,  # 任务的上一个节点的task_id
-        "next_id": 1001,  # 任务的下一个节点的task_id
-        "task_config": None,  # 任务的配置信息，如异常处理策略retry,ignore,raise，默认raise，超时时间timeout，回调方法默认send_email
-        "desc": None  # 流程描述信息
-    },
-    {
-        "task_id": 1001,
-        "task_name": "并行网关",
-        "method_name": "parallel_task",
-        "task_type": "parallel",
-        "method_kwargs": {
-            "parallel_task_ids": [1002, 1005]
-        },
-        "prev_id": 1001,
-        "next_id": 1007,
-        "task_config": {
-            'runner': 'gevent'  # 指定使用协程方式运行，默认参数，可以指定process
-        },
-        "task_module": "Parallel",
-        "desc": None
-    },
-    {
-        "task_id": 1002,
-        "task_name": "任务组1",
-        "method_name": "task_group",
-        "task_type": "group",
-        "method_kwargs": {
-            "group_ids": [1003, 1004]
-        },
+        "task_id": "1001",
+        "task_name": "start",
+        "method_name": "start",
+        "task_type": "start",
+        "method_kwargs": {},
+        "prev_id": None,
+        "next_id": "1002",
         "task_config": None,
-        "task_module": "Group",
+        "task_module": "BuiltIn",
+        "module_version": "1.0.0.1",
         "desc": None
     },
     {
-        "task_id": 1003,
-        "task_name": "add1",
+        "task_id": "1002",
+        "task_name": "add",
         "method_name": "test_add",
         "task_type": "common",
         "method_kwargs": {
             "a": 1,
             "b": 123143
         },
+        "prev_id": "1001",
+        "next_id": "1003",
         "task_config": None,
         "task_module": "Test",
-        "result": [  # 流程的返回值
+        "module_version": "1.0.0.1",
+        "result_config":
             {
-                "add_value": "${add_value}+1",  # 返回值使用${变量名}
-                "variable_type": "int",  # 返回值类型 int, str， dict, list
-                "variable_desc": "add函数的返回值"  # 返回值描述信息
-            }
-        ],
+                "result_key": "add_value",
+                "variable_key": "${add_result}",
+            },
         "desc": None
     },
     {
-        "task_id": 1004,
-        "task_name": "subtraction1",
+        "task_id": "1003",
+        "task_name": "subtraction",
         "method_name": "test_subtraction",
         "task_type": "common",
-        "method_kwargs": {  # 参数中使用变量
-            "a": "${add_value}",
+        "method_kwargs": {
+            "a": "${add_result}",
             "b": 123123
         },
+        "prev_id": "1002",
+        "next_id": "1004",
         "task_config": None,
         "task_module": "Test",
-        "result": [
-            {
-                "subtraction_value": "${return_value}",  # 使用变量用${变量名}
-                "variable_type": "int",
-                "variable_desc": "subtraction函数的返回值"
-            }
+        "module_version": "1.0.0.1",
+        "result_config": [
+
         ],
         "desc": None
     },
     {
-        "task_id": 1005,
-        "task_name": "任务组2",
-        "method_name": "task_group",
-        "task_type": "group",
-        "method_kwargs": {
-            "group_ids": [1006]
-        },
-        "task_config": None,
-        "task_module": "Group",
-        "desc": None
-    },
-    {
-        "task_id": 1006,
-        "task_name": "减法",
-        "method_name": "test_subtraction",
-        "task_type": "common",
-        "method_kwargs": {
-            "a": 10,
-            "b": 12
-        },
-        "task_config": None,
-        "task_module": "Test",
-        "desc": None
-    },
-    {
-        "task_id": 1007,
+        "task_id": "1004",
         "task_name": "end",
         "method_name": "end",
         "task_type": "end",
         "method_kwargs": {},
-        "prev_id": 1001,
+        "prev_id": "1003",
         "next_id": None,
         "task_config": None,
         "task_module": "BuiltIn",
+        "module_version": "1.0.0.1",
         "desc": None
     }
 ]
+
 process_info = {
-    'process_id': '1006',  # 流程id需要唯一
-    'process_name': 'test_parallel_with_process',  # 流程名称自定义
-    "creator": "blue",  # 流程创建者
-    "updater": None,  # 流程更新者
-    "process_config": {
-        "timeout": 1  # 流程超时时间
-    }
+    "process_id": "1003",
+    "process_name": "test_variable1",
+    "creator": "blue",
 }
+variable = [
+    {
+        "variable_key": "add_result",
+        "variable_type": "int",
+        "variable_desc": "add函数的返回值"
+    }
+]
 ```
 
 ### 流程状态介绍
@@ -323,25 +320,38 @@ class StatusEnum(enum.Enum):
 
 其中task_status简单可以分为两种，PENDING，RUNNING，SUCCESS为成功，其他都为失败
 
-### 启动celery worker
+### 启动方式
+
+#### docker启动, 直接部署
 
 ```shell
+bash deploy.sh
+```
+
+#### 命令行启动
+
+```shell
+# 先进行打包
+pip install --editable .
+# 查看帮助帮助
+orderlines --help
+# 启动命令
+orderlines run-server # 启动flask服务
+orderlines schedule # 启动定时器
+celery -A celery_worker.celery worker --loglevel=info --pool=solo # 启动celery
+```
+
+### 测试启动
+
+#### 启动celery worker
+
+```shell
+# 启动celery
 cd src
 celery -A celery_worker.celery worker --loglevel=info --pool=solo
+
+# 启动flask
+python src/app.py # 启动flask
 ```
-
-### 启动celery beat
-
-```shell
-cd src
-celery -A celery_worker.celery beat -l info 
-```
-
-### 启动flask
-
-- 启动flask flask_main.py
-- 创建流程 http://127.0.0.1:5000/build/process POST 参数在 data/common_node.json
-- 启动流程 `http://127.0.0.1:5000/orderlines_start` POST `{"process_id":"1001"}`
 
 ### 具体详细文档后续陆续更新
-pip install --editable .
