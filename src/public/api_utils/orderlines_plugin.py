@@ -41,9 +41,9 @@ class OrderlinesPlugHelper:
         self.node_types = {
             'start': 'start-node',
             'end': 'end-node',
-            'parallel': 'parallel-node',
+            'parallel_task': 'parallel-node',
             'process_control': 'process-control-node',
-            'group': 'group-node'
+            'task_group': 'group-node'
         }
 
     def init_plugin(self):

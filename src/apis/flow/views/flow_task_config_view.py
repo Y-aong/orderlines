@@ -32,9 +32,11 @@ class FlowTaskConfigView(Resource):
         process_id = self.form_data.get('process_id')
         task_id = self.form_data.get('task_id')
         flow_task_data = self.mongo.get_value(process_id, task_id)
-        if '_id' in flow_task_data:
+        if flow_task_data and '_id' in flow_task_data:
             flow_task_data.pop('_id')
-        return generate_response(flow_task_data)
+            return generate_response(flow_task_data)
+        else:
+            return generate_response({})
 
     def post(self):
         process_id = self.form_data.pop('process_id')
