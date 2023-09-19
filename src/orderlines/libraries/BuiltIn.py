@@ -33,3 +33,10 @@ class BuiltIn(BaseTask):
         end node
         """
         return {'status': self.success}
+
+    def select(self, base_param: BasePluginParam) -> dict:
+        """
+        框选节点
+        select node
+        """
+        return {'status': self.success}

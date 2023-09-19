@@ -84,6 +84,10 @@ class ParallelParam(GateWayParam):
     parallel_task_ids: List[str] = Field(description=get_desc_by_lang('parallel_task_ids'))
 
 
+class ParallelResult(BaseModel):
+    parallel_task_result: dict = Field(description=get_desc_by_lang('parallel_task_result'))
+
+
 class BaseConditionItem(BaseModel):
     """
     流程控制以返回值控制的条件

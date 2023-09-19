@@ -39,7 +39,7 @@ from orderlines.libraries.BaseTask import BaseTask
 from orderlines.libraries.Group import GroupParam
 from orderlines.task_running.process_runner import ProcessRunner
 
-from orderlines.utils.base_orderlines_type import ParallelParam
+from orderlines.utils.base_orderlines_type import ParallelParam, ParallelResult
 from orderlines.utils.parallel_util import ParallelUtils
 from orderlines.utils.utils import get_current_node
 
@@ -99,7 +99,7 @@ class Parallel(BaseTask):
                 group_param = GroupParam(**param)
                 return group.task_group(group_param)
 
-    def parallel_task(self, parallel_type: ParallelParam) -> dict:
+    def parallel_task(self, parallel_type: ParallelParam) -> ParallelResult:
         """
         并行网关
         运行并行任务组
