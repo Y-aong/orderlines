@@ -56,6 +56,9 @@ class TaskRunner(threading.Thread):
         current_task_node['task_config'] = task_config
         return current_task_node
 
+    def get_task_name(self, task_id: str):
+        return self.context.get_task_node_item(self.process_instance_id, task_id, 'task_name')
+
     def callback(self, task_status: str, result_or_error: dict) -> None:
         """
         on task run error callback func method
@@ -107,7 +110,9 @@ class TaskRunner(threading.Thread):
 
                 if task_status != TaskStatus.green.value:
                     self.callback(task_status, result_or_error)
-                self.logger.info(f'current task id {self.current_task_id}, task result {result_or_error}')
+                task_name = self.get_task_name(self.current_task_id)
+                self.logger.info(
+                    f'current_task_id:{self.current_task_id},task_name:{task_name},task result:{result_or_error}')
 
             self.stop, self.paused = self.running_db_operator.process_instance_is_stop_or_paused(self.dry)
 
@@ -206,7 +211,7 @@ class TaskRunner(threading.Thread):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}
             self.logger.error(f'current_task_id:{self.current_task_id}, run timeout \n{error_info}')
         else:
-            error_info = {'error_info':  traceback.format_exc()}
+            error_info = {'error_info': traceback.format_exc()}
             self.logger.error(f'current_task_id:{self.current_task_id}, run error \n{error_info}')
         task_build = TaskBuild(self.process_instance_id, self.current_node())
         running_strategy = RunningStrategy(

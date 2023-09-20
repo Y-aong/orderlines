@@ -12,9 +12,10 @@
 from copy import deepcopy
 from flask import request
 
-from apis.orderlines.models.task import Task
+from apis.orderlines.models.task import Task, TaskInstance
 from apis.orderlines.schema.task_schema import TaskSchema
-from public.base_model import db
+from public.base_model import db, get_session
+from public.base_response import generate_response
 from public.base_view import BaseView
 
 
@@ -46,3 +47,16 @@ class TaskView(BaseView):
             for key, val in self.form_data.items():
                 if key in self.items:
                     self.update_task_item(key)
+
+    def delete(self):
+        session = get_session()
+        # 删除任务实例
+        session.query(TaskInstance).filter(TaskInstance.task_id == self.form_data.get('task_id')).delete()
+        session.commit()
+        session.flush()
+        # 删除任务
+        session.query(Task).filter(
+            Task.task_id == self.form_data.get('task_id')).delete()
+        session.commit()
+        session.flush()
+        return generate_response(message='删除节点成功')

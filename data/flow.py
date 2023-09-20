@@ -3,60 +3,42 @@
 data = {
     "nodes": [
         {
-            "id": "dccd1479-b63d-4185-ac11-b1741cfa622d",
-            "type": "process-control-node",
-            "x": 830,
-            "y": -890,
-            "properties": {
-                "class_name": "ProcessControl",
-                "method_name": "process_control",
-                "ui": "orderlines-node",
-                "version": "1.0.0.1"
-            },
-            "text": {
-                "x": 830,
-                "y": -890,
-                "value": "流程控制"
-            },
-        },
-        {
-            "id": "81d4bebb-4227-4bfe-8feb-0f863a542f5c",
-            "type": "parallel-node",
-            "x": 830,
-            "y": -740,
-            "properties": {
-                "class_name": "Parallel",
-                "method_name": "parallel_task",
-                "ui": "orderlines-node",
-                "version": "1.0.0.1"
-            },
-            "text": {
-                "x": 830,
-                "y": -740,
-                "value": "并行网关"
-            }
-        },
-        {
-            "id": "adfb7c2f-08a2-4564-80a4-d27f81580111",
+            "id": "17d69720-1963-426a-bccd-f3e1f5d7e708",
             "type": "start-node",
-            "x": 830,
-            "y": -1040,
+            "x": 600,
+            "y": -200,
             "properties": {
                 "class_name": "BuiltIn",
                 "method_name": "start",
                 "version": "1.0.0.1"
             },
             "text": {
-                "x": 830,
-                "y": -1040,
+                "x": 600,
+                "y": -200,
                 "value": "开始节点"
             }
         },
         {
-            "id": "e531220d-fcc2-418f-b01c-e818ba80a3b1",
+            "id": "64569a66-43f0-4d05-aae5-bf95428a1749",
+            "type": "end-node",
+            "x": 600,
+            "y": 230,
+            "properties": {
+                "class_name": "BuiltIn",
+                "method_name": "end",
+                "version": "1.0.0.1"
+            },
+            "text": {
+                "x": 600,
+                "y": 230,
+                "value": "结束节点"
+            }
+        },
+        {
+            "id": "7a33a13a-8b44-44b9-8956-ef0a865ac866",
             "type": "function-node",
-            "x": 690,
-            "y": -570,
+            "x": 600,
+            "y": -90,
             "properties": {
                 "class_name": "Test",
                 "method_name": "test_subtraction",
@@ -64,16 +46,16 @@ data = {
                 "version": "1.0.0.1"
             },
             "text": {
-                "x": 690,
-                "y": -570,
+                "x": 600,
+                "y": -90,
                 "value": "减法测试"
             }
         },
         {
-            "id": "a4270896-516b-429d-b26f-43ac448f6d54",
+            "id": "337df460-b9b5-4380-8db3-896e84a5cbe8",
             "type": "function-node",
-            "x": 980,
-            "y": -570,
+            "x": 600,
+            "y": 10,
             "properties": {
                 "class_name": "Test",
                 "method_name": "test_multi",
@@ -81,200 +63,161 @@ data = {
                 "version": "1.0.0.1"
             },
             "text": {
-                "x": 980,
-                "y": -570,
+                "x": 600,
+                "y": 10,
                 "value": "乘法测试"
             }
         },
         {
-            "id": "2bc165be-9e99-44ff-85d5-46ab7507dacc",
-            "type": "end-node",
-            "x": 840,
-            "y": -320,
+            "id": "46eba828-f15d-4856-9d0f-b11f935eeb05",
+            "type": "function-node",
+            "x": 600,
+            "y": 110,
             "properties": {
-                "class_name": "BuiltIn",
-                "method_name": "end",
+                "class_name": "Test",
+                "method_name": "test_add",
+                "ui": "orderlines-node",
                 "version": "1.0.0.1"
             },
             "text": {
-                "x": 840,
-                "y": -320,
-                "value": "结束节点"
+                "x": 600,
+                "y": 110,
+                "value": "加法测试"
             }
         }
     ],
     "edges": [
         {
-            "id": "832ba872-d41d-4661-9daf-e0d03bcb84af",
+            "id": "4972b168-83e1-4459-a9d4-f0c5ee4a0d19",
             "type": "flow-link",
-            "sourceNodeId": "adfb7c2f-08a2-4564-80a4-d27f81580111",
-            "targetNodeId": "dccd1479-b63d-4185-ac11-b1741cfa622d",
+            "sourceNodeId": "17d69720-1963-426a-bccd-f3e1f5d7e708",
+            "targetNodeId": "7a33a13a-8b44-44b9-8956-ef0a865ac866",
             "startPoint": {
-                "x": 830,
-                "y": -1004
+                "id": "600--164",
+                "x": 600,
+                "y": -164
             },
             "endPoint": {
-                "x": 830,
-                "y": -935
+                "x": 600,
+                "y": -120
             },
             "properties": {},
             "pointsList": [
                 {
-                    "x": 830,
-                    "y": -1004
+                    "x": 600,
+                    "y": -164
                 },
                 {
-                    "x": 830,
-                    "y": -935
+                    "x": 600,
+                    "y": -120
                 }
             ]
         },
         {
-            "id": "74185e26-a80f-4df9-9dea-4389f9ea25f6",
+            "id": "f23b0a73-27d0-4475-8a2a-58213199922d",
             "type": "flow-link",
-            "sourceNodeId": "dccd1479-b63d-4185-ac11-b1741cfa622d",
-            "targetNodeId": "81d4bebb-4227-4bfe-8feb-0f863a542f5c",
+            "sourceNodeId": "7a33a13a-8b44-44b9-8956-ef0a865ac866",
+            "targetNodeId": "337df460-b9b5-4380-8db3-896e84a5cbe8",
             "startPoint": {
-                "x": 830,
-                "y": -845
+                "x": 600,
+                "y": -60
             },
             "endPoint": {
-                "x": 830,
-                "y": -770
+                "x": 600,
+                "y": -20
             },
             "properties": {},
             "pointsList": [
                 {
-                    "x": 830,
-                    "y": -845
+                    "x": 600,
+                    "y": -60
                 },
                 {
-                    "x": 830,
-                    "y": -770
+                    "x": 600,
+                    "y": -20
                 }
             ]
         },
         {
-            "id": "bc543feb-0b1b-4007-a119-d383791856a7",
+            "id": "6507b4d2-7715-4d22-b156-1f1947ed89bd",
             "type": "flow-link",
-            "sourceNodeId": "81d4bebb-4227-4bfe-8feb-0f863a542f5c",
-            "targetNodeId": "e531220d-fcc2-418f-b01c-e818ba80a3b1",
+            "sourceNodeId": "337df460-b9b5-4380-8db3-896e84a5cbe8",
+            "targetNodeId": "46eba828-f15d-4856-9d0f-b11f935eeb05",
             "startPoint": {
-                "x": 830,
-                "y": -710
+                "x": 600,
+                "y": 40
             },
             "endPoint": {
-                "x": 690,
-                "y": -600
+                "x": 600,
+                "y": 80
             },
             "properties": {},
             "pointsList": [
                 {
-                    "x": 830,
-                    "y": -710
+                    "x": 600,
+                    "y": 40
                 },
                 {
-                    "x": 830,
-                    "y": -630
+                    "x": 600,
+                    "y": 70
                 },
                 {
-                    "x": 690,
-                    "y": -630
+                    "x": 600,
+                    "y": 70
                 },
                 {
-                    "x": 690,
-                    "y": -600
+                    "x": 600,
+                    "y": 50
+                },
+                {
+                    "x": 600,
+                    "y": 50
+                },
+                {
+                    "x": 600,
+                    "y": 80
                 }
             ]
         },
         {
-            "id": "12380dd0-e201-4fd8-a2b3-6d97d2ad3d24",
+            "id": "607dcd57-1de1-44bf-93d6-69de25c02393",
             "type": "flow-link",
-            "sourceNodeId": "81d4bebb-4227-4bfe-8feb-0f863a542f5c",
-            "targetNodeId": "a4270896-516b-429d-b26f-43ac448f6d54",
+            "sourceNodeId": "46eba828-f15d-4856-9d0f-b11f935eeb05",
+            "targetNodeId": "64569a66-43f0-4d05-aae5-bf95428a1749",
             "startPoint": {
-                "x": 830,
-                "y": -710
+                "x": 600,
+                "y": 140
             },
             "endPoint": {
-                "x": 980,
-                "y": -600
+                "id": "600-134",
+                "x": 600,
+                "y": 194
             },
             "properties": {},
             "pointsList": [
                 {
-                    "x": 830,
-                    "y": -710
+                    "x": 600,
+                    "y": 140
                 },
                 {
-                    "x": 830,
-                    "y": -630
+                    "x": 600,
+                    "y": 170
                 },
                 {
-                    "x": 980,
-                    "y": -630
+                    "x": 600,
+                    "y": 170
                 },
                 {
-                    "x": 980,
-                    "y": -600
-                }
-            ]
-        },
-        {
-            "id": "890321ee-f2be-46b5-8913-56456871c79a",
-            "type": "flow-link",
-            "sourceNodeId": "e531220d-fcc2-418f-b01c-e818ba80a3b1",
-            "targetNodeId": "2bc165be-9e99-44ff-85d5-46ab7507dacc",
-            "startPoint": {
-                "x": 690,
-                "y": -540
-            },
-            "endPoint": {
-                "x": 804,
-                "y": -320
-            },
-            "properties": {},
-            "pointsList": [
-                {
-                    "x": 690,
-                    "y": -540
+                    "x": 600,
+                    "y": 164
                 },
                 {
-                    "x": 690,
-                    "y": -320
+                    "x": 600,
+                    "y": 164
                 },
                 {
-                    "x": 804,
-                    "y": -320
-                }
-            ]
-        },
-        {
-            "id": "8010d965-6a1f-4950-b63c-9295f9b35d13",
-            "type": "flow-link",
-            "sourceNodeId": "a4270896-516b-429d-b26f-43ac448f6d54",
-            "targetNodeId": "2bc165be-9e99-44ff-85d5-46ab7507dacc",
-            "startPoint": {
-                "x": 980,
-                "y": -540
-            },
-            "endPoint": {
-                "x": 876,
-                "y": -320
-            },
-            "properties": {},
-            "pointsList": [
-                {
-                    "x": 980,
-                    "y": -540
-                },
-                {
-                    "x": 980,
-                    "y": -320
-                },
-                {
-                    "x": 876,
-                    "y": -320
+                    "x": 600,
+                    "y": 194
                 }
             ]
         }

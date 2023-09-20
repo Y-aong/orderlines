@@ -16,6 +16,7 @@ from flask_restful import Resource
 from apis.orderlines.models import Task
 from public.base_model import db
 from public.base_response import generate_response
+from public.mongo_utils import MongoDBUtil
 
 
 class FlowSaveView(Resource):
@@ -23,10 +24,16 @@ class FlowSaveView(Resource):
 
     def __init__(self):
         self.form_data = request.json
+        self.mongo = MongoDBUtil('flow_data')
 
     def post(self):
-        nodes = self.form_data.get('nodes')
-        edges = self.form_data.get('edges')
+        filter_ = {'process_id': self.form_data.get('process_id')}
+        flow_data = self.mongo.collection.find_one(filter_)
+        if '_id' in flow_data:
+            flow_data.pop('_id')
+        graph_data = flow_data.get('graphData')
+        nodes = graph_data.get('nodes')
+        edges = graph_data.get('edges')
 
         task_nodes = list()
         for node in nodes:
@@ -37,18 +44,18 @@ class FlowSaveView(Resource):
             item['task_name'] = task_name
             prev_id = list()
             next_id = list()
-
             for edge in edges:
-                if edge.get('targetNodeId') == task_id:
-                    prev_id.append(edge.get('targetNodeId'))
-
                 if edge.get('sourceNodeId') == task_id:
-                    next_id.append(edge.get('sourceNodeId'))
+                    next_id.append(edge.get('targetNodeId'))
+
+                if edge.get('targetNodeId') == task_id:
+                    prev_id.append(edge.get('sourceNodeId'))
 
             item['prev_id'] = ','.join(prev_id) if prev_id else None
             item['next_id'] = ','.join(next_id) if next_id else None
             task_nodes.append(item)
 
+        print(task_nodes)
         for task_node in task_nodes:
             update_data = {
                 'prev_id': task_node.get('prev_id'),

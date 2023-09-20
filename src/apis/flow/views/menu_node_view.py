@@ -44,6 +44,7 @@ class NodeMenuView(Resource):
                     'method_name': item.get('method_name'),
                     'version': item.get('version'),
                     'class_name': item.get('class_name'),
+                    'task_type': item.get('task_type'),
                 })
         return nodes
 

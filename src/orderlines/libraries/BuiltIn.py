@@ -36,7 +36,7 @@ class BuiltIn(BaseTask):
 
     def select(self, base_param: BasePluginParam) -> dict:
         """
-        框选节点
+        标记节点
         select node
         """
         return {'status': self.success}

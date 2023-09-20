@@ -12,10 +12,10 @@ from orderlines.process_build.process_build_adapter import ProcessBuildAdapter
 
 
 def run_by_process_id_test():
-    json_path = './data/process.json'
-    process_id = ProcessBuildAdapter().build_by_json(json_path, clear_db=True)
+    # json_path = './data/process.json'
+    # process_id = ProcessBuildAdapter().build_by_json(json_path, clear_db=True)
     orderlines = OrderLines()
-    orderlines.start(process_id=process_id)
+    orderlines.start(process_id='a75b72b6-4e16-498a-a095-b8c0c7828ee6')
 
 
 if __name__ == '__main__':
