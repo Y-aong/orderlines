@@ -26,7 +26,7 @@ class FlowSaveView(Resource):
         self.form_data = request.json
         self.mongo = MongoDBUtil('flow_data')
 
-    def post(self):
+    def node_relation(self):
         filter_ = {'process_id': self.form_data.get('process_id')}
         flow_data = self.mongo.collection.find_one(filter_)
         if '_id' in flow_data:
@@ -54,8 +54,10 @@ class FlowSaveView(Resource):
             item['prev_id'] = ','.join(prev_id) if prev_id else None
             item['next_id'] = ','.join(next_id) if next_id else None
             task_nodes.append(item)
+        return task_nodes
 
-        print(task_nodes)
+    def post(self):
+        task_nodes = self.node_relation()
         for task_node in task_nodes:
             update_data = {
                 'prev_id': task_node.get('prev_id'),
