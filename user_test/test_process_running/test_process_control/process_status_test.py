@@ -50,11 +50,17 @@ def process_control_status_test():
             "method_name": "process_control",
             "task_type": "process_control",
             "method_kwargs": {
-                "conditions": "1012",  # 这里传递task_id
-                "expression": {
-                    "success": {"task_id": "1014"},
-                    "failure": {"task_id": "1015"}
-                }
+                'pc_type': 'status',
+                'conditions': [
+                    {
+                        'task_id': '1014',
+                        'condition': [{'task_status': 'success', 'condition': '1012'}]
+                    },
+                    {
+                        'task_id': '1015',
+                        'condition': [{'task_status': 'failure', 'condition': '1012'}]
+                    }
+                ]
             },
             "prev_id": "1012",
             "next_id": None,

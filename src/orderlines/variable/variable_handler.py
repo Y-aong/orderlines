@@ -20,28 +20,34 @@ class ProcessControlVariableStrategy(BaseVariableStrategy):
         handle process control params
         @param conditions:
         [
-           {
-               'A': [{'condition': 1, 'target': 1, 'sign': '='},
-                     {'condition': 1, 'target': 3, 'sign': '>'}]
-           },
-           {
-               'B': [{'condition': 2, 'target': "${add_value}", 'sign': '<'},
-                     {'condition': 3, 'target': 3, 'sign': '='}]
-           }
-       ]
+            {
+                'task_id': '1014',
+                'condition': [
+                    {'sign': '=', 'target': 788, 'condition': 1},
+                    {'sign': '>', 'target': 3, 'condition': 1}
+                ]
+            },
+            {
+                'task_id': '1015',
+                'condition': [
+                    {'sign': '<', 'target': 788, 'condition': 2},
+                    {'sign': '=', 'target': 3, 'condition': 3}
+                ]
+            }
+        ]
         @return:
         """
-        for _condition in conditions:
-            for _, single_condition in _condition.items():
-                for temp in single_condition:
-                    condition = temp.get('condition')
-                    target = temp.get('target')
-                    if isinstance(condition, str) and '${' in condition and '}' in condition:
-                        condition_value = self._handle_param_with_variable(condition)
-                        temp['condition'] = condition_value
-                    if isinstance(target, str) and '${' in target and '}' in target:
-                        target_value = self._handle_param_with_variable(target)
-                        temp['target'] = target_value
+        for item in conditions:
+            temp = item.get('condition')
+            for condition_item in temp:
+                condition = condition_item.get('condition')
+                target = condition_item.get('target')
+                if isinstance(condition, str) and '${' in condition and '}' in condition:
+                    condition_value = self._handle_param_with_variable(condition)
+                    temp['condition'] = condition_value
+                if isinstance(target, str) and '${' in target and '}' in target:
+                    target_value = self._handle_param_with_variable(target)
+                    temp['target'] = target_value
         return conditions
 
     def handle_task_kwargs(self, task_kwargs: dict) -> dict:
@@ -49,30 +55,29 @@ class ProcessControlVariableStrategy(BaseVariableStrategy):
            对于流程控制节点进行单独判断,Process control nodes are judged individually
            Process control nodes are judged individually
            :param task_kwargs:
-            {
-            "conditions": [
+            pc_type = 'result',
+            conditions = [
                 {
-                    'A': [{'condition': 1, 'target': 1, 'sign': '='},
-                          {'condition': 1, 'target': 3, 'sign': '>'}]
+                    'task_id': '1014',
+                    'condition': [
+                        {'sign': '=', 'target': 788, 'condition': 1},
+                        {'sign': '>', 'target': 3, 'condition': 1}
+                    ]
                 },
                 {
-                    'B': [{'condition': 2, 'target': "${add_value}", 'sign': '<'},
-                          {'condition': 3, 'target': 3, 'sign': '='}]
+                    'task_id': '1015',
+                    'condition': [
+                        {'sign': '<', 'target': 788, 'condition': 2},
+                        {'sign': '=', 'target': 3, 'condition': 3}
+                    ]
                 }
-            ],
-            "expression": {
-                'A': {'task_id': 1014},
-                'B': {'task_id': 1015}
-            },
-        }
+            ]
            :return:
         """
+        pc_type = task_kwargs.get('pc_type')
         conditions = task_kwargs.get('conditions')
-        if isinstance(conditions, str):
-            return task_kwargs
-        if isinstance(conditions, list):
+        if pc_type == 'result':
             task_kwargs['conditions'] = self.handle_process_control_return_value(conditions)
-
         return task_kwargs
 
 

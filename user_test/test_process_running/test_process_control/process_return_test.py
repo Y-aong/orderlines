@@ -54,20 +54,24 @@ def process_control_return_test():
             "method_name": "process_control",
             "task_type": "process_control",
             "method_kwargs": {
+                "pc_type": "result",
                 "conditions": [
                     {
-                        'A': [{'condition': 1, 'target': "${add_result}", 'sign': '='},
-                              {'condition': 1, 'target': 3, 'sign': '>'}]
+                        'task_id': '1014',
+                        'condition': [
+                            {'sign': '=', 'target': 788, 'condition': 1},
+                            {'sign': '>', 'target': 3, 'condition': 1}
+                        ]
                     },
                     {
-                        'B': [{'condition': 2, 'target': "${add_result}", 'sign': '<'},
-                              {'condition': 3, 'target': 3, 'sign': '='}]
+                        'task_id': '1015',
+                        'condition': [
+                            {'sign': '<', 'target': 788, 'condition': 2},
+                            {'sign': '=', 'target': 3, 'condition': 3}
+                        ]
                     }
                 ],
-                "expression": {
-                    'A': {'task_id': "1014"},
-                    'B': {'task_id': "1015"}
-                }
+
             },
             "prev_id": "1012",
             "next_id": None,

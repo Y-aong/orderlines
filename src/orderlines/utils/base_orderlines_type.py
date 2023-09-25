@@ -56,7 +56,7 @@ class BaseProcessNode(BaseModel):
 
 class BasePluginParam(BaseModel):
     task_config: Union[None, dict] = Field(default=dict(), description=get_desc_by_lang('task_config'))
-    task_instance_id: str = Field(description=get_desc_by_lang('task_instance_id'))
+    task_instance_id: str = Field(default='', description=get_desc_by_lang('task_instance_id'))
 
 
 class GateWayParam(BasePluginParam):
@@ -110,32 +110,45 @@ class BaseExpression(BaseModel):
     expression: Dict[str, dict] = Field(description=get_desc_by_lang('expression'))
 
 
+class ProcessControlConditionItem(BaseModel):
+    """
+       return params
+       [
+           {
+               'task_id': '1014',
+               'condition': [
+                   {'sign': '=', 'target': 788, 'condition': 1},
+                   {'sign': '>', 'target': 3, 'condition': 1}
+               ]
+           },
+           {
+               'task_id': '1015',
+               'condition': [
+                   {'sign': '<', 'target': 788, 'condition': 2},
+                   {'sign': '=', 'target': 3, 'condition': 3}
+               ]
+           }
+       ]
+       status params
+       'conditions': [
+               {
+                   'task_id': '1014',
+                   'condition': [{'task_status': 'success', 'condition': '1012'}]
+               },
+               {
+                   'task_id': '1015',
+                   'condition': [{'task_status': 'failure', 'condition': '1012'}]
+               }
+           ]
+       """
+    task_id: str = Field(description=get_desc_by_lang('task_id'))
+    condition: list = Field(description=get_desc_by_lang('condition'))
+
+
 class ProcessControlParam(BasePluginParam):
-    """
-    return params
-    "conditions": [
-                {
-                    'A': [{'condition': 1, 'target': "${add_value}", 'sign': '='},
-                          {'condition': 1, 'target': 3, 'sign': '>'}]
-                },
-                {
-                    'B': [{'condition': 2, 'target': "${add_value}", 'sign': '<'},
-                          {'condition': 3, 'target': 3, 'sign': '='}]
-                }
-            ],
-    "expression": {
-        'A': {'task_id': "1014"},
-        'B': {'task_id': "1015"}
-    }
-    status params
-    "conditions": "1012",  # 这里传递task_id
-    "expression": {
-        "success": {"task_id": "1014"},
-        "failure": {"task_id": "1015"}
-    }
-    """
-    conditions: Union[list, str] = Field(description=get_desc_by_lang('conditions'))
-    expression: dict = Field(description=get_desc_by_lang('expression'))
+    pc_type: str = Field(description=get_desc_by_lang('pc_type'))
+    expression: list = Field(default=[], description=get_desc_by_lang('expression'))
+    conditions: List[ProcessControlConditionItem] = Field(description=get_desc_by_lang('conditions'))
     process_info: dict = Field(description=get_desc_by_lang('process_info'))
 
 

@@ -34,6 +34,7 @@ class ZH:
     variable_value = '变量值字符串'
     variable_type = '变量值类型'
     variable_desc = '变量的描述信息'
+    pc_type = '流程控制类型。status或者result'
 
 
 class EN:
@@ -58,6 +59,7 @@ class EN:
     variable_value = 'variable value'
     variable_type = 'variable type'
     variable_desc = 'variable desc info'
+    pc_type = 'process control type.enum status or result'
 
 
 languages = {

@@ -69,7 +69,7 @@ class Email(BaseTask):
         :return:
         """
         if not EmailConfig.is_send:
-            logger.info('The callback function was called successfully, and no mail was send')
+            logger.info('The callback function was called successfully, but the email flag is false')
             return {'status': TaskStatus.green.value}
         title, msg = self._build_msg(**email_info.model_dump())
         message = MIMEText(msg, 'plain', 'utf-8')

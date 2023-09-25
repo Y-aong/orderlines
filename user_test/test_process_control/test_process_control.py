@@ -22,11 +22,23 @@ def test_process_control_by_return():
         'callback_func': 'send_msg',
         'callback_module': 'Email'
     }
+    pc_type = 'result',
     conditions = [
-        {'A': [{'sign': '=', 'target': 788, 'condition': 1}, {'sign': '>', 'target': 3, 'condition': 1}]},
-        {'B': [{'sign': '<', 'target': 788, 'condition': 2}, {'sign': '=', 'target': 3, 'condition': 3}]}
+        {
+            'task_id': '1014',
+            'condition': [
+                {'sign': '=', 'target': 788, 'condition': 1},
+                {'sign': '>', 'target': 3, 'condition': 1}
+            ]
+        },
+        {
+            'task_id': '1015',
+            'condition': [
+                {'sign': '<', 'target': 788, 'condition': 2},
+                {'sign': '=', 'target': 3, 'condition': 3}
+            ]
+        }
     ]
-    expression = {'A': {'task_id': '1014'}, 'B': {'task_id': '1015'}}
     process_info = {
         'process_config': None,
         'creator': 'blue',
@@ -39,8 +51,8 @@ def test_process_control_by_return():
     }
     data = {
         'task_config': task_config,
+        'pc_type': pc_type,
         'conditions': conditions,
-        'expression': expression,
         'process_info': process_info,
     }
     task_id = ProcessControl().process_control(ProcessControlParam(**data))
@@ -57,11 +69,17 @@ def test_process_control_by_status():
             'callback_func': 'send_msg',
             'callback_module': 'Email'
         },
-        'conditions': '1012',
-        'expression': {
-            'failure': {'task_id': '1015'},
-            'success': {'task_id': '1014'}
-        },
+        'pc_type': 'status',
+        'conditions': [
+            {
+                'task_id': '1014',
+                'condition': [{'task_status': 'success', 'condition': '1012'}]
+            },
+            {
+                'task_id': '1015',
+                'condition': [{'task_status': 'failure', 'condition': '1012'}]
+            }
+        ],
         'process_info': {
             'updater': None,
             'desc': None,

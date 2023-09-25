@@ -42,15 +42,14 @@ class ProcessControl(BaseTask):
         :param process_control_type:process control param type
         :return:
         """
-        task_status = process_control_type.expression.get('success')
-        if task_status:
+
+        if process_control_type.pc_type == 'status':
             task_id = self._control_by_status(
                 process_control_type.conditions,
-                process_control_type.expression,
                 process_control_type.process_info
             )
         else:
-            task_id = self._control_by_condition(process_control_type.conditions, process_control_type.expression)
+            task_id = self._control_by_condition(process_control_type.conditions)
         return task_id
 
     def _get_module(self, node: dict):
@@ -73,80 +72,75 @@ class ProcessControl(BaseTask):
         # pending and running are not possible here because we're running here
         return task_status if task_status in ['success', 'failure'] else 'failure'
 
-    def _control_by_status(self, conditions, expression, process_info) -> str:
+    def _control_by_status(self, conditions, process_info) -> str:
         """
         根据任务状态进行判断
         Determine the task status
-        :param conditions:task_id如1001
-        :param expression:
-        {
-        'success': {
-            'task_id':'2',
-            'method_name': 'add',
-            'method_kwargs': {"x": 10,"y": 2},
-            'module': 'TestAdd'},
-        'failure': {
-            'task_id':'1',
-            'method_name': 'subtraction',
-            'method_kwargs': {"x": 10,"y": 2},
-            'module': 'TestSubtraction'}
-        }
+        :param conditions
+        [
+            {
+                'task_id': '1014',
+                'condition': [{'task_status': 'success', 'condition_task_id': '1012'}]
+            },
+            {
+                'task_id': '1015',
+                'condition': [{'task_status': 'failure', 'condition_task_id': '1012'}]
+            }
+        ]
         :return: task_id
         """
+        condition_task_id = None
         process_instance_id = process_info.get('process_instance_id')
         # 根据上一个节点的task_id获取到task_status
         # The task status is obtained based on the task id of the previous node
-        task_status = self._get_task_status(conditions, process_instance_id)
-        assert expression.get(task_status), f'user task id::{conditions} can not find task status ::{task_status}'
-        self._get_module(expression.get(task_status))
-        return expression.get(task_status).get('task_id')
+        for item in conditions:
+            condition_flags = list()
+            task_id = item.task_id
+            condition = item.condition
+            for temp in condition:
+                task_status_config = temp.get('task_status')
+                condition_task_id = temp.get('condition_task_id')
 
-    def _control_by_condition(self, conditions: list, expression: dict) -> str:
+                task_status = self._get_task_status(condition_task_id, process_instance_id)
+                assert task_status, f'task id::{condition_task_id} can not find task status ::{task_status}'
+                condition_flags.append(task_status_config == task_status)
+            if all(condition_flags):
+                return task_id
+        raise ValueError(f'can not find condition by {condition_task_id}')
+
+    def _control_by_condition(self, conditions: list) -> str:
         """
         根据任务的返回值进行判断
         Make a judgment based on the return value of the task
         :param conditions:list
         [
             {
-                'A': [{'condition': 1, 'target': 1, 'sign': '='},
-                    {'condition': 1, 'target': 3, 'sign': '>'}]
+                'task_id': '1014',
+                'condition': [
+                    {'sign': '=', 'target': 788, 'condition': 1},
+                    {'sign': '>', 'target': 3, 'condition': 1}
+                ]
             },
             {
-                'B': [{'condition': 2, 'target': 3, 'sign': '<'},
-                    {'condition': 3, 'target': 3, 'sign': '='}]
-            },
-            {'C': [{'condition': 2, 'target': 3, 'sign': '<'}]}
+                'task_id': '1015',
+                'condition': [
+                    {'sign': '<', 'target': 788, 'condition': 2},
+                    {'sign': '=', 'target': 3, 'condition': 3}
+                ]
+            }
         ]
-        :param expression:dict
-        {
-        'A': {
-            'task_id':'1',
-            'method_name': 'add',
-            'method_kwargs': {"x": 10, "y": 2},
-            'module': 'TestAdd'},
-        'B': {
-            'task_id':'2',
-            'method_name': 'subtraction',
-            'method_kwargs': {"x": 10, "y": 2},
-            'module': 'TestSubtraction'},
-        'C': {
-            'task_id':'3',
-            'method_name': 'subtraction',
-            'method_kwargs': {"x": 10, "y": 2},
-            'module': 'TestSubtraction'}
-        }
+
         :return: task_id
         """
-        for temps in conditions:
-            condition_filter = list()
-            condition_name = list(temps.keys()).pop()
-            for temp in list(temps.values()):
-                for item in temp:
-                    flag = self._parse_condition(item)
-                    condition_filter.append(flag)
-            if all(condition_filter) and expression.get(condition_name):
-                self._get_module(expression.get(condition_name))
-                return expression.get(condition_name).get('task_id')
+        for item in conditions:
+            condition_flags = list()
+            task_id = item.task_id
+            condition = item.condition
+            for temp in condition:
+                flag = self._parse_condition(temp)
+                condition_flags.append(flag)
+            if all(condition_flags):
+                return task_id
 
         raise AttributeError('can not find condition.')
 

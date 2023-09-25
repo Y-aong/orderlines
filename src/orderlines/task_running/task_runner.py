@@ -209,10 +209,10 @@ class TaskRunner(threading.Thread):
         """
         if isinstance(error, asyncio.TimeoutError):
             error_info = {'error_info': 'The task has timeout. Check timeout in task config'}
-            self.logger.error(f'current_task_id:{self.current_task_id}, run timeout \n{error_info}')
+            self.logger.error(f'current_task_id:{self.current_task_id}, run timeout \n{traceback.format_exc()}')
         else:
-            error_info = {'error_info': traceback.format_exc()}
-            self.logger.error(f'current_task_id:{self.current_task_id}, run error \n{error_info}')
+            error_info = {'error_info': traceback.format_stack()}
+            self.logger.error(f'current_task_id:{self.current_task_id}, run error \n{traceback.format_exc()}')
         task_build = TaskBuild(self.process_instance_id, self.current_node())
         running_strategy = RunningStrategy(
             process_instance_id=self.process_instance_id,
