@@ -17,6 +17,7 @@ from apis.orderlines.schema.task_schema import TaskSchema
 from public.api_handle_exception import handle_api_error
 from public.base_model import db
 from public.base_response import generate_response
+from public.logger import logger
 from public.mongo_utils import MongoDBUtil
 
 
@@ -33,7 +34,6 @@ class PrevNodeResultView(Resource):
         if '_id' in flow_data:
             flow_data.pop('_id')
         graph_data = flow_data.get('graphData')
-        print(graph_data)
         nodes = graph_data.get('nodes')
         edges = graph_data.get('edges')
 
@@ -58,7 +58,6 @@ class PrevNodeResultView(Resource):
             item['task_id'] = task_id
             task_nodes.append(item)
         task_id = self.form_data.get('task_id')
-        print(f'task_nodes::{task_nodes}\n,task_id::{task_id}')
 
         for node in task_nodes:
             if task_id in node.get('next_id'):
@@ -67,11 +66,11 @@ class PrevNodeResultView(Resource):
 
     @handle_api_error
     def get(self):
-        prev_id = self.get_prev_id()
-        print(prev_id)
-        obj = db.session.query(Task).filter(Task.task_id == prev_id).first()
-        if obj:
-            result_config = TaskSchema().dump(obj).get('result_config')
+        try:
+            prev_id = self.get_prev_id()
+            obj = db.session.query(Task).filter(Task.task_id == prev_id).first()
+            task_info = TaskSchema().dump(obj)
+            result_config = task_info.get('result_config')
             result_config_options = list()
             if isinstance(result_config, dict):
                 result_config = [result_config]
@@ -80,6 +79,12 @@ class PrevNodeResultView(Resource):
                     'label': item.get('result_key'),
                     'value': item.get('variable_key'),
                 })
-            return generate_response(result_config_options)
-        else:
-            raise ValueError(f'该节点{obj.task_name}上个节点没有配置返回值')
+            pre_task_config = [{'label': task_info.get('task_name'), 'value': task_info.get('task_id')}]
+            result = {
+                'result_config_options': result_config_options,
+                'pre_task_config': pre_task_config
+            }
+            return generate_response(result)
+        except Exception as e:
+            logger.error(f'获取前置节点返回值失败:{e}')
+            raise ValueError(f'获取前置节点返回值失败')

@@ -29,22 +29,22 @@ def handle_api_error(func):
             res = func(*args, **kwargs)
         except IntegrityError as e:
             logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
-            return generate_abort(data=f'db parameter repetition::{e}', code=400)
+            return generate_abort(message=f'db parameter repetition::{e}', code=400)
         except ValueError as e:
             logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
-            return generate_abort(data=f'Client parameters are abnormal.{e}', code=400)
+            return generate_abort(message=f'{e}', code=400)
         except ValidationError as e:
             logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
-            return generate_abort(data=f'Client parameters are abnormal.{e}', code=400)
+            return generate_abort(message=f'Client parameters are abnormal.{e}', code=400)
         except JWTVerifyException:
-            return generate_abort(data='The current token has expired.', code=400)
+            return generate_abort(message='The current token has expired.', code=400)
         except DecodeError:
-            return generate_abort(data='jwt parse failed.', code=400)
+            return generate_abort(message='jwt parse failed.', code=400)
         except OrderLinesRunningException as e:
-            return generate_abort(data=f'orderlines run failure, {e}.', code=400)
+            return generate_abort(message=f'orderlines run failure, {e}.', code=400)
         except Exception as e:
             logger.info(f"request_url::{request.url},\ntraceback::{traceback.format_exc()}, {e}")
-            return generate_abort(data='Server exception.', code=500)
+            return generate_abort(message='Server exception.', code=500)
         return res
 
     return wrapper
